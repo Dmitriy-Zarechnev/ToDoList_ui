@@ -1,0 +1,44 @@
+@import './ColorVar.module.css';
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 400;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+body {
+    color: var(--text-color);
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--main-bg-color);
+}
+
+
+/* Анимация всех эффектов кнопки */
+button {
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+/* Стили для hover эффекта кнопки */
+button:hover {
+    box-shadow: 0 0 0 1px var(--main-bg-color), 0 0 3px 3px var(--second-bg-color);
+    color: var(--main-bg-color);
+    background-color: var(--text-color);
+    border-color: var(--text-color);
+}
+
+/* Стили при клике на кнопки */
+button:active {
+    transform: scale(0.96);
+}

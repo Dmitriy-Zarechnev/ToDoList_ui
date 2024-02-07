@@ -1,0 +1,91 @@
+@import '../../ColorVar.module.css';
+
+.to_Do_List {
+    padding: 20px;
+    border: 3px solid var(--main-border-color);
+    border-radius: 5px;
+    max-width: 350px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.to_Do_List__top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.to_Do_List__header {
+    font-size: 25px;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+
+.to_Do_List__lists {
+    list-style: none;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.to_Do_List__list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    background-color: var(--second-bg-color);
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.to_Do_List__list:not(:last-child) {
+    margin-bottom: 5px;
+}
+
+.to_Do_List__list_box {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow: hidden;
+    max-width: 270px;
+    width: 100%;
+}
+
+.to_Do_List__list_box input {
+    margin-right: 5px;
+    flex-shrink: 0;
+}
+
+.to_Do_List__btn_lists {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.is_done {
+    background-color: var(--accent-color);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

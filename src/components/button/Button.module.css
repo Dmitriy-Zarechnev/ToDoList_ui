@@ -1,0 +1,15 @@
+@import "./../../ColorVar.module.css";
+
+
+.button {
+    padding: 5px;
+    text-transform: capitalize;
+    background-color: var(--button-bg-color);
+    font-weight: 600;
+    border-color: var(--button-bg-color);
+}
+
+.active_filter {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
