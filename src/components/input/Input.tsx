@@ -28,7 +28,7 @@ export const Input = (props: InputPropsType) => {
 
     const onKeyDownInputHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
-        if (e.key === 'Enter') addTaskBtnFn()
+        if (e.key === 'Enter') {addTaskBtnFn()}
     }
 
     return (
