@@ -1,6 +1,7 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from 'react'
 import S from './Input.module.css'
-import {Button} from '../button/Button'
+import { Button } from '@mui/material'
+
 
 type InputPropsType = {
     itemType: string
@@ -42,8 +43,8 @@ export const Input = (props: InputPropsType) => {
                     placeholder={`Add new ${props.itemType}`}
                     maxLength={15}
                 />
-
-                <Button name={'📌'} onClick={addTaskBtnFn}/>
+                <Button variant="outlined" color="primary" size='small' onClick={addTaskBtnFn}>📌</Button>
+                {/*<Button name={'📌'} onClick={addTaskBtnFn}/>*/}
 
             </div>
             {error && <div className={S.error_message}>{error}</div>}

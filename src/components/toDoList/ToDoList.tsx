@@ -1,9 +1,11 @@
 import React from 'react'
 import {filterValuesType} from '../../App'
-import {Button} from '../button/Button'
 import S from './ToDoList.module.css'
 import {Input} from '../input/Input'
 import {EditableSpan} from '../editableSpan/EditableSpan'
+import {IconButton} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import {Button} from '@mui/material'
 
 export type TasksType = {
     id: string,
@@ -65,7 +67,10 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                               newClass={S.to_Do_List__header}
                               onChange={changeToDoListTitle}/>
 
-                <Button name={'⚔'} onClick={onClickDeleteListHandler}/>
+                <IconButton aria-label="delete" onClick={onClickDeleteListHandler}>
+                    <DeleteIcon/>
+                </IconButton>
+                {/*<Button name={'⚔'} onClick={onClickDeleteListHandler}/>*/}
             </div>
 
             <Input addItem={addTask} itemType={'Task'}/>
@@ -86,30 +91,60 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                                 />
                             </div>
 
-                            <Button name={'💥'} onClick={() => onClickRemoveHandler(el.id)}/>
+                            <IconButton aria-label="delete" size="small" onClick={() => onClickRemoveHandler(el.id)}>
+                                <DeleteIcon fontSize="small"/>
+                            </IconButton>
+                            {/*<Button name={'💥'} onClick={() => onClickRemoveHandler(el.id)}/>*/}
                         </li>
                     )
                 })}
             </ul>
             <div className={S.to_Do_List__btn_lists}>
-                <Button
-                    filter={props.filter}
-                    name={'all'}
-                    onClick={() => {
-                        onClickBtnHandler(props.id, 'all')
-                    }}/>
-                <Button
-                    filter={props.filter}
-                    name={'active'}
-                    onClick={() => {
-                        onClickBtnHandler(props.id, 'active')
-                    }}/>
-                <Button
-                    filter={props.filter}
-                    name={'completed'}
-                    onClick={() => {
-                        onClickBtnHandler(props.id, 'completed')
-                    }}/>
+
+                <Button variant={props.filter === 'all' ? 'outlined' : 'text'}
+                        onClick={() => {
+                            onClickBtnHandler(props.id, 'all')
+                        }}
+                        color={'secondary'}
+                >
+                    All
+                </Button>
+
+                <Button variant={props.filter === 'active' ? 'outlined' : 'text'}
+                        onClick={() => {
+                            onClickBtnHandler(props.id, 'active')
+                        }}
+                        color={'inherit'}
+                >
+                    Active
+                </Button>
+
+                <Button variant={props.filter === 'completed' ? 'outlined' : 'text'}
+                        onClick={() => {
+                            onClickBtnHandler(props.id, 'completed')
+                        }}
+                        color={'success'}
+                >
+                    Completed
+                </Button>
+                {/*<Button*/}
+                {/*    filter={props.filter}*/}
+                {/*    name={'all'}*/}
+                {/*    onClick={() => {*/}
+                {/*        onClickBtnHandler(props.id, 'all')*/}
+                {/*    }}/>*/}
+                {/*<Button*/}
+                {/*    filter={props.filter}*/}
+                {/*    name={'active'}*/}
+                {/*    onClick={() => {*/}
+                {/*        onClickBtnHandler(props.id, 'active')*/}
+                {/*    }}/>*/}
+                {/*<Button*/}
+                {/*    filter={props.filter}*/}
+                {/*    name={'completed'}*/}
+                {/*    onClick={() => {*/}
+                {/*        onClickBtnHandler(props.id, 'completed')*/}
+                {/*    }}/>*/}
             </div>
         </div>
     )
