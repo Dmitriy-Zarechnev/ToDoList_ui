@@ -3,7 +3,7 @@ import {filterValuesType} from '../../App'
 import S from './ToDoList.module.css'
 import {Input} from '../input/Input'
 import {EditableSpan} from '../editableSpan/EditableSpan'
-import {IconButton} from '@mui/material'
+import {Checkbox, IconButton} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {Button} from '@mui/material'
 
@@ -75,16 +75,24 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
 
             <Input addItem={addTask} itemType={'Task'}/>
 
-            <ul className={S.to_Do_List__lists}>
+            <div className={S.to_Do_List__lists}>
                 {props.tasks.map((el) => {
 
                     return (
-                        <li key={el.id} className={el.isDone ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}>
+                        <div key={el.id} className={el.isDone ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}>
                             <div className={S.to_Do_List__list_box}>
-                                <input type="checkbox"
+
+                                <Checkbox
+                                    color={'success'}
                                        checked={el.isDone}
                                        onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}
                                 />
+
+                                {/*<input type="checkbox"*/}
+                                {/*       checked={el.isDone}*/}
+                                {/*       onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}*/}
+                                {/*/>*/}
+
 
                                 <EditableSpan value={el.title}
                                               onChange={(newTitle) => props.changeTaskTitle(props.id, el.id, newTitle)}
@@ -95,10 +103,10 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                                 <DeleteIcon fontSize="small"/>
                             </IconButton>
                             {/*<Button name={'💥'} onClick={() => onClickRemoveHandler(el.id)}/>*/}
-                        </li>
+                        </div>
                     )
                 })}
-            </ul>
+            </div>
             <div className={S.to_Do_List__btn_lists}>
 
                 <Button variant={props.filter === 'all' ? 'outlined' : 'text'}

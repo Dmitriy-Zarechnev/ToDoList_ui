@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from 'react'
 import S from './Input.module.css'
-import { Button } from '@mui/material'
+import {Button, IconButton, TextField} from '@mui/material'
 
 
 type InputPropsType = {
@@ -29,26 +29,41 @@ export const Input = (props: InputPropsType) => {
 
     const onKeyDownInputHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         setError(null)
-        if (e.key === 'Enter') {addTaskBtnFn()}
+        if (e.key === 'Enter') {
+            addTaskBtnFn()
+        }
     }
 
     return (
         <>
             <div className={S.input_box}>
-                <input
+                <TextField
+                    variant={'outlined'}
                     value={newTaskTitle}
                     onChange={onChangeInputHandler}
                     onKeyDown={onKeyDownInputHandler}
-                    className={error ? `${S.input} ${S.error}` : S.input}
-                    placeholder={`Add new ${props.itemType}`}
-                    maxLength={15}
+                    // className={error ? `${S.input} ${S.error}` : S.input}
+                    // placeholder={`Add new ${props.itemType}`}
+                    error={!!error}
+                    helperText={error}
+                    label={`Add new ${props.itemType}`}
                 />
-                <Button variant="outlined" color="primary" size='small' onClick={addTaskBtnFn}>📌</Button>
+
+                {/*<input*/}
+                {/*    value={newTaskTitle}*/}
+                {/*    onChange={onChangeInputHandler}*/}
+                {/*    onKeyDown={onKeyDownInputHandler}*/}
+                {/*    className={error ? `${S.input} ${S.error}` : S.input}*/}
+                {/*    placeholder={`Add new ${props.itemType}`}*/}
+                {/*    maxLength={15}*/}
+                {/*/>*/}
+                {/*<Button variant="outlined" color="primary" size="small" onClick={addTaskBtnFn}>📌</Button>*/}
                 {/*<Button name={'📌'} onClick={addTaskBtnFn}/>*/}
+                <IconButton color="primary" onClick={addTaskBtnFn}>📌</IconButton>
 
             </div>
-            {error && <div className={S.error_message}>{error}</div>}
-            {newTaskTitle.length === 15 && <div className={S.limit_message}>Letters limit reached😥!</div>}
+            {/*{error && <div className={S.error_message}>{error}</div>}*/}
+            {/*{newTaskTitle.length === 15 && <div className={S.limit_message}>Letters limit reached😥!</div>}*/}
         </>
     )
 }
