@@ -1,13 +1,13 @@
 @import './ColorVar.module.css';
 
-.App {
-    padding: 30px;
-}
+/*.App {*/
+/*    padding: 30px;*/
+/*}*/
 
-.to_do_lists {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 50px;
-    padding: 30px;
-}
+/*.to_do_lists {*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*    justify-content: center;*/
+/*    gap: 50px;*/
+/*    padding: 30px;*/
+/*}*/
