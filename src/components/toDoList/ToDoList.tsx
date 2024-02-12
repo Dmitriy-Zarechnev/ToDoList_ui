@@ -3,9 +3,8 @@ import {filterValuesType} from '../../App'
 import S from './ToDoList.module.css'
 import {Input} from '../input/Input'
 import {EditableSpan} from '../editableSpan/EditableSpan'
-import {Checkbox, IconButton} from '@mui/material'
+import {Button, Checkbox, IconButton} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import {Button} from '@mui/material'
 
 export type TasksType = {
     id: string,
@@ -70,7 +69,6 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                 <IconButton aria-label="delete" onClick={onClickDeleteListHandler}>
                     <DeleteIcon/>
                 </IconButton>
-                {/*<Button name={'⚔'} onClick={onClickDeleteListHandler}/>*/}
             </div>
 
             <Input addItem={addTask} itemType={'Task'}/>
@@ -84,15 +82,9 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
 
                                 <Checkbox
                                     color={'success'}
-                                       checked={el.isDone}
-                                       onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}
+                                    checked={el.isDone}
+                                    onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}
                                 />
-
-                                {/*<input type="checkbox"*/}
-                                {/*       checked={el.isDone}*/}
-                                {/*       onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}*/}
-                                {/*/>*/}
-
 
                                 <EditableSpan value={el.title}
                                               onChange={(newTitle) => props.changeTaskTitle(props.id, el.id, newTitle)}
@@ -102,7 +94,6 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                             <IconButton aria-label="delete" size="small" onClick={() => onClickRemoveHandler(el.id)}>
                                 <DeleteIcon fontSize="small"/>
                             </IconButton>
-                            {/*<Button name={'💥'} onClick={() => onClickRemoveHandler(el.id)}/>*/}
                         </div>
                     )
                 })}
@@ -135,24 +126,7 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                 >
                     Completed
                 </Button>
-                {/*<Button*/}
-                {/*    filter={props.filter}*/}
-                {/*    name={'all'}*/}
-                {/*    onClick={() => {*/}
-                {/*        onClickBtnHandler(props.id, 'all')*/}
-                {/*    }}/>*/}
-                {/*<Button*/}
-                {/*    filter={props.filter}*/}
-                {/*    name={'active'}*/}
-                {/*    onClick={() => {*/}
-                {/*        onClickBtnHandler(props.id, 'active')*/}
-                {/*    }}/>*/}
-                {/*<Button*/}
-                {/*    filter={props.filter}*/}
-                {/*    name={'completed'}*/}
-                {/*    onClick={() => {*/}
-                {/*        onClickBtnHandler(props.id, 'completed')*/}
-                {/*    }}/>*/}
+
             </div>
         </div>
     )

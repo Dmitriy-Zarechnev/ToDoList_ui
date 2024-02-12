@@ -1,5 +1,16 @@
 :root {
     --main-bg-color: #fff;
+    --accent-color: #000000;
+    --text-color: #140e19;
+    --main-border-color: #0e3d61;
+    --error-color: #e74c3c;
+    --button-bg-color: #08c5ff;
+    --second-bg-color: #ccc9c9;
+}
+
+/*
+:root {
+    --main-bg-color: #fff;
     --accent-color: #0ffff8;
     --text-color: #140e19;
     --main-border-color: #0e3d61;
@@ -7,3 +18,4 @@
     --button-bg-color: #08c5ff;
     --second-bg-color: #087ab8;
 }
+ */

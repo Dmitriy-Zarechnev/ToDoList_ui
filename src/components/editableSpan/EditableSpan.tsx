@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useState} from 'react'
 import S from '../toDoList/ToDoList.module.css'
+import {TextField} from '@mui/material'
 
 type EditableSpan = {
     value: string
@@ -28,10 +29,14 @@ export const EditableSpan = (props: EditableSpan) => {
 
     return (
         editMode
-            ? <input onBlur={activateViewMode}
-                     onChange={onChangeInputHandler}
-                     value={editedTitle}
-                     autoFocus/>
+            ? <TextField
+                onBlur={activateViewMode}
+                onChange={onChangeInputHandler}
+                value={editedTitle}
+                autoFocus
+                variant="standard"
+
+            />
             : <span onDoubleClick={activateEditMode}
                     className={`${S.span} ${props.newClass}`}>{props.value}</span>
     )

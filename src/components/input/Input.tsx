@@ -1,6 +1,6 @@
-import React, {ChangeEvent, useState, KeyboardEvent} from 'react'
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
 import S from './Input.module.css'
-import {Button, IconButton, TextField} from '@mui/material'
+import {IconButton, TextField} from '@mui/material'
 
 
 type InputPropsType = {
@@ -42,28 +42,13 @@ export const Input = (props: InputPropsType) => {
                     value={newTaskTitle}
                     onChange={onChangeInputHandler}
                     onKeyDown={onKeyDownInputHandler}
-                    // className={error ? `${S.input} ${S.error}` : S.input}
-                    // placeholder={`Add new ${props.itemType}`}
                     error={!!error}
                     helperText={error}
                     label={`Add new ${props.itemType}`}
+
                 />
-
-                {/*<input*/}
-                {/*    value={newTaskTitle}*/}
-                {/*    onChange={onChangeInputHandler}*/}
-                {/*    onKeyDown={onKeyDownInputHandler}*/}
-                {/*    className={error ? `${S.input} ${S.error}` : S.input}*/}
-                {/*    placeholder={`Add new ${props.itemType}`}*/}
-                {/*    maxLength={15}*/}
-                {/*/>*/}
-                {/*<Button variant="outlined" color="primary" size="small" onClick={addTaskBtnFn}>📌</Button>*/}
-                {/*<Button name={'📌'} onClick={addTaskBtnFn}/>*/}
                 <IconButton color="primary" onClick={addTaskBtnFn}>📌</IconButton>
-
             </div>
-            {/*{error && <div className={S.error_message}>{error}</div>}*/}
-            {/*{newTaskTitle.length === 15 && <div className={S.limit_message}>Letters limit reached😥!</div>}*/}
         </>
     )
 }
