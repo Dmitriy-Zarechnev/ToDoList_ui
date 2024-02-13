@@ -8,7 +8,7 @@ import {Menu} from '@mui/icons-material'
 
 export type filterValuesType = 'all' | 'active' | 'completed'
 
-type ToDoListType = {
+export type ToDoListType = {
     id: string,
     title: string,
     filter: filterValuesType
@@ -70,7 +70,7 @@ function App() {
     }
 
     // ***********************************************************************************
-    
+
     // -------------- Фильтрация task ----------------
     function changeFilter(todolistId: string, value: filterValuesType) {
         setToDoLists(toDoLists.map(el => el.id === todolistId ? {...el, filter: value} : el))
