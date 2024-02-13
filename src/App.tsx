@@ -54,11 +54,6 @@ function App() {
         setTasks({...tasks, [toDoListID]: tasks[toDoListID].filter(el => el.id !== id)})
     }
 
-    // -------------- Фильтрация task ----------------
-    function changeFilter(todolistId: string, value: filterValuesType) {
-        setToDoLists(toDoLists.map(el => el.id === todolistId ? {...el, filter: value} : el))
-    }
-
     // -------------- Добавление task ----------------
     function addTask(toDoListID: string, title: string) {
         setTasks({...tasks, [toDoListID]: [{id: v1(), title, isDone: false}, ...tasks[toDoListID]]})
@@ -72,6 +67,13 @@ function App() {
     // -------------- Меняем taskTitle ----------------
     function changeTaskTitle(toDoListID: string, id: string, newTitle: string) {
         setTasks({...tasks, [toDoListID]: tasks[toDoListID].map(el => el.id === id ? {...el, title: newTitle} : el)})
+    }
+
+    // ***********************************************************************************
+    
+    // -------------- Фильтрация task ----------------
+    function changeFilter(todolistId: string, value: filterValuesType) {
+        setToDoLists(toDoLists.map(el => el.id === todolistId ? {...el, filter: value} : el))
     }
 
     // -------------- Меняем toDoListTitle ----------------
@@ -109,7 +111,7 @@ function App() {
             </AppBar>
 
             <Container fixed>
-                <Grid container style={{padding:'20px'}}>
+                <Grid container style={{padding: '20px'}}>
                     <Input addItem={addToDoList} itemType={'Todolist'}/>
                 </Grid>
 
