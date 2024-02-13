@@ -1,11 +1,11 @@
 import React from 'react'
-import {filterValuesType} from '../../App'
+import {FilterValuesType} from '../../App'
 import S from './Button.module.css'
 
 type ButtonPropsType = {
     name: string,
     onClick: () => void,
-    filter?: filterValuesType
+    filter?: FilterValuesType
 }
 
 export const Button = (props: ButtonPropsType) => {

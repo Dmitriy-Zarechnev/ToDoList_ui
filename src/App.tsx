@@ -6,12 +6,12 @@ import {Input} from './components/input/Input'
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@mui/material'
 import {Menu} from '@mui/icons-material'
 
-export type filterValuesType = 'all' | 'active' | 'completed'
+export type FilterValuesType = 'all' | 'active' | 'completed'
 
 export type ToDoListType = {
     id: string,
     title: string,
-    filter: filterValuesType
+    filter: FilterValuesType
 }
 
 type TasksStateType = {
@@ -72,7 +72,7 @@ function App() {
     // ***********************************************************************************
 
     // -------------- Фильтрация task ----------------
-    function changeFilter(todolistId: string, value: filterValuesType) {
+    function changeFilter(todolistId: string, value: FilterValuesType) {
         setToDoLists(toDoLists.map(el => el.id === todolistId ? {...el, filter: value} : el))
     }
 

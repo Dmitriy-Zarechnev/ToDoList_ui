@@ -1,5 +1,5 @@
 import React from 'react'
-import {filterValuesType} from '../../App'
+import {FilterValuesType} from '../../App'
 import S from './ToDoList.module.css'
 import {Input} from '../input/Input'
 import {EditableSpan} from '../editableSpan/EditableSpan'
@@ -15,10 +15,10 @@ export type TasksType = {
 type TodoListPropsType = {
     id: string
     title: string
-    filter: filterValuesType
+    filter: FilterValuesType
     tasks: Array<TasksType>
     removeTask: (toDoListID: string, id: string) => void
-    changeFilter: (todolistId: string, value: filterValuesType) => void
+    changeFilter: (todolistId: string, value: FilterValuesType) => void
     addTask: (toDoListID: string, title: string) => void
     changeCheckBoxStatus: (toDoListID: string, id: string, isDone: boolean) => void
     removeToDoList: (id: string) => void
@@ -39,7 +39,7 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
     }
 
     // -------------- Фильтрация task ----------------
-    const onClickBtnHandler = (todolistId: string, value: filterValuesType) => {
+    const onClickBtnHandler = (todolistId: string, value: FilterValuesType) => {
         props.changeFilter(todolistId, value)
     }
 
