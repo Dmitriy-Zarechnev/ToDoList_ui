@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
 import S from './Input.module.css'
-import {IconButton, TextField} from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
 
 
 type InputPropsType = {

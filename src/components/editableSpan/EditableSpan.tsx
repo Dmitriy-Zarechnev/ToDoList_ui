@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from 'react'
 import S from '../toDoList/ToDoList.module.css'
-import {TextField} from '@mui/material'
+import TextField from '@mui/material/TextField'
 
 type EditableSpan = {
     value: string

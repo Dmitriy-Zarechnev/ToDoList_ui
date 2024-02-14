@@ -3,8 +3,11 @@ import {FilterValuesType} from '../../App'
 import S from './ToDoList.module.css'
 import {Input} from '../input/Input'
 import {EditableSpan} from '../editableSpan/EditableSpan'
-import {Button, Checkbox, IconButton} from '@mui/material'
+import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+
 
 export type TasksType = {
     id: string,
@@ -105,17 +108,14 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                             onClickBtnHandler(props.id, 'all')
                         }}
                         color={'secondary'}
-                >
-                    All
+                > All
                 </Button>
 
                 <Button variant={props.filter === 'active' ? 'outlined' : 'text'}
                         onClick={() => {
                             onClickBtnHandler(props.id, 'active')
                         }}
-                        color={'inherit'}
-                >
-                    Active
+                > Active
                 </Button>
 
                 <Button variant={props.filter === 'completed' ? 'outlined' : 'text'}
@@ -123,8 +123,7 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                             onClickBtnHandler(props.id, 'completed')
                         }}
                         color={'success'}
-                >
-                    Completed
+                > Completed
                 </Button>
 
             </div>
