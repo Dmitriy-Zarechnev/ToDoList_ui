@@ -39,14 +39,13 @@ export const Input = (props: InputPropsType) => {
         <>
             <div className={S.input_box}>
                 <TextField
-                    variant={'outlined'}
+                    variant={'standard'}
                     value={newTaskTitle}
                     onChange={onChangeInputHandler}
                     onKeyDown={onKeyDownInputHandler}
                     error={!!error}
-                    helperText={error}
-                    label={`Add new ${props.itemType}`}
-
+                    label={error ? error : `Add new ${props.itemType}`}
+                    margin="normal"
                 />
                 <IconButton color="primary" onClick={addTaskBtnFn}>📌</IconButton>
             </div>

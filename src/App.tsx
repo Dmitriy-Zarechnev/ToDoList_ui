@@ -119,7 +119,7 @@ function App() {
             </AppBar>
 
             <Container fixed>
-                <Grid container style={{padding: '20px'}}>
+                <Grid container >
                     <Input addItem={addToDoList} itemType={'Todolist'}/>
                 </Grid>
 
