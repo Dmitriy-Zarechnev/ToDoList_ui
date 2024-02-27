@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import './App.css'
 import {TasksType, ToDoList} from './components/toDoList/ToDoList'
 import {v1} from 'uuid'
-import {Input} from './components/input/Input'
+import {AddItemForm} from './components/input/AddItemForm'
 import MenuIcon from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -120,7 +120,7 @@ function App() {
 
             <Container fixed>
                 <Grid container >
-                    <Input addItem={addToDoList} itemType={'Todolist'}/>
+                    <AddItemForm addItem={addToDoList} itemType={'Todolist'}/>
                 </Grid>
 
                 <Grid container spacing={3}>

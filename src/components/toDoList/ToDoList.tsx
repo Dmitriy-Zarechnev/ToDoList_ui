@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {FilterValuesType} from '../../App'
 import S from './ToDoList.module.css'
-import {Input} from '../input/Input'
+import {AddItemForm} from '../input/AddItemForm'
 import {EditableSpan} from '../editableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -29,36 +29,47 @@ type TodoListPropsType = {
     changeToDoListTitle: (toDoListID: string, newTitle: string) => void
 }
 
-export const ToDoList: React.FC<TodoListPropsType> = (props) => {
+export const ToDoList = React.memo((props: TodoListPropsType) => {
 
     // -------------- Меняем название todolist ----------------
-    const changeToDoListTitle = (newTitle: string) => {
+    const changeToDoListTitle = useCallback((newTitle: string) => {
         props.changeToDoListTitle(props.id, newTitle)
-    }
+    }, [props.changeToDoListTitle, props.id])
 
     // -------------- Добавление task ----------------
-    const addTask = (title: string) => {
+    const addTask = useCallback((title: string) => {
         props.addTask(props.id, title)
-    }
+    }, [props.addTask, props.id])
 
     // -------------- Фильтрация task ----------------
-    const onClickBtnHandler = (todolistId: string, value: FilterValuesType) => {
-        props.changeFilter(todolistId, value)
-    }
+    const onClickBtnHandler = useCallback((value: FilterValuesType) => {
+        props.changeFilter(props.id, value)
+    }, [props.changeFilter, props.id])
 
     // -------------- Удаление task ----------------
-    const onClickRemoveHandler = (id: string) => {
+    const onClickRemoveHandler = useCallback((id: string) => {
         props.removeTask(props.id, id)
-    }
+    }, [props.removeTask, props.id])
 
     // -------------- Меняем checkbox ----------------
-    const onChangeCheckBoxHandler = (taskId: string, isDone: boolean) => {
+    const onChangeCheckBoxHandler = useCallback((taskId: string, isDone: boolean) => {
         props.changeCheckBoxStatus(props.id, taskId, !isDone)
-    }
+    }, [props.changeCheckBoxStatus, props.id])
 
     // -------------- Удалить ToDoList ----------------
-    const onClickDeleteListHandler = () => {
+    const onClickDeleteListHandler = useCallback(() => {
         props.removeToDoList(props.id)
+    }, [props.removeToDoList, props.id])
+
+    // -------------- Фильтрация Tasks ----------------
+    let tasksForToDoList = props.tasks
+
+    if (props.filter === 'active') {
+        tasksForToDoList = props.tasks.filter((task) => !task.isDone)
+    }
+
+    if (props.filter === 'completed') {
+        tasksForToDoList = props.tasks.filter((task) => task.isDone)
     }
 
 
@@ -74,27 +85,32 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
                 </IconButton>
             </div>
 
-            <Input addItem={addTask} itemType={'Task'}/>
+            <AddItemForm addItem={addTask} itemType={'Task'}/>
 
             <div className={S.to_Do_List__lists}>
-                {props.tasks.map((el) => {
+                {tasksForToDoList.map((el) => {
 
                     return (
-                        <div key={el.id} className={el.isDone ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}>
+                        <div key={el.id}
+                             className={el.isDone ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}>
                             <div className={S.to_Do_List__list_box}>
 
                                 <Checkbox
                                     color={'success'}
                                     checked={el.isDone}
-                                    onChange={() => onChangeCheckBoxHandler(el.id, el.isDone)}
+                                    onChange={() =>
+                                        onChangeCheckBoxHandler(el.id, el.isDone)}
                                 />
 
                                 <EditableSpan value={el.title}
-                                              onChange={(newTitle) => props.changeTaskTitle(props.id, el.id, newTitle)}
+                                              onChange={(newTitle) =>
+                                                  props.changeTaskTitle(props.id, el.id, newTitle)}
                                 />
                             </div>
 
-                            <IconButton aria-label="delete" size="small" onClick={() => onClickRemoveHandler(el.id)}>
+                            <IconButton aria-label="delete" size="small"
+                                        onClick={() =>
+                                            onClickRemoveHandler(el.id)}>
                                 <DeleteIcon fontSize="small"/>
                             </IconButton>
                         </div>
@@ -105,23 +121,23 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
 
                 <Button variant={props.filter === 'all' ? 'outlined' : 'text'}
                         onClick={() => {
-                            onClickBtnHandler(props.id, 'all')
+                            onClickBtnHandler('all')
                         }}
                         color={'secondary'}
                 > All
                 </Button>
 
                 <Button variant={props.filter === 'active' ? 'outlined' : 'text'}
-                        onClick={() => {
-                            onClickBtnHandler(props.id, 'active')
-                        }}
+                        onClick={useCallback(() => {
+                            onClickBtnHandler('active')
+                        }, [])}
                 > Active
                 </Button>
 
                 <Button variant={props.filter === 'completed' ? 'outlined' : 'text'}
-                        onClick={() => {
-                            onClickBtnHandler(props.id, 'completed')
-                        }}
+                        onClick={useCallback(() => {
+                            onClickBtnHandler('completed')
+                        }, [])}
                         color={'success'}
                 > Completed
                 </Button>
@@ -129,4 +145,4 @@ export const ToDoList: React.FC<TodoListPropsType> = (props) => {
             </div>
         </div>
     )
-}
+})

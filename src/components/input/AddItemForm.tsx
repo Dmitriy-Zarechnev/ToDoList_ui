@@ -1,19 +1,19 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
 import S from './Input.module.css'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 
 
-type InputPropsType = {
+type AddItemFormPropsType = {
     itemType: string
     addItem: (title: string) => void
 }
 
 
-export const Input = (props: InputPropsType) => {
+export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
 
-    let [newTaskTitle, setNewTaskTitle] = useState('')
-    let [error, setError] = useState<string | null>(null)
+    const [newTaskTitle, setNewTaskTitle] = useState('')
+    const [error, setError] = useState<string | null>(null)
 
     const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTaskTitle(e.currentTarget.value)
@@ -28,12 +28,11 @@ export const Input = (props: InputPropsType) => {
         }
     }
 
-    const onKeyDownInputHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null)
-        if (e.key === 'Enter') {
-            addTaskBtnFn()
-        }
-    }
+    const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+        error !== null && setError(null)
+
+        e.key === 'Enter' && addTaskBtnFn()
+    }, [])
 
     return (
         <>
@@ -51,5 +50,5 @@ export const Input = (props: InputPropsType) => {
             </div>
         </>
     )
-}
+})
 

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react'
+import React, {ChangeEvent, useCallback, useState} from 'react'
 import S from '../toDoList/ToDoList.module.css'
 import TextField from '@mui/material/TextField'
 
@@ -8,24 +8,24 @@ type EditableSpan = {
     onChange: (newTitle: string) => void
 }
 
-export const EditableSpan = (props: EditableSpan) => {
+export const EditableSpan = React.memo((props: EditableSpan) => {
     const [editMode, setEditMode] = useState<boolean>(false)
     const [editedTitle, setEditedTitle] = useState<string>('')
 
 
-    function activateEditMode() {
+    const activateEditMode = useCallback(() => {
         setEditMode(true)
         setEditedTitle(props.value)
-    }
+    }, [props.value])
 
-    function activateViewMode() {
+    const activateViewMode = useCallback(() => {
         setEditMode(false)
         props.onChange(editedTitle)
-    }
+    }, [editedTitle, props.onChange])
 
-    function onChangeInputHandler(e: ChangeEvent<HTMLInputElement>) {
+    const onChangeInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setEditedTitle(e.currentTarget.value)
-    }
+    }, [])
 
     return (
         editMode
@@ -40,5 +40,5 @@ export const EditableSpan = (props: EditableSpan) => {
             : <span onDoubleClick={activateEditMode}
                     className={`${S.span} ${props.newClass}`}>{props.value}</span>
     )
-}
+})
 
