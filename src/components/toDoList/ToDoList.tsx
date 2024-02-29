@@ -118,7 +118,6 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
                 })}
             </div>
             <div className={S.to_Do_List__btn_lists}>
-
                 <Button variant={props.filter === 'all' ? 'outlined' : 'text'}
                         onClick={() => {
                             onClickBtnHandler('all')
@@ -141,7 +140,6 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
                         color={'success'}
                 > Completed
                 </Button>
-
             </div>
         </div>
     )
