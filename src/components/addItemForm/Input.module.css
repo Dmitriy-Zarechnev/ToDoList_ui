@@ -7,25 +7,25 @@
     margin: 0 auto 5px auto;
 }
 
-/*.input {*/
+/*.addItemForm {*/
 /*    width: 100%;*/
 /*    padding: 5px;*/
 /*    border: var(--text-color) 1px solid;*/
 /*    border-radius: 5px;*/
 /*}*/
 
-/*.input::placeholder {*/
+/*.addItemForm::placeholder {*/
 /*    font-size: 14px;*/
 /*    opacity: 0.8;*/
 /*    text-transform: capitalize;*/
 /*}*/
 
 
-/*.input.error {*/
+/*.addItemForm.error {*/
 /*    border: var(--error-color) 1px solid;*/
 /*}*/
 
-/*.input.error::placeholder {*/
+/*.addItemForm.error::placeholder {*/
 /*    color: var(--error-color);*/
 /*}*/
 

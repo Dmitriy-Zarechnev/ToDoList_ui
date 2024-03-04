@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react'
 import {FilterValuesType} from '../../App'
 import S from './ToDoList.module.css'
-import {AddItemForm} from '../input/AddItemForm'
+import {AddItemForm} from '../addItemForm/AddItemForm'
 import {EditableSpan} from '../editableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
+import {Task} from '../task/Task'
 
 
 export type TasksType = {
@@ -89,32 +89,13 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
             <div className={S.to_Do_List__lists}>
                 {tasksForToDoList.map((el) => {
+                    return <Task key={el.id}
+                                 id={props.id}
+                                 task={el}
+                                 changeTaskTitle={props.changeTaskTitle}
+                                 onChangeCheckBoxHandler={onChangeCheckBoxHandler}
+                                 onClickRemoveHandler={onClickRemoveHandler}/>
 
-                    return (
-                        <div key={el.id}
-                             className={el.isDone ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}>
-                            <div className={S.to_Do_List__list_box}>
-
-                                <Checkbox
-                                    color={'success'}
-                                    checked={el.isDone}
-                                    onChange={() =>
-                                        onChangeCheckBoxHandler(el.id, el.isDone)}
-                                />
-
-                                <EditableSpan value={el.title}
-                                              onChange={(newTitle) =>
-                                                  props.changeTaskTitle(props.id, el.id, newTitle)}
-                                />
-                            </div>
-
-                            <IconButton aria-label="delete" size="small"
-                                        onClick={() =>
-                                            onClickRemoveHandler(el.id)}>
-                                <DeleteIcon fontSize="small"/>
-                            </IconButton>
-                        </div>
-                    )
                 })}
             </div>
             <div className={S.to_Do_List__btn_lists}>
