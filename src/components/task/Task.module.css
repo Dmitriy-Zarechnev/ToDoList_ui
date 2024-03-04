@@ -7,7 +7,7 @@
     border: 2px solid black;
     padding: 5px;
     border-radius: 5px;
-    width: 100%;
+    /*width: 100%;*/
 }
 
 .to_Do_List__list:not(:last-child) {
