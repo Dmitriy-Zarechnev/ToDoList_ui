@@ -118,12 +118,10 @@ function AppWithRedux() {
                                     filter={el.filter}
                                     removeToDoList={removeToDoList}
                                     changeTaskTitle={changeTaskTitle}
-                                    changeToDoListTitle={changeToDoListTitle}
-                                />
+                                    changeToDoListTitle={changeToDoListTitle}/>
                             </Paper>
                         </Grid>
-                    })
-                    }
+                    })}
                 </Grid>
             </Container>
 
