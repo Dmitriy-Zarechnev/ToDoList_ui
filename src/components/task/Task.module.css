@@ -7,7 +7,7 @@
     border: 2px solid black;
     padding: 5px;
     border-radius: 5px;
-    /*width: 100%;*/
+
 }
 
 .to_Do_List__list:not(:last-child) {
@@ -19,13 +19,11 @@
     align-items: center;
     flex-wrap: wrap;
     overflow: hidden;
-    max-width: 270px;
-    width: 100%;
 }
 
 .to_Do_List__list_box input {
     margin-right: 5px;
-    flex-shrink: 0;
+    flex-grow: 1;
 }
 
 .is_done {
