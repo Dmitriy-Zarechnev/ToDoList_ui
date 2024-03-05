@@ -7,7 +7,6 @@
     border: 2px solid black;
     padding: 5px;
     border-radius: 5px;
-
 }
 
 .to_Do_List__list:not(:last-child) {
@@ -23,7 +22,7 @@
 
 .to_Do_List__list_box input {
     margin-right: 5px;
-    flex-grow: 1;
+    /*flex-grow: 1;*/
 }
 
 .is_done {
