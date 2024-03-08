@@ -35,6 +35,17 @@ type ResponseType<D = {}> = {
     data: D
 }
 
+// ----- Типизация запроса update ------
+
+type UpdateTaskModelType = {
+    deadline: Date,
+    description: string,
+    priority: number,
+    startDate: Date,
+    status: number,
+    title: string
+}
+
 
 // ----- Объект экземпляр для избежания дублирования ------
 const instance = axios.create({
@@ -58,16 +69,9 @@ export const tasksAPI = {
     },
 
     // ----- Заменили task's title на сервере ------
-    updateTaskTitle(todolistId: string, taskId: string, title: string) {
-        return instance.put<ResponseType>(`${todolistId}/tasks/${taskId}`, {title})
+    updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        return instance.put<ResponseType>(`${todolistId}/tasks/${taskId}`, model)
     },
-
-    /*
-    // ----- Заменили task's completed на сервере ------
-    updateTaskCompleted(todolistId: string, taskId: string, completed: boolean) {
-        return instance.put(`${todolistId}/tasks/${taskId}`, {completed})
-    },
-    */
 
     // ----- Удалили task на сервере ------
     deleteTask(todolistId: string, taskId: string) {

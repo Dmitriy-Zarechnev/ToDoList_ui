@@ -40,7 +40,14 @@ export const UpdateTaskTitle = () => {
     const taskId = '27db06a1-a845-4b2d-b08e-2011ff9285a0'
 
     useEffect(() => {
-        tasksAPI.updateTaskTitle(todolistId, taskId, 'I am new Title')
+        tasksAPI.updateTask(todolistId, taskId, {
+            deadline: new Date('January 1, 2000'),
+            description: '',
+            priority: 0,
+            startDate: new Date('January 1, 2000'),
+            status: 0,
+            title: 'Helloooooo'
+        })
             .then(res => {
                 setState(res.data)
             })
