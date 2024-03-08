@@ -1,23 +1,9 @@
-import React, {useReducer} from 'react'
 import './App.css'
-import {TasksType, ToDoList} from './components/toDoList/ToDoList'
-import {v1} from 'uuid'
-import {AddItemForm} from './components/addItemForm/AddItemForm'
-import MenuIcon from '@mui/icons-material/Menu'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Paper from '@mui/material/Paper'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import {addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC, todolistsReducer} from './state/todolists-reducer'
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer'
+
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
-
+/*
 export type ToDoListType = {
     id: string,
     title: string,
@@ -174,3 +160,5 @@ function AppWithReducers() {
 }
 
 export default AppWithReducers
+
+ */

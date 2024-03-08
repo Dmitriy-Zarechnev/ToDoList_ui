@@ -9,16 +9,14 @@ import {TasksType} from '../toDoList/ToDoList'
 
 type TaskPropsType = {
     task: TasksType
-    id: string
     onChangeCheckBoxHandler: (taskId: string, isDone: boolean) => void
-    changeTaskTitle: (toDoListID: string, id: string, newTitle: string) => void
+    changeTaskTitle: (newTitle: string) => void
     onClickRemoveHandler: (id: string) => void
 }
 
 
 export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              task,
-                                                             id,
                                                              onChangeCheckBoxHandler,
                                                              changeTaskTitle,
                                                              onClickRemoveHandler
@@ -36,7 +34,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
 
                 <EditableSpan value={task.title}
                               onChange={(newTitle) =>
-                                  changeTaskTitle(id, task.id, newTitle)}
+                                  changeTaskTitle(newTitle)}
                 />
             </div>
 

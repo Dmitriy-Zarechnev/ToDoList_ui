@@ -7,6 +7,11 @@ import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import {Task} from '../task/Task'
+import {useDispatch, useSelector} from 'react-redux'
+import {AppRootStateType} from '../../state/store'
+import {TasksStateType} from '../../AppWithRedux'
+import {changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from '../../state/todolists-reducer'
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from '../../state/tasks-reducer'
 
 
 export type TasksType = {
@@ -19,57 +24,98 @@ type TodoListPropsType = {
     id: string
     title: string
     filter: FilterValuesType
-    tasks: Array<TasksType>
-    removeTask: (toDoListID: string, id: string) => void
-    changeFilter: (todolistId: string, value: FilterValuesType) => void
-    addTask: (toDoListID: string, title: string) => void
-    changeCheckBoxStatus: (toDoListID: string, id: string, isDone: boolean) => void
-    removeToDoList: (id: string) => void
-    changeTaskTitle: (toDoListID: string, id: string, newTitle: string) => void
-    changeToDoListTitle: (toDoListID: string, newTitle: string) => void
 }
 
 export const ToDoList = React.memo((props: TodoListPropsType) => {
 
+    const tasks = useSelector<AppRootStateType, TasksStateType>((state) => state.tasks)
+    const dispatch = useDispatch()
+
     // -------------- Меняем название todolist ----------------
     const changeToDoListTitle = useCallback((newTitle: string) => {
-        props.changeToDoListTitle(props.id, newTitle)
-    }, [props.changeToDoListTitle, props.id])
+        dispatch(changeTodolistTitleAC(props.id, newTitle))
+    }, [props.id])
+
+    // const changeToDoListTitle = useCallback((newTitle: string) => {
+    //     props.changeToDoListTitle(props.id, newTitle)
+    // }, [props.changeToDoListTitle, props.id])
 
     // -------------- Добавление task ----------------
+
+    const addTask = useCallback((title: string) => {
+        dispatch(addTaskAC(props.id, title))
+    }, [props.id])
+
+    /*
     const addTask = useCallback((title: string) => {
         props.addTask(props.id, title)
     }, [props.addTask, props.id])
+     */
 
     // -------------- Фильтрация task ----------------
-    const onClickBtnHandler = useCallback((value: FilterValuesType) => {
-        props.changeFilter(props.id, value)
-    }, [props.changeFilter, props.id])
 
+    const onClickBtnHandler = useCallback((value: FilterValuesType) => {
+        dispatch(changeTodolistFilterAC(props.id, value))
+    }, [props.id])
+
+    /*
+        const onClickBtnHandler = useCallback((value: FilterValuesType) => {
+            props.changeFilter(props.id, value)
+        }, [props.changeFilter, props.id])
+         */
     // -------------- Удаление task ----------------
+    const onClickRemoveHandler = useCallback((id: string) => {
+        dispatch(removeTaskAC(props.id, id))
+    }, [props.id])
+
+    /*
     const onClickRemoveHandler = useCallback((id: string) => {
         props.removeTask(props.id, id)
     }, [props.removeTask, props.id])
+    */
 
     // -------------- Меняем checkbox ----------------
     const onChangeCheckBoxHandler = useCallback((taskId: string, isDone: boolean) => {
+        dispatch(changeTaskStatusAC(props.id, taskId, !isDone))
+    }, [props.id])
+
+    /*
+    const onChangeCheckBoxHandler = useCallback((taskId: string, isDone: boolean) => {
         props.changeCheckBoxStatus(props.id, taskId, !isDone)
     }, [props.changeCheckBoxStatus, props.id])
+    */
 
     // -------------- Удалить ToDoList ----------------
     const onClickDeleteListHandler = useCallback(() => {
+        dispatch(removeTodolistAC(props.id))
+    }, [props.id])
+
+    /*
+     const onClickDeleteListHandler = useCallback(() => {
         props.removeToDoList(props.id)
     }, [props.removeToDoList, props.id])
+    */
 
+
+    // -------------- Меняем Task's title ----------------
+    const changeTaskTitle = useCallback((id: string, newTitle: string) => {
+        dispatch(changeTaskTitleAC(props.id, id, newTitle))
+    }, [props.id])
+
+    /*
+     const onClickDeleteListHandler = useCallback(() => {
+        props.removeToDoList(props.id)
+    }, [props.removeToDoList, props.id])
+    */
     // -------------- Фильтрация Tasks ----------------
-    let tasksForToDoList = props.tasks
+    let tasksForToDoList = tasks[props.id]
 
     if (props.filter === 'active') {
-        tasksForToDoList = props.tasks.filter((task) => !task.isDone)
+        tasksForToDoList = tasksForToDoList.filter((task) => !task.isDone)
     }
 
     if (props.filter === 'completed') {
-        tasksForToDoList = props.tasks.filter((task) => task.isDone)
+        tasksForToDoList = tasksForToDoList.filter((task) => task.isDone)
     }
 
 
@@ -90,9 +136,8 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
             <div className={S.to_Do_List__lists}>
                 {tasksForToDoList.map((el) => {
                     return <Task key={el.id}
-                                 id={props.id}
                                  task={el}
-                                 changeTaskTitle={props.changeTaskTitle}
+                                 changeTaskTitle={(newTitle) => changeTaskTitle(el.id, newTitle)}
                                  onChangeCheckBoxHandler={onChangeCheckBoxHandler}
                                  onClickRemoveHandler={onClickRemoveHandler}/>
 

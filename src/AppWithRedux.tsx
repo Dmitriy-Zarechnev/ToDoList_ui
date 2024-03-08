@@ -12,8 +12,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import {addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from './state/todolists-reducer'
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer'
+import {addTodolistAC} from './state/todolists-reducer'
 import {useDispatch, useSelector} from 'react-redux'
 import {AppRootStateType} from './state/store'
 
@@ -34,45 +33,44 @@ export type TasksStateType = {
 function AppWithRedux() {
 
     const toDoLists = useSelector<AppRootStateType, ToDoListType[]>(state => state.todolists)
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const dispatch = useDispatch()
 
     // -------------- Удаление task ----------------
-    const removeTask = useCallback((toDoListID: string, id: string) => {
-        dispatch(removeTaskAC(toDoListID, id))
-    }, [])
+    // const removeTask = useCallback((toDoListID: string, id: string) => {
+    //     dispatch(removeTaskAC(toDoListID, id))
+    // }, [])
 
     // -------------- Добавление task ----------------
-    const addTask = useCallback((toDoListID: string, title: string) => {
-        dispatch(addTaskAC(toDoListID, title))
-    }, [])
+    // const addTask = useCallback((toDoListID: string, title: string) => {
+    //     dispatch(addTaskAC(toDoListID, title))
+    // }, [])
 
     // -------------- Меняем checkbox ----------------
-    const changeCheckBoxStatus = useCallback((toDoListID: string, id: string, isDone: boolean) => {
-        dispatch(changeTaskStatusAC(toDoListID, id, isDone))
-    }, [])
+    // const changeCheckBoxStatus = useCallback((toDoListID: string, id: string, isDone: boolean) => {
+    //     dispatch(changeTaskStatusAC(toDoListID, id, isDone))
+    // }, [])
 
     // -------------- Меняем taskTitle ----------------
-    const changeTaskTitle = useCallback((toDoListID: string, id: string, newTitle: string) => {
-        dispatch(changeTaskTitleAC(toDoListID, id, newTitle))
-    }, [])
+    // const changeTaskTitle = useCallback((toDoListID: string, id: string, newTitle: string) => {
+    //     dispatch(changeTaskTitleAC(toDoListID, id, newTitle))
+    // }, [])
 
     // ***********************************************************************************
 
     // -------------- Фильтрация task ----------------
-    const changeFilter = useCallback((todolistId: string, value: FilterValuesType) => {
-        dispatch(changeTodolistFilterAC(todolistId, value))
-    }, [])
+    // const changeFilter = useCallback((todolistId: string, value: FilterValuesType) => {
+    //     dispatch(changeTodolistFilterAC(todolistId, value))
+    // }, [])
 
     // -------------- Меняем toDoListTitle ----------------
-    const changeToDoListTitle = useCallback((toDoListID: string, newTitle: string) => {
-        dispatch(changeTodolistTitleAC(toDoListID, newTitle))
-    }, [])
+    // const changeToDoListTitle = useCallback((toDoListID: string, newTitle: string) => {
+    //     dispatch(changeTodolistTitleAC(toDoListID, newTitle))
+    // }, [])
 
     // -------------- Удалить ToDoList ----------------
-    const removeToDoList = useCallback((id: string) => {
-        dispatch(removeTodolistAC(id))
-    }, [])
+    // const removeToDoList = useCallback((id: string) => {
+    //     dispatch(removeTodolistAC(id))
+    // }, [])
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {
@@ -110,15 +108,8 @@ function AppWithRedux() {
                                     key={el.id}
                                     id={el.id}
                                     title={el.title}
-                                    tasks={tasks[el.id]}
-                                    removeTask={removeTask}
-                                    changeFilter={changeFilter}
-                                    addTask={addTask}
-                                    changeCheckBoxStatus={changeCheckBoxStatus}
                                     filter={el.filter}
-                                    removeToDoList={removeToDoList}
-                                    changeTaskTitle={changeTaskTitle}
-                                    changeToDoListTitle={changeToDoListTitle}/>
+                                />
                             </Paper>
                         </Grid>
                     })}

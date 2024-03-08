@@ -1,5 +1,4 @@
-import {FilterValuesType, ToDoListType} from '../App'
-import {v1} from 'uuid'
+import {FilterValuesType, ToDoListType} from '../AppWithRedux'
 
 
 type ActionsType =
@@ -13,8 +12,8 @@ export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitleAC>
 type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
 
-let toDoListID1 = v1()
-let toDoListID2 = v1()
+// let toDoListID1 = v1()
+// let toDoListID2 = v1()
 
 // let [toDoLists, dispatchToDoLists] = useReducer(todolistsReducer,
 //     [
