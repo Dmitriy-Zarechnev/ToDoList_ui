@@ -1,8 +1,7 @@
 import './App.css'
 
-
-
 export type FilterValuesType = 'all' | 'active' | 'completed'
+
 /*
 export type ToDoListType = {
     id: string,
