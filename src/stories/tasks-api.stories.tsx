@@ -41,10 +41,10 @@ export const UpdateTaskTitle = () => {
 
     useEffect(() => {
         tasksAPI.updateTask(todolistId, taskId, {
-            deadline: new Date('January 1, 2000'),
+            deadline: '',
             description: '',
             priority: 0,
-            startDate: new Date('January 1, 2000'),
+            startDate: '',
             status: 0,
             title: 'Helloooooo'
         })
@@ -55,23 +55,6 @@ export const UpdateTaskTitle = () => {
 
     return <div>{JSON.stringify(state)}</div>
 }
-
-/*
-export const UpdateTaskCompleted = () => {
-    const [state, setState] = useState<any>(null)
-
-    const taskId = ''
-
-    useEffect(() => {
-        tasksAPI.updateTaskCompleted(todolistId, taskId, true)
-            .then(res => {
-                setState(res.data)
-            })
-    }, [])
-
-    return <div>{JSON.stringify(state)}</div>
-}
-*/
 
 export const DeleteTask = () => {
     const [state, setState] = useState<any>(null)

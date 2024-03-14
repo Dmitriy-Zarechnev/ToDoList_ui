@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import './App.css'
-import {TasksType, ToDoList} from './components/toDoList/ToDoList'
+import {ToDoList} from './components/toDoList/ToDoList'
 import {v1} from 'uuid'
 import {AddItemForm} from './components/addItemForm/AddItemForm'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -12,33 +12,20 @@ import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import {addTodolistAC, getTodolistsTC} from './state/todolists-reducer'
+import {addTodolistAC, getTodoListsTC} from './state/todolists-reducer'
 import {useSelector} from 'react-redux'
-import {AppRootStateType, useAppDispatch} from './state/store'
-import {ItemsType} from './api/tasks-api'
-
-
-export type FilterValuesType = 'all' | 'active' | 'completed'
-
-export type ToDoListType = {
-    id: string,
-    title: string,
-    filter: FilterValuesType
-}
-
-export type TasksStateType = {
-    [key: string]: Array<ItemsType>
-}
+import {useAppDispatch} from './state/store'
+import {toDoListsSelector} from './state/selectors/todolists-selector'
 
 
 function AppWithRedux() {
 
-    const toDoLists = useSelector<AppRootStateType, ToDoListType[]>(state => state.todolists)
+    const toDoLists = useSelector(toDoListsSelector)
     const dispatch = useAppDispatch()
 
     // -------------- Получили ToDoList с сервера ----------------
     useEffect(() => {
-        dispatch(getTodolistsTC)
+        dispatch(getTodoListsTC())
     }, [])
 
     // -------------- Добавить ToDoList ----------------

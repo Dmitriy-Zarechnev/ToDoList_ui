@@ -1,8 +1,7 @@
-import {FilterValuesType, ToDoListType} from '../AppWithRedux'
 import {AppThunkDispatch} from './store'
 import {todolistAPI, TodolistType} from '../api/todolist-api'
 
-
+// Типизация Actions
 export type ToDoListActionsType =
     RemoveTodolistActionType |
     AddTodolistActionType |
@@ -14,28 +13,31 @@ export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type SetTodolistActionType = ReturnType<typeof setToDoListsAC>
 
+// Типизация Filters
+export type FilterValuesType = 'all' | 'active' | 'completed'
 
-// let toDoListID1 = v1()
-// let toDoListID2 = v1()
+// Типизация Todolists объединенный с filter
+export type ToDoListDomainType = TodolistType & { filter: FilterValuesType }
 
-// let [toDoLists, dispatchToDoLists] = useReducer(todolistsReducer,
-//     [
-//         {id: toDoListID1, title: 'What to learn', filter: 'all'},
-//         {id: toDoListID2, title: 'What to read', filter: 'all'}
-//     ]
-// )
-//
 
 // *********** Первоначальный стэйт для todolistsReducer ****************
-const initialState: ToDoListType[] = []
+const initialState: ToDoListDomainType[] = []
 
 // *********** Reducer - редьюсер, чистая функция для изменения стэйта после получения экшена от диспача ****************
-export const todolistsReducer = (state = initialState, action: ToDoListActionsType): ToDoListType[] => {
+export const todolistsReducer = (state = initialState, action: ToDoListActionsType): ToDoListDomainType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(el => el.id !== action.payload.toDoListID)
         case 'ADD-TODOLIST':
-            return [...state, {id: action.payload.todolistId, title: action.payload.title, filter: 'all'}]
+            return [...state,
+                {
+                    id: action.payload.todolistId,
+                    title: action.payload.title,
+                    filter: 'all',
+                    addedDate: '',
+                    order: 0
+                }
+            ]
         case 'CHANGE-TODOLIST-TITLE':
             return state.map(el => el.id === action.payload.toDoListID ? {...el, title: action.payload.title} : el)
         case 'CHANGE-TODOLIST-FILTER':
@@ -66,7 +68,7 @@ export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
 
-export const getTodolistsTC = () => async (dispatch: AppThunkDispatch) => {
+export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
     const toDoListsData = await todolistAPI.getTodolists()
     dispatch(setToDoListsAC(toDoListsData))
 }

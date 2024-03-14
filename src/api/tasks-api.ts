@@ -2,21 +2,21 @@ import axios from 'axios'
 
 // ----- Типизация Get запроса ------
 export type GetTaskType = {
-    items: Array<ItemsType>,
+    items: Array<TasksType>,
     totalCount: number,
     error: string
 }
 
 // ----- Типизация Task ------
-export type ItemsType = {
-    addedDate: Date,
-    deadline: Date,
+export type TasksType = {
+    addedDate: string,
+    deadline: string,
     description: string,
     id: string,
     order: number,
-    priority: number,
-    startDate: Date,
-    status: number,
+    priority: TasksPriorities,
+    startDate: string,
+    status: TasksStatuses,
     title: string
     todoListId: string
 }
@@ -36,16 +36,31 @@ type ResponseType<D = {}> = {
 }
 
 // ----- Типизация запроса update ------
-
 type UpdateTaskModelType = {
-    deadline: Date,
+    deadline: string,
     description: string,
     priority: number,
-    startDate: Date,
+    startDate: string,
     status: number,
     title: string
 }
 
+// Создаем enum для Status
+export enum TasksStatuses {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3
+}
+
+// Создаем enum для Priority
+export enum TasksPriorities {
+    Low = 0,
+    Middle = 1,
+    Hight = 2,
+    Urgently = 3,
+    Later = 4
+}
 
 // ----- Объект экземпляр для избежания дублирования ------
 const instance = axios.create({
@@ -65,7 +80,7 @@ export const tasksAPI = {
 
     // ----- Загрузили task на сервер ------
     createTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<{ item: ItemsType }>>(`${todolistId}/tasks`, {title})
+        return instance.post<ResponseType<{ item: TasksType }>>(`${todolistId}/tasks`, {title})
     },
 
     // ----- Заменили task's title на сервере ------
