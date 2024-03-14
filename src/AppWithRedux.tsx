@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import './App.css'
 import {TasksType, ToDoList} from './components/toDoList/ToDoList'
 import {v1} from 'uuid'
@@ -13,8 +13,8 @@ import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import {addTodolistAC} from './state/todolists-reducer'
-import {useDispatch, useSelector} from 'react-redux'
-import {AppRootStateType} from './state/store'
+import {useSelector} from 'react-redux'
+import {AppRootStateType, useAppDispatch} from './state/store'
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -33,9 +33,12 @@ export type TasksStateType = {
 function AppWithRedux() {
 
     const toDoLists = useSelector<AppRootStateType, ToDoListType[]>(state => state.todolists)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-
+    // -------------- Получили ToDoList с сервера ----------------
+    useEffect(() => {
+        dispatch(getTodolistsTC)
+    }, [])
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {

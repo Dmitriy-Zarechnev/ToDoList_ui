@@ -1,7 +1,8 @@
 import {combineReducers, legacy_createStore} from 'redux'
 import {TasksActionsType, tasksReducer} from './tasks-reducer'
 import {ToDoListActionsType, todolistsReducer} from './todolists-reducer'
-import {ThunkAction, ThunkDispatch} from 'redux-thunk'
+import {ThunkDispatch} from 'redux-thunk'
+import {useDispatch} from 'react-redux'
 
 
 const rootReducer = combineReducers({
@@ -22,6 +23,9 @@ type CommonActionsTypeForApp =
     ToDoListActionsType |
     TasksActionsType
 
-// Типизация для thunk, позволяет диспатчить thunk
-export type ThunkType = ThunkAction<void, AppRootStateType, unknown, CommonActionsTypeForApp>
-export type ThunkDispatchType = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypeForApp>
+// Типизация для thunk, позволяет диспатчить thunk и action
+export type AppThunkDispatch = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypeForApp>
+
+export const useAppDispatch = () => useDispatch<AppThunkDispatch>()
+
+

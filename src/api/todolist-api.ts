@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // ----- Типизация Get запроса ------
-type TodolistType = {
+export type TodolistType = {
     id: string
     addedDate: string
     order: number
@@ -35,8 +35,8 @@ const instance = axios.create({
 
 export const todolistAPI = {
     // ----- Запросили todolists с сервера ------
-    getTodolist() {
-        return instance.get<TodolistType>(`todo-lists/`)
+    getTodolists() {
+        return instance.get<TodolistType[]>(`todo-lists/`).then(res=>res.data) // toDoListsData
     },
 
     // ----- Загрузили todolist на сервер ------

@@ -38,14 +38,12 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
 
     // -------------- Добавление task ----------------
-
     const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(props.id, title))
     }, [props.id])
 
 
     // -------------- Фильтрация task ----------------
-
     const onClickBtnHandler = useCallback((value: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(props.id, value))
     }, [props.id])

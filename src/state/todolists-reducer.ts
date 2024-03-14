@@ -1,15 +1,18 @@
 import {FilterValuesType, ToDoListType} from '../AppWithRedux'
-import {ThunkDispatchType, ThunkType} from './store'
+import {AppThunkDispatch} from './store'
+import {todolistAPI, TodolistType} from '../api/todolist-api'
 
 
 export type ToDoListActionsType =
     RemoveTodolistActionType |
     AddTodolistActionType |
     ReturnType<typeof changeTodolistTitleAC> |
-    ReturnType<typeof changeTodolistFilterAC>
+    ReturnType<typeof changeTodolistFilterAC> |
+    SetTodolistActionType
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
+export type SetTodolistActionType = ReturnType<typeof setToDoListsAC>
 
 
 // let toDoListID1 = v1()
@@ -37,6 +40,8 @@ export const todolistsReducer = (state = initialState, action: ToDoListActionsTy
             return state.map(el => el.id === action.payload.toDoListID ? {...el, title: action.payload.title} : el)
         case 'CHANGE-TODOLIST-FILTER':
             return state.map(el => el.id === action.payload.toDoListID ? {...el, filter: action.payload.filter} : el)
+        case 'SET-TODOLISTS':
+            return action.payload.toDoLists.map(el => ({...el, filter: 'all'}))
         default :
             return state
     }
@@ -55,8 +60,13 @@ export const changeTodolistTitleAC = (toDoListID: string, title: string) => {
 export const changeTodolistFilterAC = (toDoListID: string, filter: FilterValuesType) => {
     return {type: 'CHANGE-TODOLIST-FILTER', payload: {toDoListID, filter}} as const
 }
+export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
+    return {type: 'SET-TODOLISTS', payload: {toDoLists}} as const
+}
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
 
-const thunkCreator = (todolistId: string): ThunkType => (dispatch: ThunkDispatchType) => {
+const getTodolistsTC = () => async (dispatch: AppThunkDispatch) => {
+    const toDoListsData = await todolistAPI.getTodolists()
+    dispatch(setToDoListsAC(toDoListsData))
 }

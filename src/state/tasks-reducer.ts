@@ -1,6 +1,7 @@
 import {v1} from 'uuid'
-import {AddTodolistActionType, RemoveTodolistActionType} from './todolists-reducer'
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
 import {TasksStateType} from '../AppWithRedux'
+import {AppThunkDispatch} from './store'
 
 export type TasksActionsType =
     RemoveTaskActionType |
@@ -8,7 +9,8 @@ export type TasksActionsType =
     ChangeTaskStatusActionType |
     ChangeTaskTitleActionType |
     AddTodolistActionType |
-    RemoveTodolistActionType
+    RemoveTodolistActionType |
+    SetTodolistActionType
 
 type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
 type AddTaskActionType = ReturnType<typeof addTaskAC>
@@ -32,10 +34,11 @@ type ChangeTaskTitleActionType = ReturnType<typeof changeTaskTitleAC>
 //     ]
 // })
 
-
+// *********** Первоначальный стэйт для tasksReducer ****************
 const initialState: TasksStateType = {}
 
-export const tasksReducer = (state: TasksStateType = initialState, action: TasksActionsType): TasksStateType => {
+// *********** Reducer - редьюсер, чистая функция для изменения стэйта после получения экшена от диспача ****************
+export const tasksReducer = (state = initialState, action: TasksActionsType): TasksStateType => {
     switch (action.type) {
         case 'REMOVE-TASK':
             return {
@@ -43,6 +46,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Tasks
                 [action.payload.toDoListID]: state[action.payload.toDoListID]
                     .filter(el => el.id !== action.payload.id)
             }
+
         case 'ADD-TASK':
             return {
                 ...state,
@@ -79,12 +83,20 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Tasks
             delete newState[action.payload.toDoListID]
             return newState
 
+        case 'SET-TODOLISTS': {
+            const newState = {...state}
+            action.payload.toDoLists.forEach(el => {
+                newState[el.id] = []
+            })
+            return newState
+        }
+
         default :
             return state
     }
 }
 
-
+// *********** Action creators - экшн криэйторы создают объект action ****************
 export const removeTaskAC = (toDoListID: string, id: string) => {
     return {type: 'REMOVE-TASK', payload: {toDoListID, id}} as const
 }
@@ -99,4 +111,9 @@ export const changeTaskStatusAC = (toDoListID: string, id: string, isDone: boole
 
 export const changeTaskTitleAC = (toDoListID: string, id: string, title: string) => {
     return {type: 'CHANGE-TASK-TITLE', payload: {toDoListID, id, title}} as const
+}
+
+// *********** Thunk - санки необходимые для общения с DAL ****************
+
+const thunkCreator = (todolistId: string) => (dispatch: AppThunkDispatch) => {
 }
