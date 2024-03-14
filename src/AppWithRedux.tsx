@@ -12,9 +12,10 @@ import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import {addTodolistAC} from './state/todolists-reducer'
+import {addTodolistAC, getTodolistsTC} from './state/todolists-reducer'
 import {useSelector} from 'react-redux'
 import {AppRootStateType, useAppDispatch} from './state/store'
+import {ItemsType} from './api/tasks-api'
 
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -26,7 +27,7 @@ export type ToDoListType = {
 }
 
 export type TasksStateType = {
-    [key: string]: TasksType[]
+    [key: string]: Array<ItemsType>
 }
 
 

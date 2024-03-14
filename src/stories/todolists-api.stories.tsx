@@ -11,8 +11,8 @@ export const GetTodolists = () => {
 
     useEffect(() => {
         todolistAPI.getTodolists()
-            .then(res => {
-                setState(res.data)
+            .then(data => {
+                setState(data)
             })
     }, [])
     return <div>{JSON.stringify(state)}</div>

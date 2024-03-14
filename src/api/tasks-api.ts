@@ -1,14 +1,14 @@
 import axios from 'axios'
 
 // ----- Типизация Get запроса ------
-type GetTaskType = {
+export type GetTaskType = {
     items: Array<ItemsType>,
     totalCount: number,
     error: string
 }
 
 // ----- Типизация Task ------
-type ItemsType = {
+export type ItemsType = {
     addedDate: Date,
     deadline: Date,
     description: string,

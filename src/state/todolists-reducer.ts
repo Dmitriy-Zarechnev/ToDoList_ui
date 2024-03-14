@@ -66,7 +66,7 @@ export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
 
-const getTodolistsTC = () => async (dispatch: AppThunkDispatch) => {
+export const getTodolistsTC = () => async (dispatch: AppThunkDispatch) => {
     const toDoListsData = await todolistAPI.getTodolists()
     dispatch(setToDoListsAC(toDoListsData))
 }

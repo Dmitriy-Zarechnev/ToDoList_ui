@@ -2,20 +2,18 @@ import {v1} from 'uuid'
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
 import {TasksStateType} from '../AppWithRedux'
 import {AppThunkDispatch} from './store'
+import {ItemsType, tasksAPI} from '../api/tasks-api'
 
 export type TasksActionsType =
-    RemoveTaskActionType |
-    AddTaskActionType |
-    ChangeTaskStatusActionType |
-    ChangeTaskTitleActionType |
+    ReturnType<typeof removeTaskAC> |
+    ReturnType<typeof addTaskAC> |
+    ReturnType<typeof changeTaskStatusAC> |
+    ReturnType<typeof changeTaskTitleAC> |
+    ReturnType<typeof setTasksAC> |
     AddTodolistActionType |
     RemoveTodolistActionType |
     SetTodolistActionType
 
-type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
-type AddTaskActionType = ReturnType<typeof addTaskAC>
-type ChangeTaskStatusActionType = ReturnType<typeof changeTaskStatusAC>
-type ChangeTaskTitleActionType = ReturnType<typeof changeTaskTitleAC>
 
 // let [tasks, dispatchTasks] = useReducer(tasksReducer, {
 //     [toDoListID1]: [
@@ -91,6 +89,12 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
             return newState
         }
 
+        case 'SET-TASKS': {
+            const newState = {...state}
+            newState[action.payload.toDoListID] = action.payload.tasks
+            return newState
+        }
+
         default :
             return state
     }
@@ -112,8 +116,13 @@ export const changeTaskStatusAC = (toDoListID: string, id: string, isDone: boole
 export const changeTaskTitleAC = (toDoListID: string, id: string, title: string) => {
     return {type: 'CHANGE-TASK-TITLE', payload: {toDoListID, id, title}} as const
 }
+export const setTasksAC = (toDoListID: string, tasks: Array<ItemsType>) => {
+    return {type: 'SET-TASKS', payload: {toDoListID, tasks}} as const
+}
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
 
-const thunkCreator = (todolistId: string) => (dispatch: AppThunkDispatch) => {
+export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispatch) => {
+    const tasksResponse = await tasksAPI.getTasks(todolistId)
+    dispatch(setTasksAC(todolistId, tasksResponse.data.items))
 }
