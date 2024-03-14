@@ -36,9 +36,6 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
         dispatch(changeTodolistTitleAC(props.id, newTitle))
     }, [props.id])
 
-    // const changeToDoListTitle = useCallback((newTitle: string) => {
-    //     props.changeToDoListTitle(props.id, newTitle)
-    // }, [props.changeToDoListTitle, props.id])
 
     // -------------- Добавление task ----------------
 
@@ -46,11 +43,6 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
         dispatch(addTaskAC(props.id, title))
     }, [props.id])
 
-    /*
-    const addTask = useCallback((title: string) => {
-        props.addTask(props.id, title)
-    }, [props.addTask, props.id])
-     */
 
     // -------------- Фильтрация task ----------------
 
@@ -58,43 +50,23 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
         dispatch(changeTodolistFilterAC(props.id, value))
     }, [props.id])
 
-    /*
-        const onClickBtnHandler = useCallback((value: FilterValuesType) => {
-            props.changeFilter(props.id, value)
-        }, [props.changeFilter, props.id])
-         */
+
     // -------------- Удаление task ----------------
     const onClickRemoveHandler = useCallback((id: string) => {
         dispatch(removeTaskAC(props.id, id))
     }, [props.id])
 
-    /*
-    const onClickRemoveHandler = useCallback((id: string) => {
-        props.removeTask(props.id, id)
-    }, [props.removeTask, props.id])
-    */
 
     // -------------- Меняем checkbox ----------------
     const onChangeCheckBoxHandler = useCallback((taskId: string, isDone: boolean) => {
         dispatch(changeTaskStatusAC(props.id, taskId, !isDone))
     }, [props.id])
 
-    /*
-    const onChangeCheckBoxHandler = useCallback((taskId: string, isDone: boolean) => {
-        props.changeCheckBoxStatus(props.id, taskId, !isDone)
-    }, [props.changeCheckBoxStatus, props.id])
-    */
 
     // -------------- Удалить ToDoList ----------------
     const onClickDeleteListHandler = useCallback(() => {
         dispatch(removeTodolistAC(props.id))
     }, [props.id])
-
-    /*
-     const onClickDeleteListHandler = useCallback(() => {
-        props.removeToDoList(props.id)
-    }, [props.removeToDoList, props.id])
-    */
 
 
     // -------------- Меняем Task's title ----------------
@@ -102,11 +74,7 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
         dispatch(changeTaskTitleAC(props.id, id, newTitle))
     }, [props.id])
 
-    /*
-     const onClickDeleteListHandler = useCallback(() => {
-        props.removeToDoList(props.id)
-    }, [props.removeToDoList, props.id])
-    */
+
     // -------------- Фильтрация Tasks ----------------
     let tasksForToDoList = tasks[props.id]
 

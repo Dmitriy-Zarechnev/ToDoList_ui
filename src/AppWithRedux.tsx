@@ -35,42 +35,7 @@ function AppWithRedux() {
     const toDoLists = useSelector<AppRootStateType, ToDoListType[]>(state => state.todolists)
     const dispatch = useDispatch()
 
-    // -------------- Удаление task ----------------
-    // const removeTask = useCallback((toDoListID: string, id: string) => {
-    //     dispatch(removeTaskAC(toDoListID, id))
-    // }, [])
 
-    // -------------- Добавление task ----------------
-    // const addTask = useCallback((toDoListID: string, title: string) => {
-    //     dispatch(addTaskAC(toDoListID, title))
-    // }, [])
-
-    // -------------- Меняем checkbox ----------------
-    // const changeCheckBoxStatus = useCallback((toDoListID: string, id: string, isDone: boolean) => {
-    //     dispatch(changeTaskStatusAC(toDoListID, id, isDone))
-    // }, [])
-
-    // -------------- Меняем taskTitle ----------------
-    // const changeTaskTitle = useCallback((toDoListID: string, id: string, newTitle: string) => {
-    //     dispatch(changeTaskTitleAC(toDoListID, id, newTitle))
-    // }, [])
-
-    // ***********************************************************************************
-
-    // -------------- Фильтрация task ----------------
-    // const changeFilter = useCallback((todolistId: string, value: FilterValuesType) => {
-    //     dispatch(changeTodolistFilterAC(todolistId, value))
-    // }, [])
-
-    // -------------- Меняем toDoListTitle ----------------
-    // const changeToDoListTitle = useCallback((toDoListID: string, newTitle: string) => {
-    //     dispatch(changeTodolistTitleAC(toDoListID, newTitle))
-    // }, [])
-
-    // -------------- Удалить ToDoList ----------------
-    // const removeToDoList = useCallback((id: string) => {
-    //     dispatch(removeTodolistAC(id))
-    // }, [])
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {

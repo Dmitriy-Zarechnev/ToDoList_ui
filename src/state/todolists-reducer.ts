@@ -1,16 +1,16 @@
 import {FilterValuesType, ToDoListType} from '../AppWithRedux'
+import {ThunkDispatchType, ThunkType} from './store'
 
 
-type ActionsType =
+export type ToDoListActionsType =
     RemoveTodolistActionType |
     AddTodolistActionType |
-    ChangeTodolistTitleActionType |
-    ChangeTodolistFilterActionType
+    ReturnType<typeof changeTodolistTitleAC> |
+    ReturnType<typeof changeTodolistFilterAC>
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
-type ChangeTodolistTitleActionType = ReturnType<typeof changeTodolistTitleAC>
-type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
+
 
 // let toDoListID1 = v1()
 // let toDoListID2 = v1()
@@ -22,14 +22,16 @@ type ChangeTodolistFilterActionType = ReturnType<typeof changeTodolistFilterAC>
 //     ]
 // )
 //
+
+// *********** Первоначальный стэйт для todolistsReducer ****************
 const initialState: ToDoListType[] = []
 
-export const todolistsReducer = (state: ToDoListType[] = initialState, action: ActionsType): ToDoListType[] => {
+// *********** Reducer - редьюсер, чистая функция для изменения стэйта после получения экшена от диспача ****************
+export const todolistsReducer = (state = initialState, action: ToDoListActionsType): ToDoListType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(el => el.id !== action.payload.toDoListID)
         case 'ADD-TODOLIST':
-            // let newTodolistId = v1()
             return [...state, {id: action.payload.todolistId, title: action.payload.title, filter: 'all'}]
         case 'CHANGE-TODOLIST-TITLE':
             return state.map(el => el.id === action.payload.toDoListID ? {...el, title: action.payload.title} : el)
@@ -40,7 +42,7 @@ export const todolistsReducer = (state: ToDoListType[] = initialState, action: A
     }
 }
 
-
+// *********** Action creators - экшн криэйторы создают объект action ****************
 export const removeTodolistAC = (toDoListID: string) => {
     return {type: 'REMOVE-TODOLIST', payload: {toDoListID}} as const
 }
@@ -52,4 +54,9 @@ export const changeTodolistTitleAC = (toDoListID: string, title: string) => {
 }
 export const changeTodolistFilterAC = (toDoListID: string, filter: FilterValuesType) => {
     return {type: 'CHANGE-TODOLIST-FILTER', payload: {toDoListID, filter}} as const
+}
+
+// *********** Thunk - санки необходимые для общения с DAL ****************
+
+const thunkCreator = (todolistId: string): ThunkType => (dispatch: ThunkDispatchType) => {
 }
