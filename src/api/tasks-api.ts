@@ -76,11 +76,13 @@ export const tasksAPI = {
     // ----- Запросили tasks с сервера ------
     getTasks(todolistId: string) {
         return instance.get<GetTaskType>(`${todolistId}/tasks`)
+            .then(res => res.data) // getTasksData
     },
 
     // ----- Загрузили task на сервер ------
     createTask(todolistId: string, title: string) {
         return instance.post<ResponseType<{ item: TasksType }>>(`${todolistId}/tasks`, {title})
+            .then(res => res.data) // addTaskData
     },
 
     // ----- Заменили task's title на сервере ------

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect} from 'react'
 import './App.css'
 import {ToDoList} from './components/toDoList/ToDoList'
-import {v1} from 'uuid'
 import {AddItemForm} from './components/addItemForm/AddItemForm'
 import MenuIcon from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
@@ -12,7 +11,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Paper from '@mui/material/Paper'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import {addTodolistAC, getTodoListsTC} from './state/todolists-reducer'
+import {addTodoListsTC, getTodoListsTC} from './state/todolists-reducer'
 import {useSelector} from 'react-redux'
 import {useAppDispatch} from './state/store'
 import {toDoListsSelector} from './state/selectors/todolists-selector'
@@ -23,15 +22,14 @@ function AppWithRedux() {
     const toDoLists = useSelector(toDoListsSelector)
     const dispatch = useAppDispatch()
 
-    // -------------- Получили ToDoList с сервера ----------------
+    // -------------- Получили ToDoLists с сервера ----------------
     useEffect(() => {
         dispatch(getTodoListsTC())
     }, [])
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {
-        const newToDoListId = v1()
-        dispatch(addTodolistAC(title, newToDoListId))
+        dispatch(addTodoListsTC(title))
     }, [])
 
     return (

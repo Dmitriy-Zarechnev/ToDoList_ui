@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import {Task} from '../task/Task'
 import {useSelector} from 'react-redux'
-import {changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC} from '../../state/todolists-reducer'
+import {changeTodolistFilterAC,  deleteTodoListsTC, FilterValuesType,  updateTodoListsTC} from '../../state/todolists-reducer'
 import {addTaskTC, deleteTaskTC, getTasksTC, updateTaskStatusTC, updateTaskTitleTC} from '../../state/tasks-reducer'
 import {tasksSelector} from '../../state/selectors/tasks-selector'
 import {TasksStatuses} from '../../api/tasks-api'
@@ -31,7 +31,7 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
     // -------------- Меняем название todolist ----------------
     const changeToDoListTitle = useCallback((newTitle: string) => {
-        dispatch(changeTodolistTitleAC(props.id, newTitle))
+        dispatch(updateTodoListsTC(props.id, newTitle))
     }, [props.id])
 
 
@@ -61,7 +61,7 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
     // -------------- Удалить ToDoList ----------------
     const onClickDeleteListHandler = useCallback(() => {
-        dispatch(removeTodolistAC(props.id))
+        dispatch(deleteTodoListsTC(props.id))
     }, [props.id])
 
 

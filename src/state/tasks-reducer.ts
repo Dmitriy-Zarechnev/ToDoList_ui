@@ -104,20 +104,21 @@ export const setTasksAC = (toDoListID: string, tasks: Array<TasksType>) => {
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
 export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispatch) => {
-    const tasksResponse = await tasksAPI.getTasks(todolistId)
-    dispatch(setTasksAC(todolistId, tasksResponse.data.items))
+    const getTasksData = await tasksAPI.getTasks(todolistId)
+    dispatch(setTasksAC(todolistId, getTasksData.items))
 }
 
 
-export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispatch: AppThunkDispatch) => {
-    const tasksResponse = await tasksAPI.deleteTask(todolistId, taskId)
-    dispatch(removeTaskAC(todolistId, taskId))
-}
+export const deleteTaskTC = (todolistId: string, taskId: string) =>
+    async (dispatch: AppThunkDispatch) => {
+        await tasksAPI.deleteTask(todolistId, taskId)
+        dispatch(removeTaskAC(todolistId, taskId))
+    }
 
 
 export const addTaskTC = (todolistId: string, title: string) => async (dispatch: AppThunkDispatch) => {
-    const tasksResponse = await tasksAPI.createTask(todolistId, title)
-    dispatch(addTaskAC(tasksResponse.data.data.item))
+    const addTaskData = await tasksAPI.createTask(todolistId, title)
+    dispatch(addTaskAC(addTaskData.data.item))
 }
 
 
@@ -125,12 +126,12 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
     async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
 
         const allTasksFromState = getState().tasks
-        const tasksForCurrentTodolist = allTasksFromState[todolistId]
-        const task = tasksForCurrentTodolist.find(t => {
+        const task = allTasksFromState[todolistId].find(t => {
             return t.id === taskId
         })
+
         if (task) {
-            const tasksResponse = await tasksAPI.updateTask(todolistId, taskId, {
+            await tasksAPI.updateTask(todolistId, taskId, {
                 title: task.title,
                 startDate: task.startDate,
                 priority: task.priority,
@@ -146,12 +147,12 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
     async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
 
         const allTasksFromState = getState().tasks
-        const tasksForCurrentTodolist = allTasksFromState[todolistId]
-        const task = tasksForCurrentTodolist.find(t => {
+        const task = allTasksFromState[todolistId].find(t => {
             return t.id === taskId
         })
+
         if (task) {
-            const tasksResponse = await tasksAPI.updateTask(todolistId, taskId, {
+            await tasksAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
                 priority: task.priority,

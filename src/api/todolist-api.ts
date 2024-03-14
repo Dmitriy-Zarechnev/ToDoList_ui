@@ -23,8 +23,6 @@ type ResponseType<D = {}> = {
 }
 
 
-
-
 // ----- Объект экземпляр для избежания дублирования ------
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
@@ -38,12 +36,13 @@ const instance = axios.create({
 export const todolistAPI = {
     // ----- Запросили todolists с сервера ------
     getTodolists() {
-        return instance.get<TodolistType[]>(`todo-lists/`).then(res=>res.data) // toDoListsData
+        return instance.get<TodolistType[]>(`todo-lists/`).then(res => res.data) // toDoListsData
     },
 
     // ----- Загрузили todolist на сервер ------
     createTodolist(title: string) {
         return instance.post<ResponseType<{ item: TodolistType }>>(`todo-lists/`, {title})
+            .then(res => res.data) // addTodoListsData
     },
 
     // ----- Заменили todolists's title на сервере ------
