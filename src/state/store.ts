@@ -11,9 +11,12 @@ const rootReducer = combineReducers({
 
 // Типизация всего STATE
 export type AppRootStateType = ReturnType<typeof rootReducer>
+// export type AppRootStateType = {
+//     tasks:TasksStateType,
+//     todolists: ToDoListDomainType[]
+//  }
 
-
-export const store = legacy_createStore(rootReducer,undefined, applyMiddleware(thunk))
+export const store = legacy_createStore(rootReducer, undefined, applyMiddleware(thunk))
 
 // @ts-ignore
 window.store = store
@@ -26,6 +29,7 @@ type CommonActionsTypeForApp =
 // Типизация для thunk, позволяет диспатчить thunk и action
 export type AppThunkDispatch = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypeForApp>
 
+// Самопальный useDispatch
 export const useAppDispatch = () => useDispatch<AppThunkDispatch>()
 
 
