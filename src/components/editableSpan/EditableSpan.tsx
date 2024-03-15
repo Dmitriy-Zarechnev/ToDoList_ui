@@ -9,20 +9,25 @@ type EditableSpan = {
 }
 
 export const EditableSpan = React.memo((props: EditableSpan) => {
+
+    // Локальный стэйт для изменения editMode
     const [editMode, setEditMode] = useState<boolean>(false)
+    // Локальный стэйт для изменения editedTitle
     const [editedTitle, setEditedTitle] = useState<string>('')
 
-
+    // -------------- Включаем editMode и устанавливаем editedTitle = props.value ----------------
     const activateEditMode = useCallback(() => {
         setEditMode(true)
         setEditedTitle(props.value)
     }, [props.value])
 
+    // -------------- Отключаем editMode и отправляем editedTitle в BLL ----------------
     const activateViewMode = useCallback(() => {
         setEditMode(false)
         props.onChange(editedTitle)
     }, [editedTitle, props.onChange])
 
+    // -------------- Меняем editedTitle и отправляем в локальный стейт ----------------
     const onChangeInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         setEditedTitle(e.currentTarget.value)
     }, [])

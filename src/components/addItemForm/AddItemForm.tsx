@@ -12,13 +12,17 @@ type AddItemFormPropsType = {
 
 export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
 
+    // Локальный стэйт для изменения newTaskTitle
     const [newTaskTitle, setNewTaskTitle] = useState('')
+    // Локальный стэйт для изменения error
     const [error, setError] = useState<string | null>(null)
 
+    // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
     const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTaskTitle(e.currentTarget.value)
     }
 
+    // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
     const addTaskBtnFn = () => {
         if (newTaskTitle.trim() !== '') {
             props.addItem(newTaskTitle.trim())
@@ -28,6 +32,7 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
         }
     }
 
+    // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
     const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
         error !== null && setError(null)
 

@@ -19,10 +19,13 @@ import {toDoListsSelector} from './state/selectors/todolists-selector'
 
 function AppWithRedux() {
 
+    // Получили tasks из state используя хук - useSelector и selector - toDoListsSelector
     const toDoLists = useSelector(toDoListsSelector)
+
+    // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
 
-    // -------------- Получили ToDoLists с сервера ----------------
+    // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
     useEffect(() => {
         dispatch(getTodoListsTC())
     }, [])

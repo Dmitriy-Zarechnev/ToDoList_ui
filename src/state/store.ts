@@ -10,9 +10,7 @@ const rootReducer = combineReducers({
     todolists: todolistsReducer
 })
 
-/*
-Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store
-*/
+/* Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store */
 
 export const store = legacy_createStore(rootReducer, undefined, applyMiddleware(thunk))
 

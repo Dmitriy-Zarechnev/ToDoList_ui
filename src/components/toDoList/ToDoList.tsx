@@ -22,9 +22,12 @@ type TodoListPropsType = {
 
 export const ToDoList = React.memo((props: TodoListPropsType) => {
 
+    // Получили tasks из state используя хук - useSelector и selector - tasksSelector
     const tasks = useSelector(tasksSelector)
+    // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
 
+    // -------------- Получили Tasks с сервера после загрузки страницы ----------------
     useEffect(() => {
         dispatch(getTasksTC(props.id))
     }, [])
