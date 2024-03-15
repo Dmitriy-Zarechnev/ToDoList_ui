@@ -21,9 +21,12 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              changeTaskTitle,
                                                              onClickRemoveHandler
                                                          }) => {
+
     const onChangeHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+
         let isDone = e.currentTarget.checked ? TasksStatuses.Completed : TasksStatuses.New
         onChangeStatusHandler(task.id, isDone)
+
     }, [task.id])
 
 

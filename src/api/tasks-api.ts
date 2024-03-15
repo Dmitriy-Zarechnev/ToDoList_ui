@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosInstance} from 'axios'
 
 // ----- Типизация Get запроса ------
 export type GetTaskType = {
