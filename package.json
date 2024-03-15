@@ -34,7 +34,8 @@
     "storybook": "storybook dev -p 9009",
     "build-storybook": "storybook build",
     "jest:integration": "jest -c integration/jest.config.js",
-    "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration"
+    "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration",
+    "updateSnapshots": "yarn jest:integration --updateSnapshot"
   },
   "eslintConfig": {
     "extends": [
@@ -74,4 +75,4 @@
     "storybook": "^7.6.17",
     "webpack": "5.90.3"
   }
-}
+  }

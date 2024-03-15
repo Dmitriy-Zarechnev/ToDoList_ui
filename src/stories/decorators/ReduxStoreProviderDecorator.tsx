@@ -1,11 +1,12 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import {combineReducers, legacy_createStore} from 'redux'
+import {applyMiddleware, combineReducers, legacy_createStore} from 'redux'
 import {tasksReducer} from '../../state/tasks-reducer'
 import {todolistsReducer} from '../../state/todolists-reducer'
 import {v1} from 'uuid'
 import {AppRootStateType} from '../../state/store'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
+import {thunk} from 'redux-thunk'
 
 
 const rootReducer = combineReducers({
@@ -88,7 +89,8 @@ const initialGlobalState: AppRootStateType = {
 
 
 // export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
-export const storyBookStore = legacy_createStore(rootReducer, undefined)
+
+export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 
 // Декоратор, предоставляющий доступ к Redux-хранилищу в историях
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {

@@ -76,7 +76,7 @@ export const tasksAPI = {
     // ----- Запросили tasks с сервера ------
     getTasks(todolistId: string) {
         return instance.get<GetTaskType>(`${todolistId}/tasks`)
-            .then(res => res.data) // getTasksData
+            .then(res => res.data)// getTasksData
     },
 
     // ----- Загрузили task на сервер ------
