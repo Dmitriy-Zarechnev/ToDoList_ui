@@ -1,5 +1,5 @@
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType} from '../tasks-reducer'
-import {addTodolistAC, removeTodolistAC, setToDoListsAC, ToDoListDomainType, todolistsReducer} from '../todolists-reducer'
+import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../todolists-reducer'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
 
 let startState: TasksStateType
@@ -262,7 +262,7 @@ test('new array should be added when new todolist is set', () => {
 })
 
 
-test('tasks should be set ', () => {
+test('tasks should be set from API ', () => {
     const action = setTasksAC('todolistId1', [
         {
             id: '1', title: 'CSS',
