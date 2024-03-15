@@ -4,24 +4,22 @@ import {ToDoListActionsType, todolistsReducer} from './todolists-reducer'
 import {thunk, ThunkDispatch} from 'redux-thunk'
 import {useDispatch} from 'react-redux'
 
+
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer
 })
 
-// Типизация всего STATE
-export type AppRootStateType = ReturnType<typeof rootReducer>
-// export type AppRootStateType = {
-//     tasks:TasksStateType,
-//     todolists: ToDoListDomainType[]
-//  }
+/*
+Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store
+*/
 
 export const store = legacy_createStore(rootReducer, undefined, applyMiddleware(thunk))
 
-// @ts-ignore
-window.store = store
+// Типизация всего STATE
+export type AppRootStateType = ReturnType<typeof rootReducer>
 
-// Типизация всех actioncreators для типизации thunk
+// Типизация всех AC для типизации thunk
 type CommonActionsTypeForApp =
     ToDoListActionsType |
     TasksActionsType

@@ -82,10 +82,10 @@ export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
 export const updateTodoListsTC = (todolistId: string, title: string) =>
     async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
 
-        // Получили все тудулисты из state
+        // Получили все todolists из state
         const allTodoListsFromState = getState().todolists
 
-        // нашли нужный todolist по todolistId
+        // Нашли нужный todolist по todolistId
         const todoList = allTodoListsFromState.find(t => {
             return t.id === todolistId
         })

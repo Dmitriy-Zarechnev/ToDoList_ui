@@ -13,7 +13,7 @@ export type TasksActionsType =
     RemoveTodolistActionType |
     SetTodolistActionType
 
-// Типизация Tasks Array
+// Типизация TasksArray
 export type TasksStateType = {
     [key: string]: Array<TasksType>
 }
@@ -34,7 +34,7 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
         case 'ADD-TASK':
             return {
                 ...state,
-                [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId] ]
+                [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId]]
             }
 
         case 'CHANGE-TASK-STATUS':
@@ -103,34 +103,48 @@ export const setTasksAC = (toDoListID: string, tasks: Array<TasksType>) => {
 }
 
 // *********** Thunk - санки необходимые для общения с DAL ****************
+// ------------- Получение tasks с сервера -----------------------
 export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispatch) => {
+    // Запрос на получение tasks с сервера
     const getTasksData = await tasksAPI.getTasks(todolistId)
+
+    // Задиспатчили ответ от сервера
     dispatch(setTasksAC(todolistId, getTasksData.items))
 }
 
-
+// ------------- Удаление task -----------------------
 export const deleteTaskTC = (todolistId: string, taskId: string) =>
     async (dispatch: AppThunkDispatch) => {
+        // Запрос на удаление task
         await tasksAPI.deleteTask(todolistId, taskId)
+
+        // Задиспатчили после ответа от сервера и удалили task
         dispatch(removeTaskAC(todolistId, taskId))
     }
 
-
+// ------------- Добавление task -----------------------
 export const addTaskTC = (todolistId: string, title: string) => async (dispatch: AppThunkDispatch) => {
+    // Запрос на добавление task
     const addTaskData = await tasksAPI.createTask(todolistId, title)
+
+    // Задиспатчили ответ от сервера
     dispatch(addTaskAC(addTaskData.data.item))
 }
 
-
+// ------------- Изменение task's status -----------------------
 export const updateTaskStatusTC = (todolistId: string, taskId: string, status: TasksStatuses) =>
     async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
-
+        // Получили все tasks из state
         const allTasksFromState = getState().tasks
+
+        // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
         const task = allTasksFromState[todolistId].find(t => {
             return t.id === taskId
         })
 
+        // Проверка, т.к find может вернуть undefined
         if (task) {
+            // Запрос на изменение task's status
             await tasksAPI.updateTask(todolistId, taskId, {
                 title: task.title,
                 startDate: task.startDate,
@@ -139,19 +153,27 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
                 deadline: task.deadline,
                 status: status
             })
+
+            // Задиспатчили после ответа от сервера и поменяли status
             dispatch(changeTaskStatusAC(todolistId, taskId, status))
         }
     }
 
+// ------------- Изменение task's title -----------------------
 export const updateTaskTitleTC = (todolistId: string, taskId: string, title: string) =>
     async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
 
+        // Получили все tasks из state
         const allTasksFromState = getState().tasks
+
+        // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
         const task = allTasksFromState[todolistId].find(t => {
             return t.id === taskId
         })
 
+        // Проверка, т.к find может вернуть undefined
         if (task) {
+            // Запрос на изменение task's title
             await tasksAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
@@ -160,6 +182,8 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
                 deadline: task.deadline,
                 status: task.status
             })
+
+            // Задиспатчили после ответа от сервера и поменяли title
             dispatch(changeTaskTitleAC(todolistId, taskId, title))
         }
     }
