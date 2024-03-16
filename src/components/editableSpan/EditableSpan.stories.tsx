@@ -25,6 +25,7 @@ type Story = StoryObj<typeof EditableSpan>;
 
 export const EditableSpanStory: Story = {
     args: {
+        value: 'Start value empty',
         onChange: action('Value EditableSpan changed')
     }
 }
