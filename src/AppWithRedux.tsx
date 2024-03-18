@@ -15,6 +15,7 @@ import {addTodoListsTC, getTodoListsTC} from './state/todolists-reducer'
 import {useSelector} from 'react-redux'
 import {useAppDispatch} from './state/store'
 import {toDoListsSelector} from './state/selectors/todolists-selector'
+import LinearProgress from '@mui/material/LinearProgress'
 
 
 function AppWithRedux() {
@@ -49,6 +50,9 @@ function AppWithRedux() {
                     </Typography>
                     <Button color={'inherit'}>Login</Button>
                 </Toolbar>
+
+                <LinearProgress color="inherit" />
+
             </AppBar>
 
             <Container fixed>
@@ -60,7 +64,7 @@ function AppWithRedux() {
 
                     {toDoLists.map(el => {
 
-                        return <Grid item>
+                        return <Grid item key={el.id}>
                             <Paper style={{padding: '10px'}}>
                                 <ToDoList
                                     key={el.id}

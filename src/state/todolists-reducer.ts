@@ -2,7 +2,7 @@ import {AppRootStateType, AppThunkDispatch} from './store'
 import {todolistAPI, TodolistType} from '../api/todolist-api'
 
 // Типизация Actions
-export type ToDoListActionsType =
+export type ToDoListActionsTypes =
     RemoveTodolistActionType |
     AddTodolistActionType |
     SetTodolistActionType |
@@ -24,7 +24,7 @@ export type ToDoListDomainType = TodolistType & { filter: FilterValuesType }
 const initialState: ToDoListDomainType[] = []
 
 // *********** Reducer - редьюсер, чистая функция для изменения стэйта после получения экшена от диспача ****************
-export const todolistsReducer = (state = initialState, action: ToDoListActionsType): ToDoListDomainType[] => {
+export const todolistsReducer = (state = initialState, action: ToDoListActionsTypes): ToDoListDomainType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(el => el.id !== action.payload.toDoListID)

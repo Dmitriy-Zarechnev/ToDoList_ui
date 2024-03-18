@@ -1,6 +1,6 @@
 import {applyMiddleware, combineReducers, legacy_createStore} from 'redux'
 import {TasksActionsType, tasksReducer} from './tasks-reducer'
-import {ToDoListActionsType, todolistsReducer} from './todolists-reducer'
+import {ToDoListActionsTypes, todolistsReducer} from './todolists-reducer'
 import {thunk, ThunkDispatch} from 'redux-thunk'
 import {useDispatch} from 'react-redux'
 
@@ -19,7 +19,7 @@ export type AppRootStateType = ReturnType<typeof rootReducer>
 
 // Типизация всех AC для типизации thunk
 type CommonActionsTypeForApp =
-    ToDoListActionsType |
+    ToDoListActionsTypes |
     TasksActionsType
 
 // Типизация для thunk, позволяет диспатчить thunk и action
