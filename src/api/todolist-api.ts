@@ -48,6 +48,7 @@ export const todolistAPI = {
     // ----- Заменили todolists's title на сервере ------
     updateTodolist(todolistId: string, title: string) {
         return instance.put<ResponseType>(`todo-lists/${todolistId}`, {title})
+            .then(res => res.data) // updateTodolistData
     },
 
     // ----- Удалили todolists на сервере ------

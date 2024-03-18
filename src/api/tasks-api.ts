@@ -88,6 +88,7 @@ export const tasksAPI = {
     // ----- Заменили task's title на сервере ------
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
         return instance.put<ResponseType>(`${todolistId}/tasks/${taskId}`, model)
+            .then(res=> res.data) // updateTaskData
     },
 
     // ----- Удалили task на сервере ------

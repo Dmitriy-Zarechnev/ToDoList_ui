@@ -103,13 +103,29 @@ export const updateTodoListsTC = (todolistId: string, title: string) =>
             dispatch(setAppStatusAC('loading'))
 
             // Запрос на изменение todolist's title
-            await todolistAPI.updateTodolist(todolistId, title)
+            const updateTodolistData = await todolistAPI.updateTodolist(todolistId, title)
 
-            // Задиспатчили после ответа от сервера и поменяли title
-            dispatch(changeTodolistTitleAC(todolistId, title))
 
-            // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC('updated'))
+            // Если успех
+            if (updateTodolistData.resultCode === 0) {
+                // Задиспатчили после ответа от сервера и поменяли title
+                dispatch(changeTodolistTitleAC(todolistId, title))
+
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC('updated'))
+            } else {
+                // Проверили существование ошибки
+                updateTodolistData.messages.length
+
+                    // Задиспатчили ошибку с сервера
+                    ? dispatch(setAppErrorAC(updateTodolistData.messages[0]))
+
+                    // Задиспатчили ошибку свою
+                    : dispatch(setAppErrorAC('Some error occurred🤬'))
+
+                // Изменили статус
+                dispatch(setAppStatusAC('failed'))
+            }
         }
     }
 
@@ -131,13 +147,14 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
         dispatch(setAppStatusAC('updated'))
     } else {
         // Проверили существование ошибки
-        if (addTodoListsData.messages.length) {
+        addTodoListsData.messages.length
+
             // Задиспатчили ошибку с сервера
-            dispatch(setAppErrorAC(addTodoListsData.messages[0]))
-        } else {
+            ? dispatch(setAppErrorAC(addTodoListsData.messages[0]))
+
             // Задиспатчили ошибку свою
-            dispatch(setAppErrorAC('Some error occurred🤬'))
-        }
+            : dispatch(setAppErrorAC('Some error occurred🤬'))
+
         // Изменили статус
         dispatch(setAppStatusAC('failed'))
     }

@@ -34,13 +34,13 @@ export function ErrorSnackbar() {
                     {error}
                 </Alert>
             </Snackbar>
-            <Snackbar open={status === 'succeeded'} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={status === 'succeeded'} autoHideDuration={3000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{width: '100%'}}>
                     Success loading!😉
                 </Alert>
             </Snackbar>
 
-            <Snackbar open={status === 'updated'} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={status === 'updated'} autoHideDuration={3000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{width: '100%'}} variant={'filled'}>
                     Success update!😃
                 </Alert>

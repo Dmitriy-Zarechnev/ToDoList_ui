@@ -152,13 +152,14 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
         dispatch(setAppStatusAC('updated'))
     } else {
         // Проверили существование ошибки
-        if (addTaskData.messages.length) {
+        addTaskData.messages.length
+
             // Задиспатчили ошибку с сервера
-            dispatch(setAppErrorAC(addTaskData.messages[0]))
-        } else {
+            ? dispatch(setAppErrorAC(addTaskData.messages[0]))
+
             // Задиспатчили ошибку свою
-            dispatch(setAppErrorAC('Some error occurred🤬'))
-        }
+            : dispatch(setAppErrorAC('Some error occurred🤬'))
+
         // Изменили статус
         dispatch(setAppStatusAC('failed'))
     }
@@ -216,7 +217,7 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
             dispatch(setAppStatusAC('loading'))
 
             // Запрос на изменение task's title
-            await tasksAPI.updateTask(todolistId, taskId, {
+            const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
                 priority: task.priority,
@@ -225,10 +226,26 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
                 status: task.status
             })
 
-            // Задиспатчили после ответа от сервера и поменяли title
-            dispatch(changeTaskTitleAC(todolistId, taskId, title))
 
-            // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC('updated'))
+            // Если успех
+            if (updateTaskData.resultCode === 0) {
+                // Задиспатчили после ответа от сервера и поменяли title
+                dispatch(changeTaskTitleAC(todolistId, taskId, title))
+
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC('updated'))
+            } else {
+                // Проверили существование ошибки
+                updateTaskData.messages.length
+
+                    // Задиспатчили ошибку с сервера
+                    ? dispatch(setAppErrorAC(updateTaskData.messages[0]))
+
+                    // Задиспатчили ошибку свою
+                    : dispatch(setAppErrorAC('Some error occurred🤬'))
+
+                // Изменили статус
+                dispatch(setAppStatusAC('failed'))
+            }
         }
     }
