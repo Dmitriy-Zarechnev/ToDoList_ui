@@ -1,6 +1,6 @@
 // Типизация Actions всего appReducer
 export type AppActionsTypes =
-    ReturnType<typeof setStatusAC>
+    ReturnType<typeof setAppStatusAC>
 
 
 // Типы статусов для работы в приложении
@@ -14,7 +14,7 @@ const SET_STATUS = 'APP/SET-STATUS'
 
 // *********** Первоначальный state для appReducer ****************
 const initialState = {
-    status: 'loading' as RequestStatusType
+    status: 'idle' as RequestStatusType
 }
 
 
@@ -29,7 +29,7 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
 }
 
 // *********** Action creators - экшн криэйторы создают объект action ****************
-export const setStatusAC = (status: RequestStatusType) => {
+export const setAppStatusAC = (status: RequestStatusType) => {
     return {type: SET_STATUS, status} as const
 }
 

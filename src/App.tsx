@@ -16,12 +16,16 @@ import {useSelector} from 'react-redux'
 import {useAppDispatch} from './state/store'
 import {toDoListsSelector} from './state/selectors/todolists-selector'
 import LinearProgress from '@mui/material/LinearProgress'
+import {appStatusSelector} from './state/selectors/app-selector'
 
 
-function AppWithRedux() {
+function App() {
 
     // Получили tasks из state используя хук - useSelector и selector - toDoListsSelector
     const toDoLists = useSelector(toDoListsSelector)
+
+    // Получили status из state используя хук - useSelector и selector - appStatusSelector
+    const status = useSelector(appStatusSelector)
 
     // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
@@ -51,7 +55,7 @@ function AppWithRedux() {
                     <Button color={'inherit'}>Login</Button>
                 </Toolbar>
 
-                <LinearProgress color="inherit" />
+                {status === 'loading' && <LinearProgress/>}
 
             </AppBar>
 
@@ -82,4 +86,4 @@ function AppWithRedux() {
     )
 }
 
-export default AppWithRedux
+export default App

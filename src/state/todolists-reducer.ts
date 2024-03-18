@@ -1,5 +1,6 @@
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {todolistAPI, TodolistType} from '../api/todolist-api'
+import {setAppStatusAC} from './app-reducer'
 
 // Типизация Actions
 export type ToDoListActionsTypes =
@@ -70,11 +71,17 @@ export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
 // *********** Thunk - санки необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
 export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
     // Запрос на получение todolist с сервера
     const getTodoListsData = await todolistAPI.getTodolists()
 
     // Задиспатчили ответ от сервера
     dispatch(setToDoListsAC(getTodoListsData))
+
+    // Убираем Preloader после успешного ответа
+    dispatch(setAppStatusAC('succeeded'))
 }
 
 // ------------- Изменение todolist's title -----------------------
@@ -91,28 +98,46 @@ export const updateTodoListsTC = (todolistId: string, title: string) =>
 
         // Проверка, т.к find может вернуть undefined
         if (todoList) {
+            // Показываем Preloader во время запроса
+            dispatch(setAppStatusAC('loading'))
+
             // Запрос на изменение todolist's title
             await todolistAPI.updateTodolist(todolistId, title)
 
             // Задиспатчили после ответа от сервера и поменяли title
             dispatch(changeTodolistTitleAC(todolistId, title))
+
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('succeeded'))
         }
     }
 
 // ------------- Добавление нового todolist -----------------------
 export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
     // Запрос на добавление todolist
     const addTodoListsData = await todolistAPI.createTodolist(title)
 
     // Задиспатчили ответ от сервера
     dispatch(addTodolistAC(title, addTodoListsData.data.item.id))
+
+    // Убираем Preloader после успешного ответа
+    dispatch(setAppStatusAC('succeeded'))
 }
 
 // ------------- Удаление todolist -----------------------
 export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
     // Запрос на удаление todolist
     await todolistAPI.deleteTodolist(toDoListID)
 
     // Задиспатчили после ответа от сервера и удалили todolist
     dispatch(removeTodolistAC(toDoListID))
+
+    // Убираем Preloader после успешного ответа
+    dispatch(setAppStatusAC('succeeded'))
 }

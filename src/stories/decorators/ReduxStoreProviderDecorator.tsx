@@ -84,7 +84,10 @@ const initialGlobalState: AppRootStateType = {
             addedDate: '',
             order: 0
         }
-    ]
+    ],
+    app: {
+        status: 'loading'
+    }
 }
 
 

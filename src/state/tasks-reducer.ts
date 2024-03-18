@@ -1,6 +1,7 @@
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
+import {setAppStatusAC} from './app-reducer'
 
 // Типизация Actions
 export type TasksActionsType =
@@ -105,30 +106,48 @@ export const setTasksAC = (toDoListID: string, tasks: Array<TasksType>) => {
 // *********** Thunk - санки необходимые для общения с DAL ****************
 // ------------- Получение tasks с сервера -----------------------
 export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
     // Запрос на получение tasks с сервера
     const getTasksData = await tasksAPI.getTasks(todolistId)
 
     // Задиспатчили ответ от сервера
     dispatch(setTasksAC(todolistId, getTasksData.items))
+
+    // Убираем Preloader после успешного ответа
+    dispatch(setAppStatusAC('succeeded'))
 }
 
 // ------------- Удаление task -----------------------
 export const deleteTaskTC = (todolistId: string, taskId: string) =>
     async (dispatch: AppThunkDispatch) => {
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC('loading'))
+
         // Запрос на удаление task
         await tasksAPI.deleteTask(todolistId, taskId)
 
         // Задиспатчили после ответа от сервера и удалили task
         dispatch(removeTaskAC(todolistId, taskId))
+
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC('succeeded'))
     }
 
 // ------------- Добавление task -----------------------
 export const addTaskTC = (todolistId: string, title: string) => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
     // Запрос на добавление task
     const addTaskData = await tasksAPI.createTask(todolistId, title)
 
     // Задиспатчили ответ от сервера
     dispatch(addTaskAC(addTaskData.data.item))
+
+    // Убираем Preloader после успешного ответа
+    dispatch(setAppStatusAC('succeeded'))
 }
 
 // ------------- Изменение task's status -----------------------
@@ -144,6 +163,9 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
 
         // Проверка, т.к find может вернуть undefined
         if (task) {
+            // Показываем Preloader во время запроса
+            dispatch(setAppStatusAC('loading'))
+
             // Запрос на изменение task's status
             await tasksAPI.updateTask(todolistId, taskId, {
                 title: task.title,
@@ -156,6 +178,9 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
 
             // Задиспатчили после ответа от сервера и поменяли status
             dispatch(changeTaskStatusAC(todolistId, taskId, status))
+
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('succeeded'))
         }
     }
 
@@ -173,7 +198,10 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
 
         // Проверка, т.к find может вернуть undefined
         if (task) {
-            // Запрос на изменение task's title
+            // Показываем Preloader во время запроса
+            dispatch(setAppStatusAC('loading'))
+
+                        // Запрос на изменение task's title
             await tasksAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
@@ -185,5 +213,8 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
 
             // Задиспатчили после ответа от сервера и поменяли title
             dispatch(changeTaskTitleAC(todolistId, taskId, title))
+
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('succeeded'))
         }
     }
