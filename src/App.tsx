@@ -17,6 +17,7 @@ import {useAppDispatch} from './state/store'
 import {toDoListsSelector} from './state/selectors/todolists-selector'
 import LinearProgress from '@mui/material/LinearProgress'
 import {appStatusSelector} from './state/selectors/app-selector'
+import {ErrorSnackbar} from './components/ErrorSnackbar'
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
 
     return (
         <div className="App">
+            {/*ErrorSnackbar который показываем во время ошибки*/}
+            <ErrorSnackbar/>
 
             <AppBar position="static">
                 <Toolbar variant="dense">
@@ -55,6 +58,7 @@ function App() {
                     <Button color={'inherit'}>Login</Button>
                 </Toolbar>
 
+                {/*Preloader который показываем во время связи с сервером*/}
                 {status === 'loading' && <LinearProgress/>}
 
             </AppBar>

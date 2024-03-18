@@ -1,7 +1,7 @@
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
-import {setAppStatusAC} from './app-reducer'
+import {setAppErrorAC, setAppStatusAC} from './app-reducer'
 
 // Типизация Actions
 export type TasksActionsType =
@@ -143,11 +143,22 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
     // Запрос на добавление task
     const addTaskData = await tasksAPI.createTask(todolistId, title)
 
-    // Задиспатчили ответ от сервера
-    dispatch(addTaskAC(addTaskData.data.item))
+    // Если успех
+    if (addTaskData.resultCode === 0) {
+        // Задиспатчили ответ от сервера
+        dispatch(addTaskAC(addTaskData.data.item))
 
-    // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('succeeded'))
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC('succeeded'))
+    } else {
+        if (addTaskData.messages.length) {
+            dispatch(setAppErrorAC(addTaskData.messages[0]))
+        } else {
+            dispatch(setAppErrorAC('Some error occurred🤬'))
+        }
+        dispatch(setAppStatusAC('failed'))
+    }
+
 }
 
 // ------------- Изменение task's status -----------------------
@@ -201,7 +212,7 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
             // Показываем Preloader во время запроса
             dispatch(setAppStatusAC('loading'))
 
-                        // Запрос на изменение task's title
+            // Запрос на изменение task's title
             await tasksAPI.updateTask(todolistId, taskId, {
                 title: title,
                 startDate: task.startDate,
