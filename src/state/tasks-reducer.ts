@@ -132,7 +132,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
         dispatch(removeTaskAC(todolistId, taskId))
 
         // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC('succeeded'))
+        dispatch(setAppStatusAC('updated'))
     }
 
 // ------------- Добавление task -----------------------
@@ -149,16 +149,19 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
         dispatch(addTaskAC(addTaskData.data.item))
 
         // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC('succeeded'))
+        dispatch(setAppStatusAC('updated'))
     } else {
+        // Проверили существование ошибки
         if (addTaskData.messages.length) {
+            // Задиспатчили ошибку с сервера
             dispatch(setAppErrorAC(addTaskData.messages[0]))
         } else {
+            // Задиспатчили ошибку свою
             dispatch(setAppErrorAC('Some error occurred🤬'))
         }
+        // Изменили статус
         dispatch(setAppStatusAC('failed'))
     }
-
 }
 
 // ------------- Изменение task's status -----------------------
@@ -191,7 +194,7 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
             dispatch(changeTaskStatusAC(todolistId, taskId, status))
 
             // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatusAC('updated'))
         }
     }
 
@@ -226,6 +229,6 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
             dispatch(changeTaskTitleAC(todolistId, taskId, title))
 
             // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatusAC('updated'))
         }
     }

@@ -2,9 +2,9 @@ import React from 'react'
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {useSelector} from 'react-redux'
-import {appErrorSelector, appStatusSelector} from '../state/selectors/app-selector'
-import {useAppDispatch} from '../state/store'
-import {setAppErrorAC, setAppStatusAC} from '../state/app-reducer'
+import {appErrorSelector, appStatusSelector} from '../../state/selectors/app-selector'
+import {useAppDispatch} from '../../state/store'
+import {setAppErrorAC, setAppStatusAC} from '../../state/app-reducer'
 
 
 export function ErrorSnackbar() {
@@ -31,11 +31,17 @@ export function ErrorSnackbar() {
         <>
             <Snackbar open={error !== null} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
-                    Error message 😠
+                    {error}
                 </Alert>
             </Snackbar>
             <Snackbar open={status === 'succeeded'} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{width: '100%'}}>
+                    Success loading!😉
+                </Alert>
+            </Snackbar>
+
+            <Snackbar open={status === 'updated'} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{width: '100%'}} variant={'filled'}>
                     Success update!😃
                 </Alert>
             </Snackbar>

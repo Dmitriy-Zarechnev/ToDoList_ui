@@ -5,7 +5,7 @@ export type AppActionsTypes =
 
 
 // Типы статусов для работы в приложении
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated'
 
 // Типизация initialState для appReducer
 type InitialStateType = typeof initialState

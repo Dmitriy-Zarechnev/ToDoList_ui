@@ -17,7 +17,7 @@ import {useAppDispatch} from './state/store'
 import {toDoListsSelector} from './state/selectors/todolists-selector'
 import LinearProgress from '@mui/material/LinearProgress'
 import {appStatusSelector} from './state/selectors/app-selector'
-import {ErrorSnackbar} from './components/ErrorSnackbar'
+import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
 
 
 function App() {

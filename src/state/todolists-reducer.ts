@@ -1,6 +1,7 @@
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {todolistAPI, TodolistType} from '../api/todolist-api'
-import {setAppStatusAC} from './app-reducer'
+import {setAppErrorAC, setAppStatusAC} from './app-reducer'
+
 
 // Типизация Actions
 export type ToDoListActionsTypes =
@@ -108,7 +109,7 @@ export const updateTodoListsTC = (todolistId: string, title: string) =>
             dispatch(changeTodolistTitleAC(todolistId, title))
 
             // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC('succeeded'))
+            dispatch(setAppStatusAC('updated'))
         }
     }
 
@@ -120,11 +121,26 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
     // Запрос на добавление todolist
     const addTodoListsData = await todolistAPI.createTodolist(title)
 
-    // Задиспатчили ответ от сервера
-    dispatch(addTodolistAC(title, addTodoListsData.data.item.id))
 
-    // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('succeeded'))
+    // Если успех
+    if (addTodoListsData.resultCode === 0) {
+        // Задиспатчили ответ от сервера
+        dispatch(addTodolistAC(title, addTodoListsData.data.item.id))
+
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC('updated'))
+    } else {
+        // Проверили существование ошибки
+        if (addTodoListsData.messages.length) {
+            // Задиспатчили ошибку с сервера
+            dispatch(setAppErrorAC(addTodoListsData.messages[0]))
+        } else {
+            // Задиспатчили ошибку свою
+            dispatch(setAppErrorAC('Some error occurred🤬'))
+        }
+        // Изменили статус
+        dispatch(setAppStatusAC('failed'))
+    }
 }
 
 // ------------- Удаление todolist -----------------------
@@ -139,5 +155,5 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThu
     dispatch(removeTodolistAC(toDoListID))
 
     // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('succeeded'))
+    dispatch(setAppStatusAC('updated'))
 }
