@@ -17,7 +17,7 @@ const SET_ERROR = 'APP/SET-ERROR'
 // *********** Первоначальный state для appReducer ****************
 const initialState = {
     status: 'idle' as RequestStatusType,
-    error: 'Hello Error' as string | null
+    error: null as string | null
 }
 
 
