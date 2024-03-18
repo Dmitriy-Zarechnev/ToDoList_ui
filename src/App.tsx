@@ -65,7 +65,7 @@ function App() {
 
             <Container fixed>
                 <Grid container>
-                    <AddItemForm addItem={addToDoList} itemType={'Todolist'}/>
+                    <AddItemForm addItem={addToDoList} itemType={'Todolist'} />
                 </Grid>
 
                 <Grid container spacing={3}>

@@ -2,11 +2,13 @@ import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
 import S from './Input.module.css'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
+import {RequestStatusType} from '../../state/app-reducer'
 
 
 type AddItemFormPropsType = {
     itemType: string
     addItem: (title: string) => void
+    disabled?: RequestStatusType
 }
 
 
@@ -51,7 +53,11 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
                     label={error ? error : `Add new ${props.itemType}`}
                     margin="normal"
                 />
-                <IconButton color="primary" onClick={addTaskBtnFn}>📌</IconButton>
+                <IconButton color="primary"
+                            onClick={addTaskBtnFn}
+                            disabled={props.disabled === 'loading'}
+                >
+                    📌</IconButton>
             </div>
         </>
     )

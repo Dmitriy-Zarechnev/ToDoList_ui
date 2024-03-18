@@ -179,6 +179,9 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
 export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThunkDispatch) => {
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
+    // Отключаем кнопку во время запроса
+    dispatch(changeTodolistEntityStatusAC(toDoListID,'loading'))
+
 
     // Запрос на удаление todolist
     await todolistAPI.deleteTodolist(toDoListID)
