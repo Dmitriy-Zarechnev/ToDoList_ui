@@ -15,14 +15,16 @@ beforeEach(() => {
             title: 'What to learn',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus:'idle'
         },
         {
             id: toDoListID2,
             title: 'What to read',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus:'idle'
         }
     ]
 })
@@ -75,21 +77,24 @@ test('todolist should be set from API', () => {
             title: 'What to learn',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus:'idle'
         },
         {
             id: toDoListID2,
             title: 'What to read',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus:'idle'
         },
         {
             id: '213412',
             title: 'What to read',
             filter: 'all',
             addedDate: '',
-            order: 0
+            order: 0,
+            entityStatus:'idle'
         }
     ]
 

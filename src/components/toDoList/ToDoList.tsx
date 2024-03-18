@@ -7,17 +7,19 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import {Task} from '../task/Task'
 import {useSelector} from 'react-redux'
-import {changeTodolistFilterAC,  deleteTodoListsTC, FilterValuesType,  updateTodoListsTC} from '../../state/todolists-reducer'
+import {changeTodolistFilterAC, deleteTodoListsTC, FilterValuesType, updateTodoListsTC} from '../../state/todolists-reducer'
 import {addTaskTC, deleteTaskTC, getTasksTC, updateTaskStatusTC, updateTaskTitleTC} from '../../state/tasks-reducer'
 import {tasksSelector} from '../../state/selectors/tasks-selector'
 import {TasksStatuses} from '../../api/tasks-api'
 import {useAppDispatch} from '../../state/store'
+import {RequestStatusType} from '../../state/app-reducer'
 
 
 type TodoListPropsType = {
     id: string
     title: string
     filter: FilterValuesType
+    entityStatus: RequestStatusType
 }
 
 export const ToDoList = React.memo((props: TodoListPropsType) => {
@@ -25,6 +27,8 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
     // Получили tasks из state используя хук - useSelector и selector - tasksSelector
     const tasks = useSelector(tasksSelector)
+
+
     // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
 
@@ -94,7 +98,9 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
                               newClass={S.to_Do_List__header}
                               onChange={changeToDoListTitle}/>
 
-                <IconButton aria-label="delete" onClick={onClickDeleteListHandler}>
+                <IconButton aria-label="delete"
+                            onClick={onClickDeleteListHandler}
+                            disabled={props.entityStatus === 'loading'}>
                     <DeleteIcon/>
                 </IconButton>
             </div>

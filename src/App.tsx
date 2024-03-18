@@ -79,6 +79,7 @@ function App() {
                                     id={el.id}
                                     title={el.title}
                                     filter={el.filter}
+                                    entityStatus={el.entityStatus}
                                 />
                             </Paper>
                         </Grid>
