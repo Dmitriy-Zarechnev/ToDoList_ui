@@ -5,6 +5,7 @@ import {EditableSpan} from '../editableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {TasksStatuses, TasksType} from '../../api/tasks-api'
+import {RequestStatusType} from '../../state/app-reducer'
 
 
 type TaskPropsType = {
@@ -12,6 +13,7 @@ type TaskPropsType = {
     onChangeStatusHandler: (taskId: string, status: TasksStatuses) => void
     changeTaskTitle: (newTitle: string) => void
     onClickRemoveHandler: (id: string) => void
+    entityStatus:RequestStatusType
 }
 
 
@@ -19,7 +21,8 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              task,
                                                              onChangeStatusHandler,
                                                              changeTaskTitle,
-                                                             onClickRemoveHandler
+                                                             onClickRemoveHandler,
+                                                             entityStatus
                                                          }) => {
 
 
@@ -41,17 +44,20 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                     color={'success'}
                     checked={task.status === TasksStatuses.Completed}
                     onChange={onChangeHandler}
+                    disabled={entityStatus==='loading'}
                 />
 
                 <EditableSpan value={task.title}
                               onChange={(newTitle) =>
                                   changeTaskTitle(newTitle)}
-                />
+                              disabled={entityStatus}/>
             </div>
 
             <IconButton aria-label="delete" size="small"
                         onClick={() =>
-                            onClickRemoveHandler(task.id)}>
+                            onClickRemoveHandler(task.id)}
+                        disabled={entityStatus==='loading'}
+            >
                 <DeleteIcon fontSize="small"/>
             </IconButton>
         </div>

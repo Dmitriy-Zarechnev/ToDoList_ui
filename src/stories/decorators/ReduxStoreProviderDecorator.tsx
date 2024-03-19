@@ -28,7 +28,8 @@ const initialGlobalState: AppRootStateType = {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: v1(),
@@ -40,7 +41,8 @@ const initialGlobalState: AppRootStateType = {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ],
         ['todolistId2']: [
@@ -54,7 +56,8 @@ const initialGlobalState: AppRootStateType = {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: v1(),
@@ -66,7 +69,8 @@ const initialGlobalState: AppRootStateType = {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ]
     },
@@ -77,14 +81,14 @@ const initialGlobalState: AppRootStateType = {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         },
         {
             id: 'todolistId2', title: 'What to buy',
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         }
     ],
     app: {

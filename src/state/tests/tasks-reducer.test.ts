@@ -1,5 +1,5 @@
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType} from '../tasks-reducer'
-import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../todolists-reducer'
+import {addTaskAC, changeTaskEntityStatusAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType} from '../tasks-reducer'
+import {addTodolistAC,  removeTodolistAC, setToDoListsAC} from '../todolists-reducer'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
 
 let startState: TasksStateType
@@ -16,7 +16,9 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
+
             },
             {
                 id: '2', title: 'JS', status: TasksStatuses.Completed,
@@ -26,7 +28,8 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '3', title: 'React', status: TasksStatuses.New,
@@ -36,7 +39,8 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ],
         'todolistId2': [
@@ -49,7 +53,8 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '2', title: 'milk',
@@ -60,7 +65,8 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '3', title: 'tea',
@@ -71,7 +77,8 @@ beforeEach(() => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ]
     }
@@ -158,7 +165,8 @@ test('correct task should be added to correct array', () => {
         startDate: '',
         description: 'Hello',
         addedDate: '',
-        todoListId: 'todolistId2'
+        todoListId: 'todolistId2',
+        entityTaskStatus:'idle'
     }))
 
     expect(endState['todolistId1'].length).toBe(startState['todolistId1'].length)
@@ -277,3 +285,10 @@ test('tasks should be set from API ', () => {
     expect(endState['todolistId1'].length).toBe(2)
 })
 
+
+test('tasks entity status should be changed', () => {
+
+    const endState = tasksReducer(startState, changeTaskEntityStatusAC('todolistId1','1', 'loading'))
+
+    expect(endState['todolistId1'][0].entityTaskStatus).toBe('loading')
+})

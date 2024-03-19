@@ -1,11 +1,13 @@
 import React, {ChangeEvent, useCallback, useState} from 'react'
 import S from '../toDoList/ToDoList.module.css'
 import TextField from '@mui/material/TextField'
+import {RequestStatusType} from '../../state/app-reducer'
 
 type EditableSpan = {
     value: string
     newClass?: string
     onChange: (newTitle: string) => void
+    disabled?: RequestStatusType
 }
 
 export const EditableSpan = React.memo((props: EditableSpan) => {
@@ -33,7 +35,7 @@ export const EditableSpan = React.memo((props: EditableSpan) => {
     }, [])
 
     return (
-        editMode
+        props.disabled !== 'loading' && editMode
             ? <TextField
                 onBlur={activateViewMode}
                 onChange={onChangeInputHandler}

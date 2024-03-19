@@ -1,7 +1,7 @@
 import {ADD_TODOLIST, AddTodolistActionType, changeTodolistEntityStatusAC, REMOVE_TODOLIST, RemoveTodolistActionType, SET_TODOLISTS, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
-import {setAppStatusAC} from './app-reducer'
+import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
 
 // Типизация Actions всего tasksReducer
@@ -11,13 +11,14 @@ export type TasksActionsType =
     ReturnType<typeof changeTaskStatusAC> |
     ReturnType<typeof changeTaskTitleAC> |
     ReturnType<typeof setTasksAC> |
+    ReturnType<typeof changeTaskEntityStatusAC> |
     AddTodolistActionType |
     RemoveTodolistActionType |
     SetTodolistActionType
 
 // Типизация TasksArray
 export type TasksStateType = {
-    [key: string]: Array<TasksType>
+    [key: string]: Array<TasksType & { entityTaskStatus: RequestStatusType }>
 }
 
 // Константы для работы с action в tasksReducer
@@ -26,6 +27,7 @@ const ADD_TASK = 'TASKS/ADD-TASK'
 const CHANGE_TASK_STATUS = 'TASKS/CHANGE-TASK-STATUS'
 const CHANGE_TASK_TITLE = 'TASKS/CHANGE-TASK-TITLE'
 const SET_TASKS = 'TASKS/SET-TASKS'
+const CHANGE_TASK_ENTITY_STATUS = 'TASKS/CHANGE-TASK-ENTITY-STATUS'
 
 // *********** Первоначальный state для tasksReducer ****************
 const initialState: TasksStateType = {}
@@ -85,9 +87,18 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
 
         case SET_TASKS: {
             const newState = {...state}
-            newState[action.payload.toDoListID] = [...action.payload.tasks]
+            newState[action.payload.toDoListID] = action.payload.tasks.map(el => ({...el, entityTaskStatus: 'idle'}))
             return newState
         }
+
+        case CHANGE_TASK_ENTITY_STATUS:
+            return {
+                ...state,
+                [action.payload.toDoListID]: state[action.payload.toDoListID]
+                    .map(el => el.id !== action.payload.id
+                        ? el
+                        : {...el, entityTaskStatus: action.payload.entityTaskStatus})
+            }
 
         default :
             return state
@@ -98,7 +109,7 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
 export const removeTaskAC = (toDoListID: string, id: string) => {
     return {type: REMOVE_TASK, payload: {toDoListID, id}} as const
 }
-export const addTaskAC = (task: TasksType) => {
+export const addTaskAC = (task: TasksType & { entityTaskStatus: RequestStatusType }) => {
     return {type: ADD_TASK, payload: {task}} as const
 }
 export const changeTaskStatusAC = (toDoListID: string, id: string, status: TasksStatuses) => {
@@ -109,6 +120,9 @@ export const changeTaskTitleAC = (toDoListID: string, id: string, title: string)
 }
 export const setTasksAC = (toDoListID: string, tasks: Array<TasksType>) => {
     return {type: SET_TASKS, payload: {toDoListID, tasks}} as const
+}
+export const changeTaskEntityStatusAC = (toDoListID: string, id: string, entityTaskStatus: RequestStatusType) => {
+    return {type: CHANGE_TASK_ENTITY_STATUS, payload: {toDoListID, id, entityTaskStatus}} as const
 }
 
 // *********** Thunk - необходимые для общения с DAL ****************
@@ -137,6 +151,8 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
     async (dispatch: AppThunkDispatch) => {
         // Показываем Preloader во время запроса
         dispatch(setAppStatusAC('loading'))
+        // Отключаем кнопку во время запроса
+        dispatch(changeTaskEntityStatusAC(todolistId,taskId,'loading'))
 
         try {
             // Запрос на удаление task
@@ -144,11 +160,15 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
 
             // Если успех
             if (deleteTaskData.resultCode === 0) {
+
+
                 // Задиспатчили после ответа от сервера и удалили task
                 dispatch(removeTaskAC(todolistId, taskId))
 
                 // Убираем Preloader после успешного ответа
                 dispatch(setAppStatusAC('updated'))
+                // Включили после успеха
+                dispatch(changeTaskEntityStatusAC(todolistId,taskId,'idle'))
             } else {
                 // Обработка серверной ошибки
                 handleServerAppError(deleteTaskData, dispatch)
@@ -172,8 +192,8 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
 
         // Если успех
         if (addTaskData.resultCode === 0) {
-            // Задиспатчили ответ от сервера
-            dispatch(addTaskAC(addTaskData.data.item))
+            // Задиспатчили ответ от сервера и прибавили entityTaskStatus
+            dispatch(addTaskAC({...addTaskData.data.item, entityTaskStatus: 'idle'}))
 
             // Убираем Preloader после успешного ответа
             dispatch(setAppStatusAC('updated'))
@@ -204,6 +224,9 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
         if (task) {
             // Показываем Preloader во время запроса
             dispatch(setAppStatusAC('loading'))
+            // Отключаем кнопку во время запроса
+            dispatch(changeTaskEntityStatusAC(todolistId,taskId,'loading'))
+
             try {
                 // Запрос на изменение task's status
                 const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
@@ -217,11 +240,14 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
 
                 // Если успех
                 if (updateTaskData.resultCode === 0) {
+
                     // Задиспатчили после ответа от сервера и поменяли status
                     dispatch(changeTaskStatusAC(todolistId, taskId, status))
 
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC('updated'))
+                    // Включили после успеха
+                    dispatch(changeTaskEntityStatusAC(todolistId,taskId,'idle'))
                 } else {
                     // Обработка серверной ошибки
                     handleServerAppError(updateTaskData, dispatch)
@@ -249,6 +275,9 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
         if (task) {
             // Показываем Preloader во время запроса
             dispatch(setAppStatusAC('loading'))
+            // Отключаем кнопку во время запроса
+            dispatch(changeTaskEntityStatusAC(todolistId,taskId,'loading'))
+
             try {
                 // Запрос на изменение task's title
                 const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
@@ -268,6 +297,8 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
 
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC('updated'))
+                    // Включили после успеха
+                    dispatch(changeTaskEntityStatusAC(todolistId,taskId,'idle'))
                 } else {
                     // Обработка серверной ошибки
                     handleServerAppError(updateTaskData, dispatch)

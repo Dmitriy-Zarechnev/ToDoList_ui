@@ -96,7 +96,8 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
             <div className={S.to_Do_List__top}>
                 <EditableSpan value={props.title}
                               newClass={S.to_Do_List__header}
-                              onChange={changeToDoListTitle}/>
+                              onChange={changeToDoListTitle}
+                              disabled={props.entityStatus}/>
 
                 <IconButton aria-label="delete"
                             onClick={onClickDeleteListHandler}
@@ -113,7 +114,8 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
                                  task={el}
                                  changeTaskTitle={(newTitle) => changeTaskTitle(el.id, newTitle)}
                                  onChangeStatusHandler={onChangeStatusHandler}
-                                 onClickRemoveHandler={onClickRemoveHandler}/>
+                                 onClickRemoveHandler={onClickRemoveHandler}
+                                 entityStatus={el.entityTaskStatus}/>
 
                 })}
             </div>
