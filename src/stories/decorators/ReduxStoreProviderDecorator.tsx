@@ -92,7 +92,7 @@ const initialGlobalState: AppRootStateType = {
         }
     ],
     app: {
-        status: 'loading',
+        status: 'idle',
         error: null
     }
 }
@@ -100,7 +100,7 @@ const initialGlobalState: AppRootStateType = {
 
 // export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
+export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any )
 
 // Декоратор, предоставляющий доступ к Redux-хранилищу в историях
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {

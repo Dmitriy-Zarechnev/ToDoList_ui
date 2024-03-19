@@ -100,7 +100,8 @@ test('correct task should be deleted from correct array', () => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '2', title: 'JS', status: TasksStatuses.Completed,
@@ -110,7 +111,8 @@ test('correct task should be deleted from correct array', () => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '3', title: 'React', status: TasksStatuses.New,
@@ -120,7 +122,8 @@ test('correct task should be deleted from correct array', () => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ],
         'todolistId2': [
@@ -133,7 +136,8 @@ test('correct task should be deleted from correct array', () => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             },
             {
                 id: '3', title: 'tea',
@@ -144,7 +148,8 @@ test('correct task should be deleted from correct array', () => {
                 startDate: '',
                 description: 'Hello',
                 addedDate: '',
-                todoListId: 'TodolistId'
+                todoListId: 'TodolistId',
+                entityTaskStatus: 'idle'
             }
         ]
     })
