@@ -1,7 +1,7 @@
-import {AddTodolistActionType, changeTodolistEntityStatusAC, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
+import {ADD_TODOLIST, AddTodolistActionType, changeTodolistEntityStatusAC, REMOVE_TODOLIST, RemoveTodolistActionType, SET_TODOLISTS, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
-import { setAppStatusAC} from './app-reducer'
+import {setAppStatusAC} from './app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
 
 // Типизация Actions всего tasksReducer
@@ -20,26 +20,33 @@ export type TasksStateType = {
     [key: string]: Array<TasksType>
 }
 
+// Константы для работы с action в tasksReducer
+const REMOVE_TASK = 'TASKS/REMOVE-TASK'
+const ADD_TASK = 'TASKS/ADD-TASK'
+const CHANGE_TASK_STATUS = 'TASKS/CHANGE-TASK-STATUS'
+const CHANGE_TASK_TITLE = 'TASKS/CHANGE-TASK-TITLE'
+const SET_TASKS = 'TASKS/SET-TASKS'
+
 // *********** Первоначальный state для tasksReducer ****************
 const initialState: TasksStateType = {}
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 export const tasksReducer = (state = initialState, action: TasksActionsType): TasksStateType => {
     switch (action.type) {
-        case 'REMOVE-TASK':
+        case REMOVE_TASK:
             return {
                 ...state,
                 [action.payload.toDoListID]: state[action.payload.toDoListID]
                     .filter(el => el.id !== action.payload.id)
             }
 
-        case 'ADD-TASK':
+        case ADD_TASK:
             return {
                 ...state,
                 [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId]]
             }
 
-        case 'CHANGE-TASK-STATUS':
+        case CHANGE_TASK_STATUS:
             return {
                 ...state,
                 [action.payload.toDoListID]: state[action.payload.toDoListID]
@@ -48,7 +55,7 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
                         : {...el, status: action.payload.status})
             }
 
-        case 'CHANGE-TASK-TITLE':
+        case CHANGE_TASK_TITLE:
             return {
                 ...state,
                 [action.payload.toDoListID]: state[action.payload.toDoListID]
@@ -57,18 +64,18 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
                         : {...el, title: action.payload.title})
             }
 
-        case 'ADD-TODOLIST':
+        case ADD_TODOLIST:
             return {
                 ...state,
                 [action.payload.todolistId]: []
             }
 
-        case 'REMOVE-TODOLIST':
+        case REMOVE_TODOLIST:
             const newState = {...state}
             delete newState[action.payload.toDoListID]
             return newState
 
-        case 'SET-TODOLISTS': {
+        case SET_TODOLISTS: {
             const newState = {...state}
             action.payload.toDoLists.forEach(el => {
                 newState[el.id] = []
@@ -76,7 +83,7 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
             return newState
         }
 
-        case 'SET-TASKS': {
+        case SET_TASKS: {
             const newState = {...state}
             newState[action.payload.toDoListID] = [...action.payload.tasks]
             return newState
@@ -89,19 +96,19 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
 
 // *********** Action creators - создают объект action ****************
 export const removeTaskAC = (toDoListID: string, id: string) => {
-    return {type: 'REMOVE-TASK', payload: {toDoListID, id}} as const
+    return {type: REMOVE_TASK, payload: {toDoListID, id}} as const
 }
 export const addTaskAC = (task: TasksType) => {
-    return {type: 'ADD-TASK', payload: {task}} as const
+    return {type: ADD_TASK, payload: {task}} as const
 }
 export const changeTaskStatusAC = (toDoListID: string, id: string, status: TasksStatuses) => {
-    return {type: 'CHANGE-TASK-STATUS', payload: {toDoListID, id, status}} as const
+    return {type: CHANGE_TASK_STATUS, payload: {toDoListID, id, status}} as const
 }
 export const changeTaskTitleAC = (toDoListID: string, id: string, title: string) => {
-    return {type: 'CHANGE-TASK-TITLE', payload: {toDoListID, id, title}} as const
+    return {type: CHANGE_TASK_TITLE, payload: {toDoListID, id, title}} as const
 }
 export const setTasksAC = (toDoListID: string, tasks: Array<TasksType>) => {
-    return {type: 'SET-TASKS', payload: {toDoListID, tasks}} as const
+    return {type: SET_TASKS, payload: {toDoListID, tasks}} as const
 }
 
 // *********** Thunk - необходимые для общения с DAL ****************
@@ -111,7 +118,6 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispa
     dispatch(setAppStatusAC('loading'))
 
     try {
-
         // Запрос на получение tasks с сервера
         const getTasksData = await tasksAPI.getTasks(todolistId)
 
@@ -121,6 +127,7 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispa
         // Убираем Preloader после успешного ответа
         dispatch(setAppStatusAC('succeeded'))
     } catch (error: any) {
+        // Обработка сетевой ошибки
         handleServerNetworkError(error, dispatch)
     }
 }
@@ -142,9 +149,11 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
                 // Убираем Preloader после успешного ответа
                 dispatch(setAppStatusAC('updated'))
             } else {
+                // Обработка серверной ошибки
                 handleServerAppError(deleteTaskData, dispatch)
             }
         } catch (error: any) {
+            // Обработка сетевой ошибки
             handleServerNetworkError(error, dispatch)
         }
     }
@@ -170,24 +179,12 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
             // Включаем кнопку после успешного ответа
             dispatch(changeTodolistEntityStatusAC(todolistId, 'idle'))
         } else {
+            // Обработка серверной ошибки
             handleServerAppError(addTaskData, dispatch)
-            // // Проверили существование ошибки
-            // addTaskData.messages.length
-            //
-            //     // Задиспатчили ошибку с сервера
-            //     ? dispatch(setAppErrorAC(addTaskData.messages[0]))
-            //
-            //     // Задиспатчили ошибку свою
-            //     : dispatch(setAppErrorAC('Some error occurred🤬'))
-            //
-            // // Изменили статус
-            // dispatch(setAppStatusAC('failed'))
         }
     } catch (error: any) {
+        // Обработка сетевой ошибки
         handleServerNetworkError(error, dispatch)
-
-        // dispatch(setAppErrorAC(error.toString()))
-        // dispatch(setAppStatusAC('failed'))
     }
 }
 
@@ -224,13 +221,12 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC('updated'))
                 } else {
+                    // Обработка серверной ошибки
                     handleServerAppError(updateTaskData, dispatch)
                 }
             } catch (error: any) {
+                // Обработка сетевой ошибки
                 handleServerNetworkError(error, dispatch)
-
-                // dispatch(setAppErrorAC(error.toString()))
-                // dispatch(setAppStatusAC('failed'))
             }
         }
     }
@@ -271,23 +267,12 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC('updated'))
                 } else {
+                    // Обработка серверной ошибки
                     handleServerAppError(updateTaskData, dispatch)
-                    // // Проверили существование ошибки
-                    // updateTaskData.messages.length
-                    //
-                    //     // Задиспатчили ошибку с сервера
-                    //     ? dispatch(setAppErrorAC(updateTaskData.messages[0]))
-                    //
-                    //     // Задиспатчили ошибку свою
-                    //     : dispatch(setAppErrorAC('Some error occurred🤬'))
-                    //
-                    // // Изменили статус
-                    // dispatch(setAppStatusAC('failed'))
                 }
             } catch (error: any) {
+                // Обработка сетевой ошибки
                 handleServerNetworkError(error, dispatch)
-                // dispatch(setAppErrorAC(error.toString()))
-                // dispatch(setAppStatusAC('failed'))
             }
         }
     }

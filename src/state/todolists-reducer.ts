@@ -18,7 +18,13 @@ export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type SetTodolistActionType = ReturnType<typeof setToDoListsAC>
 
 // Константы для работы с action в todolistsReducer
-const CHANGE_TODOLIST_ENTITY_STATUS = 'todolists/CHANGE-TODOLIST-ENTITY-STATUS'
+
+export const REMOVE_TODOLIST = 'TODOLISTS/REMOVE-TODOLIST'
+export const ADD_TODOLIST = 'TODOLISTS/ADD-TODOLIST'
+const CHANGE_TODOLIST_TITLE = 'TODOLISTS/CHANGE-TODOLIST-TITLE'
+const CHANGE_TODOLIST_FILTER = 'TODOLISTS/CHANGE-TODOLIST-FILTER'
+export const SET_TODOLISTS = 'TODOLISTS/SET-TODOLISTS'
+const CHANGE_TODOLIST_ENTITY_STATUS = 'TODOLISTS/CHANGE-TODOLIST-ENTITY-STATUS'
 
 
 // Типизация Filters
@@ -37,9 +43,9 @@ const initialState: ToDoListDomainType[] = []
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 export const todolistsReducer = (state = initialState, action: ToDoListActionsTypes): ToDoListDomainType[] => {
     switch (action.type) {
-        case 'REMOVE-TODOLIST':
+        case REMOVE_TODOLIST:
             return state.filter(el => el.id !== action.payload.toDoListID)
-        case 'ADD-TODOLIST':
+        case ADD_TODOLIST:
             return [
                 {
                     id: action.payload.todolistId,
@@ -51,11 +57,11 @@ export const todolistsReducer = (state = initialState, action: ToDoListActionsTy
                 },
                 ...state
             ]
-        case 'CHANGE-TODOLIST-TITLE':
+        case CHANGE_TODOLIST_TITLE:
             return state.map(el => el.id === action.payload.toDoListID ? {...el, title: action.payload.title} : el)
-        case 'CHANGE-TODOLIST-FILTER':
+        case CHANGE_TODOLIST_FILTER:
             return state.map(el => el.id === action.payload.toDoListID ? {...el, filter: action.payload.filter} : el)
-        case 'SET-TODOLISTS':
+        case SET_TODOLISTS:
             return action.payload.toDoLists.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
         case CHANGE_TODOLIST_ENTITY_STATUS:
             return state.map(el => el.id === action.payload.id ? {...el, entityStatus: action.payload.status} : el)
@@ -66,19 +72,19 @@ export const todolistsReducer = (state = initialState, action: ToDoListActionsTy
 
 // *********** Action creators - создают объект action ****************
 export const removeTodolistAC = (toDoListID: string) => {
-    return {type: 'REMOVE-TODOLIST', payload: {toDoListID}} as const
+    return {type: REMOVE_TODOLIST, payload: {toDoListID}} as const
 }
 export const addTodolistAC = (title: string, todolistId: string) => {
-    return {type: 'ADD-TODOLIST', payload: {title, todolistId}} as const
+    return {type: ADD_TODOLIST, payload: {title, todolistId}} as const
 }
 export const changeTodolistTitleAC = (toDoListID: string, title: string) => {
-    return {type: 'CHANGE-TODOLIST-TITLE', payload: {toDoListID, title}} as const
+    return {type: CHANGE_TODOLIST_TITLE, payload: {toDoListID, title}} as const
 }
 export const changeTodolistFilterAC = (toDoListID: string, filter: FilterValuesType) => {
-    return {type: 'CHANGE-TODOLIST-FILTER', payload: {toDoListID, filter}} as const
+    return {type: CHANGE_TODOLIST_FILTER, payload: {toDoListID, filter}} as const
 }
 export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
-    return {type: 'SET-TODOLISTS', payload: {toDoLists}} as const
+    return {type: SET_TODOLISTS, payload: {toDoLists}} as const
 }
 export const changeTodolistEntityStatusAC = (id: string, status: RequestStatusType) => {
     return {type: CHANGE_TODOLIST_ENTITY_STATUS, payload: {id, status}} as const
