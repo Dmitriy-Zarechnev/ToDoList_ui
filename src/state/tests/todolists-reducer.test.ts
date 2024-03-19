@@ -1,5 +1,5 @@
 import {v1} from 'uuid'
-import {addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC, setToDoListsAC, ToDoListDomainType, todolistsReducer} from '../todolists-reducer'
+import {addTodolistAC, changeTodolistEntityStatusAC, changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC, setToDoListsAC, ToDoListDomainType, todolistsReducer} from '../todolists-reducer'
 
 let toDoListID1: string
 let toDoListID2: string
@@ -16,7 +16,7 @@ beforeEach(() => {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         },
         {
             id: toDoListID2,
@@ -24,7 +24,7 @@ beforeEach(() => {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         }
     ]
 })
@@ -78,7 +78,7 @@ test('todolist should be set from API', () => {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         },
         {
             id: toDoListID2,
@@ -86,7 +86,7 @@ test('todolist should be set from API', () => {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         },
         {
             id: '213412',
@@ -94,11 +94,19 @@ test('todolist should be set from API', () => {
             filter: 'all',
             addedDate: '',
             order: 0,
-            entityStatus:'idle'
+            entityStatus: 'idle'
         }
     ]
 
     const endState = todolistsReducer(startState, setToDoListsAC(startState))
 
     expect(endState.length).toBe(3)
+})
+
+
+test('todolist entity status should be changed', () => {
+
+    const endState = todolistsReducer(startState, changeTodolistEntityStatusAC(toDoListID1, 'loading'))
+
+    expect(endState[0].entityStatus).toBe('loading')
 })

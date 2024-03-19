@@ -1,6 +1,7 @@
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {todolistAPI, TodolistType} from '../api/todolist-api'
-import {RequestStatusType, setAppErrorAC, setAppStatusAC} from './app-reducer'
+import {RequestStatusType, setAppStatusAC} from './app-reducer'
+import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
 
 
 // Типизация Actions всего todolistsReducer
@@ -18,7 +19,6 @@ export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type SetTodolistActionType = ReturnType<typeof setToDoListsAC>
 
 // Константы для работы с action в todolistsReducer
-
 export const REMOVE_TODOLIST = 'TODOLISTS/REMOVE-TODOLIST'
 export const ADD_TODOLIST = 'TODOLISTS/ADD-TODOLIST'
 const CHANGE_TODOLIST_TITLE = 'TODOLISTS/CHANGE-TODOLIST-TITLE'
@@ -96,14 +96,19 @@ export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
 
-    // Запрос на получение todolist с сервера
-    const getTodoListsData = await todolistAPI.getTodolists()
+    try {
+        // Запрос на получение todolist с сервера
+        const getTodoListsData = await todolistAPI.getTodolists()
 
-    // Задиспатчили ответ от сервера
-    dispatch(setToDoListsAC(getTodoListsData))
+        // Задиспатчили ответ от сервера
+        dispatch(setToDoListsAC(getTodoListsData))
 
-    // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('succeeded'))
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC('succeeded'))
+    } catch (error: any) {
+        // Обработка сетевой ошибки
+        handleServerNetworkError(error, dispatch)
+    }
 }
 
 // ------------- Изменение todolist's title -----------------------
@@ -123,29 +128,24 @@ export const updateTodoListsTC = (todolistId: string, title: string) =>
             // Показываем Preloader во время запроса
             dispatch(setAppStatusAC('loading'))
 
-            // Запрос на изменение todolist's title
-            const updateTodolistData = await todolistAPI.updateTodolist(todolistId, title)
+            try {
+                // Запрос на изменение todolist's title
+                const updateTodolistData = await todolistAPI.updateTodolist(todolistId, title)
 
+                // Если успех
+                if (updateTodolistData.resultCode === 0) {
+                    // Задиспатчили после ответа от сервера и поменяли title
+                    dispatch(changeTodolistTitleAC(todolistId, title))
 
-            // Если успех
-            if (updateTodolistData.resultCode === 0) {
-                // Задиспатчили после ответа от сервера и поменяли title
-                dispatch(changeTodolistTitleAC(todolistId, title))
-
-                // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC('updated'))
-            } else {
-                // Проверили существование ошибки
-                updateTodolistData.messages.length
-
-                    // Задиспатчили ошибку с сервера
-                    ? dispatch(setAppErrorAC(updateTodolistData.messages[0]))
-
-                    // Задиспатчили ошибку свою
-                    : dispatch(setAppErrorAC('Some error occurred🤬'))
-
-                // Изменили статус
-                dispatch(setAppStatusAC('failed'))
+                    // Убираем Preloader после успешного ответа
+                    dispatch(setAppStatusAC('updated'))
+                } else {
+                    // Обработка серверной ошибки
+                    handleServerAppError(updateTodolistData, dispatch)
+                }
+            } catch (error: any) {
+                // Обработка сетевой ошибки
+                handleServerNetworkError(error, dispatch)
             }
         }
     }
@@ -155,29 +155,25 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
 
-    // Запрос на добавление todolist
-    const addTodoListsData = await todolistAPI.createTodolist(title)
+    try {
+        // Запрос на добавление todolist
+        const addTodoListsData = await todolistAPI.createTodolist(title)
 
 
-    // Если успех
-    if (addTodoListsData.resultCode === 0) {
-        // Задиспатчили ответ от сервера
-        dispatch(addTodolistAC(title, addTodoListsData.data.item.id))
+        // Если успех
+        if (addTodoListsData.resultCode === 0) {
+            // Задиспатчили ответ от сервера
+            dispatch(addTodolistAC(title, addTodoListsData.data.item.id))
 
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC('updated'))
-    } else {
-        // Проверили существование ошибки
-        addTodoListsData.messages.length
-
-            // Задиспатчили ошибку с сервера
-            ? dispatch(setAppErrorAC(addTodoListsData.messages[0]))
-
-            // Задиспатчили ошибку свою
-            : dispatch(setAppErrorAC('Some error occurred🤬'))
-
-        // Изменили статус
-        dispatch(setAppStatusAC('failed'))
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('updated'))
+        } else {
+            // Обработка серверной ошибки
+            handleServerAppError(addTodoListsData, dispatch)
+        }
+    } catch (error: any) {
+        // Обработка сетевой ошибки
+        handleServerNetworkError(error, dispatch)
     }
 }
 
@@ -186,15 +182,25 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThu
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
     // Отключаем кнопку во время запроса
-    dispatch(changeTodolistEntityStatusAC(toDoListID,'loading'))
+    dispatch(changeTodolistEntityStatusAC(toDoListID, 'loading'))
 
+    try {
+        // Запрос на удаление todolist
+        const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID)
 
-    // Запрос на удаление todolist
-    await todolistAPI.deleteTodolist(toDoListID)
+        // Если успех
+        if (deleteTodolistData.resultCode === 0) {
+            // Задиспатчили после ответа от сервера и удалили todolist
+            dispatch(removeTodolistAC(toDoListID))
 
-    // Задиспатчили после ответа от сервера и удалили todolist
-    dispatch(removeTodolistAC(toDoListID))
-
-    // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('updated'))
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('updated'))
+        } else {
+            // Обработка серверной ошибки
+            handleServerAppError(deleteTodolistData, dispatch)
+        }
+    } catch (error: any) {
+        // Обработка сетевой ошибки
+        handleServerNetworkError(error, dispatch)
+    }
 }

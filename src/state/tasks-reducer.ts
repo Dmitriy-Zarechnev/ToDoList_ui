@@ -142,6 +142,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
             // Запрос на удаление task
             const deleteTaskData = await tasksAPI.deleteTask(todolistId, taskId)
 
+            // Если успех
             if (deleteTaskData.resultCode === 0) {
                 // Задиспатчили после ответа от сервера и удалили task
                 dispatch(removeTaskAC(todolistId, taskId))
@@ -214,6 +215,7 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
                     status: status
                 })
 
+                // Если успех
                 if (updateTaskData.resultCode === 0) {
                     // Задиспатчили после ответа от сервера и поменяли status
                     dispatch(changeTaskStatusAC(todolistId, taskId, status))

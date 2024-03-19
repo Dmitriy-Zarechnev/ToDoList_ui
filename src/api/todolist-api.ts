@@ -54,5 +54,6 @@ export const todolistAPI = {
     // ----- Удалили todolists на сервере ------
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`)
+            .then(res=>res.data) // deleteTodolistData
     }
 }
