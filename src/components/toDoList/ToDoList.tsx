@@ -20,9 +20,10 @@ type TodoListPropsType = {
     title: string
     filter: FilterValuesType
     entityStatus: RequestStatusType
+    demo?: boolean
 }
 
-export const ToDoList = React.memo((props: TodoListPropsType) => {
+export const ToDoList = React.memo(({demo = false, ...props}: TodoListPropsType) => {
 
 
     // Получили tasks из state используя хук - useSelector и selector - tasksSelector
@@ -34,7 +35,9 @@ export const ToDoList = React.memo((props: TodoListPropsType) => {
 
     // -------------- Получили Tasks с сервера после загрузки страницы ----------------
     useEffect(() => {
-        dispatch(getTasksTC(props.id))
+        if (!demo) {
+            dispatch(getTasksTC(props.id))
+        }
     }, [])
 
     // -------------- Меняем название todolist ----------------

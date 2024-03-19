@@ -19,8 +19,12 @@ import LinearProgress from '@mui/material/LinearProgress'
 import {appStatusSelector} from './state/selectors/app-selector'
 import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
 
+type AppPropsType = {
+    demo?: boolean
+}
 
-function App() {
+
+function App({demo = false}: AppPropsType) {
 
     // Получили tasks из state используя хук - useSelector и selector - toDoListsSelector
     const toDoLists = useSelector(toDoListsSelector)
@@ -33,7 +37,9 @@ function App() {
 
     // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
     useEffect(() => {
-        dispatch(getTodoListsTC())
+        if (!demo) {
+            dispatch(getTodoListsTC())
+        }
     }, [])
 
 
@@ -65,7 +71,7 @@ function App() {
 
             <Container fixed>
                 <Grid container>
-                    <AddItemForm addItem={addToDoList} itemType={'Todolist'} />
+                    <AddItemForm addItem={addToDoList} itemType={'Todolist'}/>
                 </Grid>
 
                 <Grid container spacing={3}>
@@ -80,6 +86,7 @@ function App() {
                                     title={el.title}
                                     filter={el.filter}
                                     entityStatus={el.entityStatus}
+                                    demo={demo}
                                 />
                             </Paper>
                         </Grid>

@@ -23,9 +23,16 @@ export default meta
 type Story = StoryObj<typeof AddItemForm>;
 
 
-export const AddItemFormStory: Story = {
+export const AddItemFormBase: Story = {
 
     args: {
+        addItem: action('Button clicked inside form')
+    }
+}
+
+export const AddItemFormStoryDisabled: Story = {
+    args: {
+        disabled: 'loading',
         addItem: action('Button clicked inside form')
     }
 }

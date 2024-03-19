@@ -13,7 +13,7 @@ type TaskPropsType = {
     onChangeStatusHandler: (taskId: string, status: TasksStatuses) => void
     changeTaskTitle: (newTitle: string) => void
     onClickRemoveHandler: (id: string) => void
-    entityStatus:RequestStatusType
+    entityStatus: RequestStatusType
 }
 
 
@@ -44,7 +44,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                     color={'success'}
                     checked={task.status === TasksStatuses.Completed}
                     onChange={onChangeHandler}
-                    disabled={entityStatus==='loading'}
+                    disabled={entityStatus === 'loading'}
                 />
 
                 <EditableSpan value={task.title}
@@ -56,7 +56,7 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
             <IconButton aria-label="delete" size="small"
                         onClick={() =>
                             onClickRemoveHandler(task.id)}
-                        disabled={entityStatus==='loading'}
+                        disabled={entityStatus === 'loading'}
             >
                 <DeleteIcon fontSize="small"/>
             </IconButton>

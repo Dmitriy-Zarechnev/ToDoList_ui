@@ -6,12 +6,14 @@ import {todolistsReducer} from '../../state/todolists-reducer'
 import {v1} from 'uuid'
 import {AppRootStateType} from '../../state/store'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
+import {appReducer} from '../../state/app-reducer'
 import {thunk} from 'redux-thunk'
 
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer
+    todolists: todolistsReducer,
+    app: appReducer
 })
 
 
@@ -100,7 +102,7 @@ const initialGlobalState: AppRootStateType = {
 
 // export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any )
+export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 
 // Декоратор, предоставляющий доступ к Redux-хранилищу в историях
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {
