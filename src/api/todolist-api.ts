@@ -9,13 +9,13 @@ export type TodolistType = {
 }
 
 // ----- Типизация ошибок при запросе ------
-type FieldErrorType = {
+export type FieldErrorType = {
     error: string
     field: string
 }
 
 // ----- Типизация запросов с generic ------
-type ResponseType<D = {}> = {
+export type ResponseType<D = {}> = {
     resultCode: number
     messages: string[]
     fieldsErrors: FieldErrorType[]

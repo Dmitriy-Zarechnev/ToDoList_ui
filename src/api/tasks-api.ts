@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {ResponseType} from './todolist-api'
 
 // ----- Типизация Get запроса ------
 export type GetTaskType = {
@@ -21,19 +22,6 @@ export type TasksType = {
     todoListId: string
 }
 
-// ----- Типизация ошибок при запросе ------
-type FieldErrorType = {
-    error: string
-    field: string
-}
-
-// ----- Типизация запросов с generic ------
-type ResponseType<D = {}> = {
-    resultCode: number
-    messages: string[]
-    fieldsErrors: FieldErrorType[]
-    data: D
-}
 
 // ----- Типизация запроса update ------
 type UpdateTaskModelType = {
@@ -94,5 +82,6 @@ export const tasksAPI = {
     // ----- Удалили task на сервере ------
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType>(`${todolistId}/tasks/${taskId}`)
+            .then(res=>res.data)// deleteTaskData
     }
 }

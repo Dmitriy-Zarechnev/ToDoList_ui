@@ -1,7 +1,8 @@
 import {AddTodolistActionType, changeTodolistEntityStatusAC, RemoveTodolistActionType, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from './store'
 import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
-import {setAppErrorAC, setAppStatusAC} from './app-reducer'
+import { setAppStatusAC} from './app-reducer'
+import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
 
 // Типизация Actions всего tasksReducer
 export type TasksActionsType =
@@ -109,14 +110,19 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppThunkDispa
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
 
-    // Запрос на получение tasks с сервера
-    const getTasksData = await tasksAPI.getTasks(todolistId)
+    try {
 
-    // Задиспатчили ответ от сервера
-    dispatch(setTasksAC(todolistId, getTasksData.items))
+        // Запрос на получение tasks с сервера
+        const getTasksData = await tasksAPI.getTasks(todolistId)
 
-    // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC('succeeded'))
+        // Задиспатчили ответ от сервера
+        dispatch(setTasksAC(todolistId, getTasksData.items))
+
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC('succeeded'))
+    } catch (error: any) {
+        handleServerNetworkError(error, dispatch)
+    }
 }
 
 // ------------- Удаление task -----------------------
@@ -125,14 +131,22 @@ export const deleteTaskTC = (todolistId: string, taskId: string) =>
         // Показываем Preloader во время запроса
         dispatch(setAppStatusAC('loading'))
 
-        // Запрос на удаление task
-        await tasksAPI.deleteTask(todolistId, taskId)
+        try {
+            // Запрос на удаление task
+            const deleteTaskData = await tasksAPI.deleteTask(todolistId, taskId)
 
-        // Задиспатчили после ответа от сервера и удалили task
-        dispatch(removeTaskAC(todolistId, taskId))
+            if (deleteTaskData.resultCode === 0) {
+                // Задиспатчили после ответа от сервера и удалили task
+                dispatch(removeTaskAC(todolistId, taskId))
 
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC('updated'))
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC('updated'))
+            } else {
+                handleServerAppError(deleteTaskData, dispatch)
+            }
+        } catch (error: any) {
+            handleServerNetworkError(error, dispatch)
+        }
     }
 
 // ------------- Добавление task -----------------------
@@ -156,21 +170,24 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
             // Включаем кнопку после успешного ответа
             dispatch(changeTodolistEntityStatusAC(todolistId, 'idle'))
         } else {
-            // Проверили существование ошибки
-            addTaskData.messages.length
-
-                // Задиспатчили ошибку с сервера
-                ? dispatch(setAppErrorAC(addTaskData.messages[0]))
-
-                // Задиспатчили ошибку свою
-                : dispatch(setAppErrorAC('Some error occurred🤬'))
-
-            // Изменили статус
-            dispatch(setAppStatusAC('failed'))
+            handleServerAppError(addTaskData, dispatch)
+            // // Проверили существование ошибки
+            // addTaskData.messages.length
+            //
+            //     // Задиспатчили ошибку с сервера
+            //     ? dispatch(setAppErrorAC(addTaskData.messages[0]))
+            //
+            //     // Задиспатчили ошибку свою
+            //     : dispatch(setAppErrorAC('Some error occurred🤬'))
+            //
+            // // Изменили статус
+            // dispatch(setAppStatusAC('failed'))
         }
     } catch (error: any) {
-        dispatch(setAppErrorAC(error.toString()))
-        dispatch(setAppStatusAC('failed'))
+        handleServerNetworkError(error, dispatch)
+
+        // dispatch(setAppErrorAC(error.toString()))
+        // dispatch(setAppStatusAC('failed'))
     }
 }
 
@@ -191,7 +208,7 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
             dispatch(setAppStatusAC('loading'))
             try {
                 // Запрос на изменение task's status
-                await tasksAPI.updateTask(todolistId, taskId, {
+                const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
                     title: task.title,
                     startDate: task.startDate,
                     priority: task.priority,
@@ -200,15 +217,20 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
                     status: status
                 })
 
-                // Задиспатчили после ответа от сервера и поменяли status
-                dispatch(changeTaskStatusAC(todolistId, taskId, status))
+                if (updateTaskData.resultCode === 0) {
+                    // Задиспатчили после ответа от сервера и поменяли status
+                    dispatch(changeTaskStatusAC(todolistId, taskId, status))
 
-                // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC('updated'))
-
+                    // Убираем Preloader после успешного ответа
+                    dispatch(setAppStatusAC('updated'))
+                } else {
+                    handleServerAppError(updateTaskData, dispatch)
+                }
             } catch (error: any) {
-                dispatch(setAppErrorAC(error.toString()))
-                dispatch(setAppStatusAC('failed'))
+                handleServerNetworkError(error, dispatch)
+
+                // dispatch(setAppErrorAC(error.toString()))
+                // dispatch(setAppStatusAC('failed'))
             }
         }
     }
@@ -249,22 +271,23 @@ export const updateTaskTitleTC = (todolistId: string, taskId: string, title: str
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC('updated'))
                 } else {
-                    // Проверили существование ошибки
-                    updateTaskData.messages.length
-
-                        // Задиспатчили ошибку с сервера
-                        ? dispatch(setAppErrorAC(updateTaskData.messages[0]))
-
-                        // Задиспатчили ошибку свою
-                        : dispatch(setAppErrorAC('Some error occurred🤬'))
-
-                    // Изменили статус
-                    dispatch(setAppStatusAC('failed'))
+                    handleServerAppError(updateTaskData, dispatch)
+                    // // Проверили существование ошибки
+                    // updateTaskData.messages.length
+                    //
+                    //     // Задиспатчили ошибку с сервера
+                    //     ? dispatch(setAppErrorAC(updateTaskData.messages[0]))
+                    //
+                    //     // Задиспатчили ошибку свою
+                    //     : dispatch(setAppErrorAC('Some error occurred🤬'))
+                    //
+                    // // Изменили статус
+                    // dispatch(setAppStatusAC('failed'))
                 }
             } catch (error: any) {
-                dispatch(setAppErrorAC(error.toString()))
-                dispatch(setAppStatusAC('failed'))
+                handleServerNetworkError(error, dispatch)
+                // dispatch(setAppErrorAC(error.toString()))
+                // dispatch(setAppStatusAC('failed'))
             }
-
         }
     }
