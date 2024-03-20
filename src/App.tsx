@@ -67,6 +67,7 @@ function App({demo = false}: AppPropsType) {
                 {/*Preloader который показываем во время связи с сервером*/}
                 {status === 'loading' && <LinearProgress/>}
 
+
             </AppBar>
 
             <Container fixed>
