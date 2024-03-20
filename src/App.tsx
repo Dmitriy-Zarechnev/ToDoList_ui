@@ -53,6 +53,7 @@ function App({demo = false}: AppPropsType) {
             {/*ErrorSnackbar который показываем во время ошибки*/}
             <ErrorSnackbar/>
 
+
             <AppBar position="static">
                 <Toolbar variant="dense">
                     <IconButton edge="start" color="inherit" aria-label="menu" sx={{mr: 2}}>
