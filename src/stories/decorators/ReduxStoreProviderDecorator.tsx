@@ -4,14 +4,15 @@ import {applyMiddleware, combineReducers, legacy_createStore} from 'redux'
 import {tasksReducer} from '../../state/reducers/tasks-reducer'
 import {todolistsReducer} from '../../state/reducers/todolists-reducer'
 import {v1} from 'uuid'
-import {AppRootStateType} from '../../state/store'
+import {AppRootStateType, RootReducerType} from '../../state/store'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
 import {appReducer} from '../../state/reducers/app-reducer'
 import {thunk} from 'redux-thunk'
 import {authReducer} from '../../state/reducers/auth-reducer'
+import {HashRouter} from 'react-router-dom'
 
 
-const rootReducer = combineReducers({
+const rootReducer:RootReducerType = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
     app: appReducer,
@@ -98,10 +99,10 @@ const initialGlobalState: AppRootStateType = {
     app: {
         status: 'idle',
         error: null,
-        isInitialized: false
+        isInitialized: true
     },
     auth: {
-        isLoggedIn: false
+        isLoggedIn: true
     }
 }
 
@@ -111,4 +112,9 @@ export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState
 // Декоратор, предоставляющий доступ к Redux-хранилищу в историях
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {
     return <Provider store={storyBookStore}>{storyFn()}</Provider>
+}
+
+// Декоратор, предоставляющий доступ к Redux-хранилищу в историях
+export const HashRouterDecorator = (storyFn: () => React.ReactNode) => {
+    return <HashRouter>{storyFn()}</HashRouter>
 }

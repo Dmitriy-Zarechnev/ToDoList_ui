@@ -17,8 +17,11 @@ const rootReducer = combineReducers({
 /* Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store */
 export const store = legacy_createStore(rootReducer, undefined, applyMiddleware(thunk))
 
+// Типизация rootReducer
+export type RootReducerType = typeof rootReducer
+
 // Типизация всего STATE
-export type AppRootStateType = ReturnType<typeof rootReducer>
+export type AppRootStateType = ReturnType<RootReducerType>
 
 // Типизация всех AC для типизации thunk
 type CommonActionsTypes =

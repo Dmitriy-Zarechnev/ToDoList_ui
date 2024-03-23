@@ -1,6 +1,6 @@
 import type {Meta} from '@storybook/react'
 import App from './App'
-import {ReduxStoreProviderDecorator} from './stories/decorators/ReduxStoreProviderDecorator'
+import {HashRouterDecorator, ReduxStoreProviderDecorator} from './stories/decorators/ReduxStoreProviderDecorator'
 
 
 const meta: Meta<typeof App> = {
@@ -8,7 +8,7 @@ const meta: Meta<typeof App> = {
     component: App,
 
     tags: ['autodocs'],
-    decorators: [ReduxStoreProviderDecorator]
+    decorators: [ReduxStoreProviderDecorator,HashRouterDecorator]
 }
 
 export default meta
