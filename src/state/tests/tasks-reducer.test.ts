@@ -1,8 +1,8 @@
-import {addTaskAC, changeTaskEntityStatusAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer, TasksStateType} from '../reducers/tasks-reducer'
+import {addTaskAC, changeTaskEntityStatusAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, setTasksAC, tasksReducer, TasksInitialStateType} from '../reducers/tasks-reducer'
 import {addTodolistAC,  removeTodolistAC, setToDoListsAC} from '../reducers/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
 
-let startState: TasksStateType
+let startState: TasksInitialStateType
 
 beforeEach(() => {
     startState = {

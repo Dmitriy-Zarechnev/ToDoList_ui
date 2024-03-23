@@ -17,7 +17,7 @@ export type TasksActionsType =
     SetTodolistActionType
 
 // Типизация TasksArray
-export type TasksStateType = {
+export type TasksInitialStateType = {
     [key: string]: Array<TasksType & { entityTaskStatus: RequestStatusType }>
 }
 
@@ -30,10 +30,10 @@ const SET_TASKS = 'TASKS/SET-TASKS'
 const CHANGE_TASK_ENTITY_STATUS = 'TASKS/CHANGE-TASK-ENTITY-STATUS'
 
 // *********** Первоначальный state для tasksReducer ****************
-const initialState: TasksStateType = {}
+const initialState: TasksInitialStateType = {}
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
-export const tasksReducer = (state = initialState, action: TasksActionsType): TasksStateType => {
+export const tasksReducer = (state = initialState, action: TasksActionsType): TasksInitialStateType => {
     switch (action.type) {
         case REMOVE_TASK:
             return {

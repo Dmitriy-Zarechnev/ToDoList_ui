@@ -9,7 +9,7 @@ export type AppActionsTypes =
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated'
 
 // Типизация initialState для appReducer
-export type InitialStateType = typeof initialState
+export type AppInitialStateType = typeof initialState
 
 // Константы для работы с action в appReducer
 const SET_APP_STATUS = 'APP/SET-APP-STATUS'
@@ -25,7 +25,7 @@ const initialState = {
 
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
-export const appReducer = (state: InitialStateType = initialState, action: AppActionsTypes): InitialStateType => {
+export const appReducer = (state: AppInitialStateType = initialState, action: AppActionsTypes): AppInitialStateType => {
     switch (action.type) {
         case SET_APP_STATUS:
             return {...state, status: action.status}

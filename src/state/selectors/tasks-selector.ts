@@ -1,6 +1,6 @@
 import {AppRootStateType} from '../store'
-import {TasksStateType} from '../reducers/tasks-reducer'
+import {TasksInitialStateType} from '../reducers/tasks-reducer'
 
-export const tasksSelector = (state: AppRootStateType): TasksStateType => {
+export const tasksSelector = (state: AppRootStateType): TasksInitialStateType => {
     return state.tasks
 }
