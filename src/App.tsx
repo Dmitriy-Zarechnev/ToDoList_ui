@@ -11,12 +11,13 @@ import {useSelector} from 'react-redux'
 import LinearProgress from '@mui/material/LinearProgress'
 import {appIsInitializedSelector, appStatusSelector} from './state/selectors/app-selector'
 import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
-import {Route, Routes} from 'react-router-dom'
+import {Navigate, Route, Routes} from 'react-router-dom'
 import {LogIn} from './components/logIn/LogIn'
 import {ToDoLists} from './components/toDoLists/ToDoLists'
-import {initializeMeTC} from './state/reducers/auth-reducer'
+import {initializeMeTC, logOutTC} from './state/reducers/auth-reducer'
 import {useAppDispatch} from './state/store'
 import CircularProgress from '@mui/material/CircularProgress'
+import {isLoggedInSelector} from './state/selectors/auth-selector'
 
 type AppPropsType = {
     demo?: boolean
@@ -29,6 +30,8 @@ function App({demo = false}: AppPropsType) {
     const status = useSelector(appStatusSelector)
     // Получили isInitialized из state используя хук - useSelector и selector - appIsInitializedSelector
     const isInitialized = useSelector(appIsInitializedSelector)
+    // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
+    const isLoggedIn = useSelector(isLoggedInSelector)
 
     // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
@@ -39,12 +42,17 @@ function App({demo = false}: AppPropsType) {
 
     if (!isInitialized) {
         return (
-            <div style={{ position: 'fixed', top: '30%', textAlign: 'center', width: '100%' }}>
-                <CircularProgress />
+            <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+                <CircularProgress/>
             </div>
         )
     }
 
+    const onClickHandler = () => {
+        isLoggedIn
+            ? dispatch(logOutTC())
+            : <Navigate to={'/login'}/>
+    }
 
     return (
         <div className="App">
@@ -60,7 +68,7 @@ function App({demo = false}: AppPropsType) {
                     <Typography variant="h6" color="inherit" component="div">
                         TodoList
                     </Typography>
-                    <Button color={'inherit'}>Login</Button>
+                    <Button color={'inherit'} onClick={onClickHandler}>{isLoggedIn ? 'LogOut' : 'LogIn'}</Button>
                 </Toolbar>
 
                 {/*Preloader который показываем во время связи с сервером*/}

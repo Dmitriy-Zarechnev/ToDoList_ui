@@ -38,7 +38,7 @@ export const authAPI = {
     // ----- Вылогинизация с сервера ------
     logOut() {
         return instance.delete<ResponseType>(`auth/login`)
-        // .then(res=>res.data) // deleteTodolistData
+        .then(res=>res.data) // logOutData
     },
 
     // ----- Проверка при входе ------

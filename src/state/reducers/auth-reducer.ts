@@ -93,3 +93,30 @@ export const initializeMeTC = () => async (dispatch: AppThunkDispatch) => {
     }
 
 }
+
+// Вылогинизация на сервере
+export const logOutTC = () => async (dispatch: AppThunkDispatch) => {
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC('loading'))
+
+    try {
+        // Запрос на вылогинизацию
+        const logOutData = await authAPI.logOut()
+
+        // Если успех
+        if (logOutData.resultCode === 0) {
+
+            // Задиспатчили после ответа от сервера false
+            dispatch(setIsLoggedInAC(false))
+
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC('idle'))
+        } else {
+            // Обработка серверной ошибки
+            handleServerAppError(logOutData, dispatch)
+        }
+    } catch (error) {
+        // Обработка сетевой ошибки
+        handleServerNetworkError(error, dispatch)
+    }
+}
