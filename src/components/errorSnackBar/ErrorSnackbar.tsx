@@ -20,9 +20,6 @@ export function ErrorSnackbar() {
 
     // Закрытие Snackbar при кликах
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        // if (reason === 'clickaway') {
-        //     return
-        // }
         dispatch(setAppStatusAC('idle'))
         dispatch(setAppErrorAC(null))
     }

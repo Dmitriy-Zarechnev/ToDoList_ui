@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './App.css'
 import MenuIcon from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
@@ -9,11 +9,14 @@ import Toolbar from '@mui/material/Toolbar'
 import Container from '@mui/material/Container'
 import {useSelector} from 'react-redux'
 import LinearProgress from '@mui/material/LinearProgress'
-import {appStatusSelector} from './state/selectors/app-selector'
+import {appIsInitializedSelector, appStatusSelector} from './state/selectors/app-selector'
 import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
 import {Route, Routes} from 'react-router-dom'
 import {LogIn} from './components/logIn/LogIn'
 import {ToDoLists} from './components/toDoLists/ToDoLists'
+import {initializeMeTC} from './state/reducers/auth-reducer'
+import {useAppDispatch} from './state/store'
+import CircularProgress from '@mui/material/CircularProgress'
 
 type AppPropsType = {
     demo?: boolean
@@ -24,6 +27,23 @@ function App({demo = false}: AppPropsType) {
 
     // Получили status из state используя хук - useSelector и selector - appStatusSelector
     const status = useSelector(appStatusSelector)
+    // Получили isInitialized из state используя хук - useSelector и selector - appIsInitializedSelector
+    const isInitialized = useSelector(appIsInitializedSelector)
+
+    // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(initializeMeTC())
+    }, [])
+
+    if (!isInitialized) {
+        return (
+            <div style={{ position: 'fixed', top: '30%', textAlign: 'center', width: '100%' }}>
+                <CircularProgress />
+            </div>
+        )
+    }
 
 
     return (

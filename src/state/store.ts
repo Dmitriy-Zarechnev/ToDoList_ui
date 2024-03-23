@@ -4,12 +4,14 @@ import {ToDoListActionsTypes, todolistsReducer} from './reducers/todolists-reduc
 import {thunk, ThunkDispatch} from 'redux-thunk'
 import {useDispatch} from 'react-redux'
 import {AppActionsTypes, appReducer} from './reducers/app-reducer'
+import {AuthActionsTypes, authReducer} from './reducers/auth-reducer'
 
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 })
 
 /* Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store */
@@ -22,7 +24,8 @@ export type AppRootStateType = ReturnType<typeof rootReducer>
 type CommonActionsTypes =
     ToDoListActionsTypes |
     TasksActionsType |
-    AppActionsTypes
+    AppActionsTypes |
+    AuthActionsTypes
 
 // Типизация для thunk, позволяет диспатчить thunk и action
 export type AppThunkDispatch = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypes>

@@ -7,17 +7,28 @@ import {addTodoListsTC, getTodoListsTC} from '../../state/reducers/todolists-red
 import {useAppDispatch} from '../../state/store'
 import {useSelector} from 'react-redux'
 import {toDoListsSelector} from '../../state/selectors/todolists-selector'
+import {Navigate} from 'react-router-dom'
+import {isLoggedInSelector} from '../../state/selectors/auth-selector'
 
-export const ToDoLists = memo(({demo = false}:{demo: boolean}) => {
+export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
 
-    // Получили tasks из state используя хук - useSelector и selector - toDoListsSelector
+    // Получили toDoLists из state используя хук - useSelector и selector - toDoListsSelector
     const toDoLists = useSelector(toDoListsSelector)
+
+    // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
+    const isLoggedIn = useSelector(isLoggedInSelector)
+
 
     // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
     const dispatch = useAppDispatch()
 
     // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
     useEffect(() => {
+        // Проверка, чтоб лишний раз не грузить todolists
+        if (!isLoggedIn) {
+            return
+        }
+
         if (!demo) {
             dispatch(getTodoListsTC())
         }
@@ -28,6 +39,13 @@ export const ToDoLists = memo(({demo = false}:{demo: boolean}) => {
     const addToDoList = useCallback((title: string) => {
         dispatch(addTodoListsTC(title))
     }, [])
+
+
+    // Redirect в случае отсутствия логинизации
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
+
 
     return (
         <div>
