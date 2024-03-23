@@ -31,6 +31,7 @@ export const authReducer = (state: AuthInitialStateType = initialState, action: 
     }
 }
 
+
 // *********** Action creators - создают объект action ****************
 export const setIsLoggedInAC = (value: boolean) => {
     return {type: SET_IS_LOGGED_IN, value} as const
