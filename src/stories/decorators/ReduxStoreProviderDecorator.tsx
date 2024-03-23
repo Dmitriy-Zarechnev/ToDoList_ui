@@ -8,12 +8,14 @@ import {AppRootStateType} from '../../state/store'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
 import {appReducer} from '../../state/reducers/app-reducer'
 import {thunk} from 'redux-thunk'
+import {authReducer} from '../../state/reducers/auth-reducer'
 
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 })
 
 
@@ -103,8 +105,6 @@ const initialGlobalState: AppRootStateType = {
     }
 }
 
-
-// export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 
 export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk))
 

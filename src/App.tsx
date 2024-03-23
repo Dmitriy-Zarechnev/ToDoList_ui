@@ -40,6 +40,8 @@ function App({demo = false}: AppPropsType) {
         dispatch(initializeMeTC())
     }, [])
 
+
+    // Крутилка во время инициализации
     if (!isInitialized) {
         return (
             <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
@@ -48,6 +50,7 @@ function App({demo = false}: AppPropsType) {
         )
     }
 
+    // Функция для вылогинизации
     const onClickHandler = () => {
         isLoggedIn
             ? dispatch(logOutTC())
@@ -78,7 +81,6 @@ function App({demo = false}: AppPropsType) {
             </AppBar>
 
             <Container fixed>
-                {/*<ToDoLists demo={demo}/>*/}
                 <Routes>
                     <Route path={'/'} element={<ToDoLists demo={demo}/>}/>
                     <Route path={'/login'} element={<LogIn/>}/>
