@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useCallback, useState} from 'react'
 import S from '../toDoList/ToDoList.module.css'
 import TextField from '@mui/material/TextField'
-import {RequestStatusType} from '../../state/app-reducer'
+import {RequestStatusType} from '../../state/reducers/app-reducer'
 
 type EditableSpan = {
     value: string

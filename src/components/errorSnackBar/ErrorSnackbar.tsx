@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert'
 import {useSelector} from 'react-redux'
 import {appErrorSelector, appStatusSelector} from '../../state/selectors/app-selector'
 import {useAppDispatch} from '../../state/store'
-import {setAppErrorAC, setAppStatusAC} from '../../state/app-reducer'
+import {setAppErrorAC, setAppStatusAC} from '../../state/reducers/app-reducer'
 
 
 export function ErrorSnackbar() {

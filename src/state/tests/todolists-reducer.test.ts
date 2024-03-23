@@ -1,5 +1,5 @@
 import {v1} from 'uuid'
-import {addTodolistAC, changeTodolistEntityStatusAC, changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC, setToDoListsAC, ToDoListDomainType, todolistsReducer} from '../todolists-reducer'
+import {addTodolistAC, changeTodolistEntityStatusAC, changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC, setToDoListsAC, ToDoListDomainType, todolistsReducer} from '../reducers/todolists-reducer'
 
 let toDoListID1: string
 let toDoListID2: string

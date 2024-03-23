@@ -5,7 +5,7 @@ import {EditableSpan} from '../editableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {TasksStatuses, TasksType} from '../../api/tasks-api'
-import {RequestStatusType} from '../../state/app-reducer'
+import {RequestStatusType} from '../../state/reducers/app-reducer'
 
 
 type TaskPropsType = {

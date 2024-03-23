@@ -1,7 +1,7 @@
-import {AppRootStateType, AppThunkDispatch} from './store'
-import {todolistAPI, TodolistType} from '../api/todolist-api'
+import {AppRootStateType, AppThunkDispatch} from '../store'
+import {todolistAPI, TodolistType} from '../../api/todolist-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
-import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
 
 
 // Типизация Actions всего todolistsReducer

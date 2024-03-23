@@ -1,12 +1,12 @@
 import React from 'react'
 import {Provider} from 'react-redux'
 import {applyMiddleware, combineReducers, legacy_createStore} from 'redux'
-import {tasksReducer} from '../../state/tasks-reducer'
-import {todolistsReducer} from '../../state/todolists-reducer'
+import {tasksReducer} from '../../state/reducers/tasks-reducer'
+import {todolistsReducer} from '../../state/reducers/todolists-reducer'
 import {v1} from 'uuid'
 import {AppRootStateType} from '../../state/store'
 import {TasksPriorities, TasksStatuses} from '../../api/tasks-api'
-import {appReducer} from '../../state/app-reducer'
+import {appReducer} from '../../state/reducers/app-reducer'
 import {thunk} from 'redux-thunk'
 
 

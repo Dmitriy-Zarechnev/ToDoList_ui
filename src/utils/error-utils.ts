@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux'
 import {ResponseType} from '../api/todolist-api'
-import {AppActionsTypes, setAppErrorAC, setAppStatusAC} from '../state/app-reducer'
+import {AppActionsTypes, setAppErrorAC, setAppStatusAC} from '../state/reducers/app-reducer'
 
 // Типизация для dispatch
 type ErrorUtilsDispatchType = Dispatch<AppActionsTypes>

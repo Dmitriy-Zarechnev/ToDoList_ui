@@ -1,6 +1,6 @@
 import React from 'react'
 import S from './Button.module.css'
-import {FilterValuesType} from '../../state/todolists-reducer'
+import {FilterValuesType} from '../../state/reducers/todolists-reducer'
 
 type ButtonPropsType = {
     name: string,

@@ -1,8 +1,8 @@
 import {ADD_TODOLIST, AddTodolistActionType, changeTodolistEntityStatusAC, REMOVE_TODOLIST, RemoveTodolistActionType, SET_TODOLISTS, SetTodolistActionType} from './todolists-reducer'
-import {AppRootStateType, AppThunkDispatch} from './store'
-import {tasksAPI, TasksStatuses, TasksType} from '../api/tasks-api'
+import {AppRootStateType, AppThunkDispatch} from '../store'
+import {tasksAPI, TasksStatuses, TasksType} from '../../api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
-import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils'
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
 
 // Типизация Actions всего tasksReducer
 export type TasksActionsType =
