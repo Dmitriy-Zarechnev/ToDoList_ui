@@ -2,6 +2,7 @@ import {AppRootStateType, AppThunkDispatch} from '../store'
 import {todolistAPI, TodolistType} from '../../api/todolist-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
+import {getTasksTC} from './tasks-reducer'
 
 
 // Типизация Actions всего todolistsReducer
@@ -102,6 +103,12 @@ export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
 
         // Задиспатчили ответ от сервера
         dispatch(setToDoListsAC(getTodoListsData))
+
+        // Задиспатчили tasks с сервера для каждого todolist
+        getTodoListsData.forEach(el => {
+            dispatch(getTasksTC(el.id))
+        })
+
 
         // Убираем Preloader после успешного ответа
         dispatch(setAppStatusAC('succeeded'))

@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux'
 import LinearProgress from '@mui/material/LinearProgress'
 import {appIsInitializedSelector, appStatusSelector} from './state/selectors/app-selector'
 import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
-import { Navigate, Route, Routes} from 'react-router-dom'
+import {Navigate, Route, Routes} from 'react-router-dom'
 import {LogIn} from './components/logIn/LogIn'
 import {ToDoLists} from './components/toDoLists/ToDoLists'
 import {initializeMeTC, logOutTC} from './state/reducers/auth-reducer'
@@ -38,11 +38,9 @@ function App({demo = false}: AppPropsType) {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-
         if (!demo) {
             dispatch(initializeMeTC())
         }
-
     }, [])
 
 
@@ -63,7 +61,6 @@ function App({demo = false}: AppPropsType) {
     }
 
     return (
-
         <div className="App">
             {/*ErrorSnackbar который показываем во время ошибки*/}
             <ErrorSnackbar/>
@@ -96,7 +93,6 @@ function App({demo = false}: AppPropsType) {
             </Container>
 
         </div>
-
     )
 }
 

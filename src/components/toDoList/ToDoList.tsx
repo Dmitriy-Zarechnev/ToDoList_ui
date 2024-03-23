@@ -34,11 +34,11 @@ export const ToDoList = React.memo(({demo = false, ...props}: TodoListPropsType)
     const dispatch = useAppDispatch()
 
     // -------------- Получили Tasks с сервера после загрузки страницы ----------------
-    useEffect(() => {
-        if (!demo) {
-            dispatch(getTasksTC(props.id))
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (!demo) {
+    //         dispatch(getTasksTC(props.id))
+    //     }
+    // }, [])
 
     // -------------- Меняем название todolist ----------------
     const changeToDoListTitle = useCallback((newTitle: string) => {
