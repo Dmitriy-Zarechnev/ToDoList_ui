@@ -1,4 +1,4 @@
-import {ADD_TODOLIST, AddTodolistActionType, changeTodolistEntityStatusAC, REMOVE_TODOLIST, RemoveTodolistActionType, SET_TODOLISTS, SetTodolistActionType} from './todolists-reducer'
+import {ADD_TODOLIST, AddTodolistActionType, changeTodolistEntityStatusAC, CLEAR_TO_DO_DATA, ClearToDoDataActionType, REMOVE_TODOLIST, RemoveTodolistActionType, SET_TODOLISTS, SetTodolistActionType} from './todolists-reducer'
 import {AppRootStateType, AppThunkDispatch} from '../store'
 import {tasksAPI, TasksStatuses, TasksType} from '../../api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
@@ -14,7 +14,8 @@ export type TasksActionsType =
     ReturnType<typeof changeTaskEntityStatusAC> |
     AddTodolistActionType |
     RemoveTodolistActionType |
-    SetTodolistActionType
+    SetTodolistActionType |
+    ClearToDoDataActionType
 
 // Типизация TasksArray
 export type TasksInitialStateType = {
@@ -99,6 +100,9 @@ export const tasksReducer = (state = initialState, action: TasksActionsType): Ta
                         ? el
                         : {...el, entityTaskStatus: action.payload.entityTaskStatus})
             }
+
+        case CLEAR_TO_DO_DATA:
+            return {}
 
         default :
             return state

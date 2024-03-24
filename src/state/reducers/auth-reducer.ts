@@ -1,9 +1,11 @@
-// Типизация Actions всего authReducer
 import {AppThunkDispatch} from '../store'
 import {setAppInitializedAC, setAppStatusAC} from './app-reducer'
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils'
 import {authAPI, LoginParamsType} from '../../api/auth-api'
+import {clearToDoDataAC} from './todolists-reducer'
 
+
+// Типизация Actions всего authReducer
 export type AuthActionsTypes =
     ReturnType<typeof setIsLoggedInAC>
 
@@ -40,7 +42,7 @@ export const setIsLoggedInAC = (value: boolean) => {
 
 // *********** Thunk - необходимы для общения с DAL ****************
 
-// Логинизация на сервере
+// ------------- Логинизация на сервере -----------------------
 export const logInTC = (data: LoginParamsType) => async (dispatch: AppThunkDispatch) => {
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
@@ -67,7 +69,8 @@ export const logInTC = (data: LoginParamsType) => async (dispatch: AppThunkDispa
     }
 }
 
-// Проверка при первом входе
+
+// ------------- Проверка при первом входе -----------------------
 export const initializeMeTC = () => async (dispatch: AppThunkDispatch) => {
 
     try {
@@ -95,7 +98,8 @@ export const initializeMeTC = () => async (dispatch: AppThunkDispatch) => {
 
 }
 
-// Вылогинизация на сервере
+
+// ------------- Вылогинизация на сервере -----------------------
 export const logOutTC = () => async (dispatch: AppThunkDispatch) => {
     // Показываем Preloader во время запроса
     dispatch(setAppStatusAC('loading'))
@@ -109,6 +113,9 @@ export const logOutTC = () => async (dispatch: AppThunkDispatch) => {
 
             // Задиспатчили после ответа от сервера false
             dispatch(setIsLoggedInAC(false))
+
+            // Удалили все данные из store после вылогинизации
+            dispatch(clearToDoDataAC())
 
             // Убираем Preloader после успешного ответа
             dispatch(setAppStatusAC('idle'))

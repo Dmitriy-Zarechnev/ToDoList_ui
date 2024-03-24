@@ -12,12 +12,14 @@ export type ToDoListActionsTypes =
     SetTodolistActionType |
     ReturnType<typeof changeTodolistTitleAC> |
     ReturnType<typeof changeTodolistFilterAC> |
-    ReturnType<typeof changeTodolistEntityStatusAC>
+    ReturnType<typeof changeTodolistEntityStatusAC> |
+    ClearToDoDataActionType
 
 
 export type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export type AddTodolistActionType = ReturnType<typeof addTodolistAC>
 export type SetTodolistActionType = ReturnType<typeof setToDoListsAC>
+export type ClearToDoDataActionType = ReturnType<typeof clearToDoDataAC>
 
 // Константы для работы с action в todolistsReducer
 export const REMOVE_TODOLIST = 'TODOLISTS/REMOVE-TODOLIST'
@@ -26,6 +28,7 @@ const CHANGE_TODOLIST_TITLE = 'TODOLISTS/CHANGE-TODOLIST-TITLE'
 const CHANGE_TODOLIST_FILTER = 'TODOLISTS/CHANGE-TODOLIST-FILTER'
 export const SET_TODOLISTS = 'TODOLISTS/SET-TODOLISTS'
 const CHANGE_TODOLIST_ENTITY_STATUS = 'TODOLISTS/CHANGE-TODOLIST-ENTITY-STATUS'
+export const CLEAR_TO_DO_DATA = 'TODOLISTS/CLEAR-TO-DO-DATA'
 
 
 // Типизация Filters
@@ -66,6 +69,8 @@ export const todolistsReducer = (state = initialState, action: ToDoListActionsTy
             return action.payload.toDoLists.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
         case CHANGE_TODOLIST_ENTITY_STATUS:
             return state.map(el => el.id === action.payload.id ? {...el, entityStatus: action.payload.status} : el)
+        case CLEAR_TO_DO_DATA:
+            return []
         default :
             return state
     }
@@ -90,7 +95,9 @@ export const setToDoListsAC = (toDoLists: Array<TodolistType>) => {
 export const changeTodolistEntityStatusAC = (id: string, status: RequestStatusType) => {
     return {type: CHANGE_TODOLIST_ENTITY_STATUS, payload: {id, status}} as const
 }
-
+export const clearToDoDataAC = () => {
+    return {type: CLEAR_TO_DO_DATA} as const
+}
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
 export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
