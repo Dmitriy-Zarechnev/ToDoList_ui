@@ -5,6 +5,7 @@ import { thunk, ThunkDispatch } from "redux-thunk";
 import { useDispatch } from "react-redux";
 import { AppActionsTypes, appReducer } from "./reducers/app-reducer";
 import { AuthActionsTypes, authReducer } from "./reducers/auth-reducer";
+import { configureStore } from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
   tasks: tasksReducer,
@@ -13,14 +14,17 @@ const rootReducer = combineReducers({
   auth: authReducer,
 });
 
-/* Второй параметр preloadedState необходимо указать undefined, чтоб не ругался store */
-export const store = legacy_createStore(rootReducer, undefined, applyMiddleware(thunk));
+/* Создали RTK store */
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk),
+});
 
 // Типизация rootReducer
 export type RootReducerType = typeof rootReducer;
 
 // Типизация всего STATE
-export type AppRootStateType = ReturnType<RootReducerType>;
+export type AppRootStateType = ReturnType<typeof store.getState>;
 
 // Типизация всех AC для типизации thunk
 type CommonActionsTypes = ToDoListActionsTypes | TasksActionsType | AppActionsTypes | AuthActionsTypes;
