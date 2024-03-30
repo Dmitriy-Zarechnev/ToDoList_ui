@@ -1,10 +1,10 @@
-import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
+import { combineReducers } from "redux";
 import { TasksActionsType, tasksReducer } from "./reducers/tasks-reducer";
 import { ToDoListActionsTypes, todolistsReducer } from "./reducers/todolists-reducer";
 import { thunk, ThunkDispatch } from "redux-thunk";
 import { useDispatch } from "react-redux";
 import { AppActionsTypes, appReducer } from "./reducers/app-reducer";
-import { AuthActionsTypes, authReducer } from "./reducers/auth-reducer";
+import { authReducer } from "./reducers/auth-reducer";
 import { configureStore } from "@reduxjs/toolkit";
 
 const rootReducer = combineReducers({
@@ -27,10 +27,12 @@ export type RootReducerType = typeof rootReducer;
 export type AppRootStateType = ReturnType<typeof store.getState>;
 
 // Типизация всех AC для типизации thunk
-type CommonActionsTypes = ToDoListActionsTypes | TasksActionsType | AppActionsTypes | AuthActionsTypes;
+type CommonActionsTypes = ToDoListActionsTypes | TasksActionsType | AppActionsTypes;
 
 // Типизация для thunk, позволяет диспатчить thunk и action
 export type AppThunkDispatch = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypes>;
 
+// Типизация dispatch по RTK
+export type AppDispatch = typeof store.dispatch;
 // Самопальный useDispatch
-export const useAppDispatch = () => useDispatch<AppThunkDispatch>();
+export const useAppDispatch = () => useDispatch<AppDispatch>();
