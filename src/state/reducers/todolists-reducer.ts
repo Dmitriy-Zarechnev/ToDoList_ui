@@ -94,9 +94,6 @@ export const {
   clearToDoDataAC
 } = slice.actions;
 
-// ❗ В дальнейшем пригодится в tasksReducer
-export const toDoListsActions = slice.actions;
-
 
 /*
 // Типизация Actions всего todolistsReducer

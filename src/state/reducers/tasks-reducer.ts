@@ -1,5 +1,6 @@
 import {
-  changeTodolistEntityStatusAC, toDoListsActions
+  addTodolistAC,
+  changeTodolistEntityStatusAC, clearToDoDataAC, removeTodolistAC, setToDoListsAC
 } from "./todolists-reducer";
 import { AppDispatch, AppRootStateType } from "../store";
 import { tasksAPI, TasksStatuses, TasksType } from "api/tasks-api";
@@ -74,21 +75,21 @@ const slice = createSlice({
   // Общие reducers с другими
   extraReducers: builder => {
     builder
-      .addCase(toDoListsActions.addTodolistAC,
+      .addCase(addTodolistAC,
         (state, action) => {
           state[action.payload.toDoListID] = [];
         })
-      .addCase(toDoListsActions.removeTodolistAC,
+      .addCase(removeTodolistAC,
         (state, action) => {
           delete state[action.payload.toDoListID];
         })
-      .addCase(toDoListsActions.setToDoListsAC,
+      .addCase(setToDoListsAC,
         (state, action) => {
           action.payload.toDoLists.forEach((el) => {
             state[el.id] = [];
           });
         })
-      .addCase(toDoListsActions.clearToDoDataAC,
+      .addCase(clearToDoDataAC,
         (state) => {
           Object.keys(state).forEach(el => {
             delete state[el];
@@ -241,7 +242,7 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppDispatch) 
     // Запрос на получение tasks с сервера
     const getTasksData = await tasksAPI.getTasks(todolistId);
 
-    // Задиспатчили ответ от сервера
+    // Dispatch ответ от сервера
     dispatch(setTasksAC({ toDoListID: todolistId, tasks: getTasksData.items }));
 
     // Убираем Preloader после успешного ответа
@@ -265,7 +266,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispa
 
     // Если успех
     if (deleteTaskData.resultCode === 0) {
-      // Задиспатчили после ответа от сервера и удалили task
+      // Dispatch после ответа от сервера и удалили task
       dispatch(removeTaskAC({ toDoListID: todolistId, id: taskId }));
 
       // Убираем Preloader после успешного ответа
@@ -295,7 +296,7 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
 
     // Если успех
     if (addTaskData.resultCode === 0) {
-      // Задиспатчили ответ от сервера и прибавили entityTaskStatus
+      // Dispatch ответ от сервера и прибавили entityTaskStatus
       dispatch(addTaskAC({ task: { ...addTaskData.data.item, entityTaskStatus: "idle" } }));
 
       // Убираем Preloader после успешного ответа
@@ -344,7 +345,7 @@ export const updateTaskStatusTC =
 
           // Если успех
           if (updateTaskData.resultCode === 0) {
-            // Задиспатчили после ответа от сервера и поменяли status
+            // Dispatch после ответа от сервера и поменяли status
             dispatch(changeTaskStatusAC({ toDoListID: todolistId, id: taskId, status }));
 
             // Убираем Preloader после успешного ответа
@@ -362,7 +363,7 @@ export const updateTaskStatusTC =
       }
     };
 
-// ------------- Изменение task's title -----------------------
+// ------------- Изменение tasks title -----------------------
 export const updateTaskTitleTC =
   (todolistId: string, taskId: string, title: string) =>
     async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
@@ -394,7 +395,7 @@ export const updateTaskTitleTC =
 
           // Если успех
           if (updateTaskData.resultCode === 0) {
-            // Задиспатчили после ответа от сервера и поменяли title
+            // Dispatch после ответа от сервера и поменяли title
             dispatch(changeTaskTitleAC({ toDoListID: todolistId, id: taskId, title }));
 
             // Убираем Preloader после успешного ответа
