@@ -3,7 +3,7 @@ import { TasksActionsType, tasksReducer } from "./reducers/tasks-reducer";
 import { ToDoListActionsTypes, todolistsReducer } from "./reducers/todolists-reducer";
 import { thunk, ThunkDispatch } from "redux-thunk";
 import { useDispatch } from "react-redux";
-import { AppActionsTypes, appReducer } from "./reducers/app-reducer";
+import {  appReducer } from "./reducers/app-reducer";
 import { authReducer } from "./reducers/auth-reducer";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -27,7 +27,7 @@ export type RootReducerType = typeof rootReducer;
 export type AppRootStateType = ReturnType<typeof store.getState>;
 
 // Типизация всех AC для типизации thunk
-type CommonActionsTypes = ToDoListActionsTypes | TasksActionsType | AppActionsTypes;
+type CommonActionsTypes = ToDoListActionsTypes | TasksActionsType ;
 
 // Типизация для thunk, позволяет диспатчить thunk и action
 export type AppThunkDispatch = ThunkDispatch<AppRootStateType, unknown, CommonActionsTypes>;

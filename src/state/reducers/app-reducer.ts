@@ -1,3 +1,46 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+// Типы статусов для работы в приложении
+export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed" | "updated";
+
+// slice - reducer создаем с помощью функции createSlice
+const slice = createSlice({
+  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+  name: "app",
+  initialState: {
+    status: "idle" as RequestStatusType,
+    error: null as string | null,
+    isInitialized: false as boolean
+  },
+  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+  reducers: {
+    setAppStatusAC: (state,
+                     action: PayloadAction<{ status: RequestStatusType }>) => {
+      state.status = action.payload.status;
+    },
+    setAppErrorAC: (state,
+                    action: PayloadAction<{ error: string | null }>) => {
+      state.error = action.payload.error;
+    },
+    setAppInitializedAC: (state,
+                          action: PayloadAction<{ isInitialized: boolean }>) => {
+      state.isInitialized = action.payload.isInitialized;
+    }
+  }
+});
+
+// Создаем appReducer с помощью slice
+export const appReducer = slice.reducer;
+// Action creator также достаем с помощью slice
+export const {
+  setAppStatusAC,
+  setAppErrorAC,
+  setAppInitializedAC
+} = slice.actions;
+// ❗ В дальнейшем пригодится
+export const appActions = slice.actions;
+
+/*
 // Типизация Actions всего appReducer
 export type AppActionsTypes =
   | ReturnType<typeof setAppStatusAC>
@@ -19,7 +62,7 @@ const SET_APP_INITIALIZED = "APP/SET-APP-INITIALIZED";
 const initialState = {
   status: "idle" as RequestStatusType,
   error: null as string | null,
-  isInitialized: false as boolean,
+  isInitialized: false as boolean
 };
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
@@ -49,5 +92,6 @@ export const setAppErrorAC = (error: string | null) => {
 export const setAppInitializedAC = (isInitialized: boolean) => {
   return { type: SET_APP_INITIALIZED, isInitialized } as const;
 };
+ */
 
 // *********** Thunk - необходимы для общения с DAL ****************

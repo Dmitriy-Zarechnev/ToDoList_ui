@@ -1,4 +1,4 @@
-import { AppRootStateType, AppThunkDispatch } from "../store";
+import { AppDispatch, AppRootStateType } from "../store";
 import { todolistAPI, TodolistType } from "api/todolist-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
@@ -53,9 +53,9 @@ export const todolistsReducer = (state = initialState, action: ToDoListActionsTy
           filter: "all",
           addedDate: "",
           order: 0,
-          entityStatus: "idle",
+          entityStatus: "idle"
         },
-        ...state,
+        ...state
       ];
     case CHANGE_TODOLIST_TITLE:
       return state.map((el) => (el.id === action.payload.toDoListID ? { ...el, title: action.payload.title } : el));
@@ -96,9 +96,9 @@ export const clearToDoDataAC = () => {
 };
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
-export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
+export const getTodoListsTC = () => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
-  dispatch(setAppStatusAC("loading"));
+  dispatch(setAppStatusAC({ status: "loading" }));
 
   try {
     // Запрос на получение todolist с сервера
@@ -113,7 +113,7 @@ export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
     });
 
     // Убираем Preloader после успешного ответа
-    dispatch(setAppStatusAC("succeeded"));
+    dispatch(setAppStatusAC({ status: "succeeded" }));
   } catch (error: any) {
     // Обработка сетевой ошибки
     handleServerNetworkError(error, dispatch);
@@ -122,7 +122,7 @@ export const getTodoListsTC = () => async (dispatch: AppThunkDispatch) => {
 
 // ------------- Изменение todolist's title -----------------------
 export const updateTodoListsTC =
-  (todolistId: string, title: string) => async (dispatch: AppThunkDispatch, getState: () => AppRootStateType) => {
+  (todolistId: string, title: string) => async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
     // Получили все todolists из state
     const allTodoListsFromState = getState().todolists;
 
@@ -134,7 +134,7 @@ export const updateTodoListsTC =
     // Проверка, т.к find может вернуть undefined
     if (todoList) {
       // Показываем Preloader во время запроса
-      dispatch(setAppStatusAC("loading"));
+      dispatch(setAppStatusAC({ status: "loading" }));
 
       try {
         // Запрос на изменение todolist's title
@@ -146,7 +146,7 @@ export const updateTodoListsTC =
           dispatch(changeTodolistTitleAC(todolistId, title));
 
           // Убираем Preloader после успешного ответа
-          dispatch(setAppStatusAC("updated"));
+          dispatch(setAppStatusAC({ status: "updated" }));
         } else {
           // Обработка серверной ошибки
           handleServerAppError(updateTodolistData, dispatch);
@@ -159,9 +159,9 @@ export const updateTodoListsTC =
   };
 
 // ------------- Добавление нового todolist -----------------------
-export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispatch) => {
+export const addTodoListsTC = (title: string) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
-  dispatch(setAppStatusAC("loading"));
+  dispatch(setAppStatusAC({ status: "loading" }));
 
   try {
     // Запрос на добавление todolist
@@ -173,7 +173,7 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
       dispatch(addTodolistAC(title, addTodoListsData.data.item.id));
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC("updated"));
+      dispatch(setAppStatusAC({ status: "updated" }));
     } else {
       // Обработка серверной ошибки
       handleServerAppError(addTodoListsData, dispatch);
@@ -185,9 +185,9 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppThunkDispat
 };
 
 // ------------- Удаление todolist -----------------------
-export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThunkDispatch) => {
+export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
-  dispatch(setAppStatusAC("loading"));
+  dispatch(setAppStatusAC({ status: "loading" }));
   // Отключаем кнопку во время запроса
   dispatch(changeTodolistEntityStatusAC(toDoListID, "loading"));
 
@@ -201,7 +201,7 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppThu
       dispatch(removeTodolistAC(toDoListID));
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC("updated"));
+      dispatch(setAppStatusAC({ status: "updated" }));
     } else {
       // Обработка серверной ошибки
       handleServerAppError(deleteTodolistData, dispatch);

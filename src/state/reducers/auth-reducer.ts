@@ -7,24 +7,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качетве приставки согласно соглашению redux ducks
+  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
   name: "auth",
   initialState: {
-    isLoggedIn: false,
+    isLoggedIn: false as boolean
   },
-  // подредьюсеры, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
   reducers: {
-    setIsLoggedInAC: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+    setIsLoggedInAC: (state,
+                      action: PayloadAction<{ isLoggedIn: boolean }>) => {
       state.isLoggedIn = action.payload.isLoggedIn;
-    },
-  },
+    }
+  }
 });
 
-// Создаем reducer с помощью slice
+// Создаем authReducer с помощью slice
 export const authReducer = slice.reducer;
 // Action creator также достаем с помощью slice
 export const { setIsLoggedInAC } = slice.actions;
-// либо вот так. ❗Делаем так, в дальнейшем пригодиться
+// ❗ В дальнейшем пригодится
 export const authActions = slice.actions;
 
 /*
@@ -66,7 +67,7 @@ export const setIsLoggedInAC = (value: boolean) => {
 // ------------- Логинизация на сервере -----------------------
 export const logInTC = (data: LoginParamsType) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
-  dispatch(setAppStatusAC("loading"));
+  dispatch(setAppStatusAC({ status: "loading" }));
 
   try {
     // Запрос на логинизацию
@@ -78,7 +79,7 @@ export const logInTC = (data: LoginParamsType) => async (dispatch: AppDispatch) 
       dispatch(setIsLoggedInAC({ isLoggedIn: true }));
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC("idle"));
+      dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
       handleServerAppError(logInData, dispatch);
@@ -101,13 +102,13 @@ export const initializeMeTC = () => async (dispatch: AppDispatch) => {
       dispatch(setIsLoggedInAC({ isLoggedIn: true }));
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC("idle"));
+      dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
       handleServerAppError(meData, dispatch);
     }
     // Инициализировали приложенеи после ответа
-    dispatch(setAppInitializedAC(true));
+    dispatch(setAppInitializedAC({ isInitialized: true }));
   } catch (error) {
     // Обработка сетевой ошибки
     handleServerNetworkError(error, dispatch);
@@ -117,7 +118,7 @@ export const initializeMeTC = () => async (dispatch: AppDispatch) => {
 // ------------- Вылогинизация на сервере -----------------------
 export const logOutTC = () => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
-  dispatch(setAppStatusAC("loading"));
+  dispatch(setAppStatusAC({ status: "loading" }));
 
   try {
     // Запрос на вылогинизацию
@@ -132,7 +133,7 @@ export const logOutTC = () => async (dispatch: AppDispatch) => {
       dispatch(clearToDoDataAC());
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC("idle"));
+      dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
       handleServerAppError(logOutData, dispatch);
