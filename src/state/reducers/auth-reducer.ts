@@ -23,10 +23,11 @@ const slice = createSlice({
 
 // Создаем authReducer с помощью slice
 export const authReducer = slice.reducer;
-// Action creator также достаем с помощью slice
+// Action creator достаем с помощью slice
 export const { setIsLoggedInAC } = slice.actions;
-// ❗ В дальнейшем пригодится
-export const authActions = slice.actions;
+// Типизация AuthInitialStateType для тестов
+export type AuthInitialStateType = ReturnType<typeof slice.getInitialState>
+
 
 /*
 // Типизация Actions всего authReducer

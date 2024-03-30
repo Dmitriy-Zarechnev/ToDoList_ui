@@ -6,10 +6,10 @@ import {
   removeTaskAC,
   setTasksAC,
   tasksReducer,
-  TasksInitialStateType,
+  TasksInitialStateType
 } from "../reducers/tasks-reducer";
 import { addTodolistAC, removeTodolistAC, setToDoListsAC } from "../reducers/todolists-reducer";
-import { TasksPriorities, TasksStatuses } from "../../api/tasks-api";
+import { TasksPriorities, TasksStatuses } from "api/tasks-api";
 
 let startState: TasksInitialStateType;
 
@@ -27,7 +27,7 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "2",
@@ -40,7 +40,7 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "3",
@@ -53,8 +53,8 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
+        entityTaskStatus: "idle"
+      }
     ],
     todolistId2: [
       {
@@ -68,7 +68,7 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "2",
@@ -81,7 +81,7 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "3",
@@ -94,14 +94,14 @@ beforeEach(() => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
-    ],
+        entityTaskStatus: "idle"
+      }
+    ]
   };
 });
 
 test("correct task should be deleted from correct array", () => {
-  const endState = tasksReducer(startState, removeTaskAC("todolistId2", "2"));
+  const endState = tasksReducer(startState, removeTaskAC({ toDoListID: "todolistId2", id: "2" }));
 
   expect(endState).toEqual({
     todolistId1: [
@@ -116,7 +116,7 @@ test("correct task should be deleted from correct array", () => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "2",
@@ -129,7 +129,7 @@ test("correct task should be deleted from correct array", () => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "3",
@@ -142,8 +142,8 @@ test("correct task should be deleted from correct array", () => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
+        entityTaskStatus: "idle"
+      }
     ],
     todolistId2: [
       {
@@ -157,7 +157,7 @@ test("correct task should be deleted from correct array", () => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: "3",
@@ -170,9 +170,9 @@ test("correct task should be deleted from correct array", () => {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
-    ],
+        entityTaskStatus: "idle"
+      }
+    ]
   });
   expect(endState["todolistId2"].every((el) => el.id !== "2")).toBeTruthy();
 });
@@ -181,18 +181,20 @@ test("correct task should be added to correct array", () => {
   const endState = tasksReducer(
     startState,
     addTaskAC({
-      id: "5",
-      title: "juce",
-      status: TasksStatuses.New,
-      priority: TasksPriorities.Low,
-      deadline: "",
-      order: 0,
-      startDate: "",
-      description: "Hello",
-      addedDate: "",
-      todoListId: "todolistId2",
-      entityTaskStatus: "idle",
-    }),
+      task: {
+        id: "5",
+        title: "juce",
+        status: TasksStatuses.New,
+        priority: TasksPriorities.Low,
+        deadline: "",
+        order: 0,
+        startDate: "",
+        description: "Hello",
+        addedDate: "",
+        todoListId: "todolistId2",
+        entityTaskStatus: "idle"
+      }
+    })
   );
 
   expect(endState["todolistId1"].length).toBe(startState["todolistId1"].length);
@@ -202,21 +204,21 @@ test("correct task should be added to correct array", () => {
 });
 
 test("status of specified task should be changed", () => {
-  const endState = tasksReducer(startState, changeTaskStatusAC("todolistId2", "2", TasksStatuses.New));
+  const endState = tasksReducer(startState, changeTaskStatusAC({ toDoListID: "todolistId2", id: "2", status: TasksStatuses.New }));
 
   expect(endState["todolistId2"][1].status).toBe(TasksStatuses.New);
   expect(endState["todolistId1"][1].status).toBe(TasksStatuses.Completed);
 });
 
 test("title of specified task should be changed", () => {
-  const endState = tasksReducer(startState, changeTaskTitleAC("todolistId1", "3", "NodeJs"));
+  const endState = tasksReducer(startState, changeTaskTitleAC({ toDoListID: "todolistId1", id: "3", title: "NodeJs" }));
 
   expect(endState["todolistId2"][2].title).toBe("tea");
   expect(endState["todolistId1"][2].title).toBe("NodeJs");
 });
 
 test("new array should be added when new todolist is added", () => {
-  const endState = tasksReducer(startState, addTodolistAC("new todolist", "todolistId"));
+  const endState = tasksReducer(startState, addTodolistAC({ title: "new todolist", toDoListID: "todolistId" }));
 
   const keys = Object.keys(endState);
   const newKey = keys.find((k) => k != "todolistId1" && k != "todolistId2");
@@ -229,7 +231,7 @@ test("new array should be added when new todolist is added", () => {
 });
 
 test("property with todolistId should be deleted", () => {
-  const endState = tasksReducer(startState, removeTodolistAC("todolistId2"));
+  const endState = tasksReducer(startState, removeTodolistAC({ toDoListID: "todolistId2" }));
 
   const keys = Object.keys(endState);
 
@@ -240,25 +242,27 @@ test("property with todolistId should be deleted", () => {
 test("new array should be added when new todolist is set", () => {
   const startState = {
     todolistId1: [],
-    todolistId2: [],
+    todolistId2: []
   };
 
   const endState = tasksReducer(
     startState,
-    setToDoListsAC([
-      {
-        id: "123",
-        title: "What to learn",
-        addedDate: "",
-        order: 0,
-      },
-      {
-        id: "321",
-        title: "What to read",
-        addedDate: "",
-        order: 0,
-      },
-    ]),
+    setToDoListsAC({
+      toDoLists: [
+        {
+          id: "123",
+          title: "What to learn",
+          addedDate: "",
+          order: 0
+        },
+        {
+          id: "321",
+          title: "What to read",
+          addedDate: "",
+          order: 0
+        }
+      ]
+    })
   );
 
   const keys = Object.keys(endState);
@@ -274,39 +278,42 @@ test("new array should be added when new todolist is set", () => {
 test("tasks should be set from API ", () => {
   const endState = tasksReducer(
     startState,
-    setTasksAC("todolistId1", [
-      {
-        id: "1",
-        title: "CSS",
-        status: TasksStatuses.New,
-        priority: TasksPriorities.Low,
-        deadline: "",
-        order: 0,
-        startDate: "",
-        description: "Hello",
-        addedDate: "",
-        todoListId: "TodolistId",
-      },
-      {
-        id: "2",
-        title: "JS",
-        status: TasksStatuses.Completed,
-        priority: TasksPriorities.Low,
-        deadline: "",
-        order: 0,
-        startDate: "",
-        description: "Hello",
-        addedDate: "",
-        todoListId: "TodolistId",
-      },
-    ]),
+    setTasksAC({
+      toDoListID: "todolistId1", tasks: [
+        {
+          id: "1",
+          title: "CSS",
+          status: TasksStatuses.New,
+          priority: TasksPriorities.Low,
+          deadline: "",
+          order: 0,
+          startDate: "",
+          description: "Hello",
+          addedDate: "",
+          todoListId: "TodolistId"
+        },
+        {
+          id: "2",
+          title: "JS",
+          status: TasksStatuses.Completed,
+          priority: TasksPriorities.Low,
+          deadline: "",
+          order: 0,
+          startDate: "",
+          description: "Hello",
+          addedDate: "",
+          todoListId: "TodolistId"
+        }
+      ]
+    })
   );
 
   expect(endState["todolistId1"].length).toBe(2);
 });
 
 test("tasks entity status should be changed", () => {
-  const endState = tasksReducer(startState, changeTaskEntityStatusAC("todolistId1", "1", "loading"));
+  const endState = tasksReducer(startState,
+    changeTaskEntityStatusAC({ toDoListID: "todolistId1", id: "1", entityTaskStatus: "loading" }));
 
   expect(endState["todolistId1"][0].entityTaskStatus).toBe("loading");
 });

@@ -1,12 +1,10 @@
-import { authReducer, setIsLoggedInAC } from "../reducers/auth-reducer";
+import { AuthInitialStateType, authReducer, setIsLoggedInAC } from "../reducers/auth-reducer";
 
-let startState: {
-  isLoggedIn: false;
-};
+let startState: AuthInitialStateType;
 
 beforeEach(() => {
   startState = {
-    isLoggedIn: false,
+    isLoggedIn: false
   };
 });
 

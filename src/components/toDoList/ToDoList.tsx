@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 import S from "./ToDoList.module.css";
 import { AddItemForm } from "../addItemForm/AddItemForm";
 import { EditableSpan } from "../editableSpan/EditableSpan";
@@ -27,7 +27,7 @@ type TodoListPropsType = {
   demo?: boolean;
 };
 
-export const ToDoList = React.memo(({ demo = false, ...props }: TodoListPropsType) => {
+export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => {
   // Получили tasks из state используя хук - useSelector и selector - tasksSelector
   const tasks = useSelector(tasksSelector);
 
@@ -60,7 +60,7 @@ export const ToDoList = React.memo(({ demo = false, ...props }: TodoListPropsTyp
   // -------------- Фильтрация task ----------------
   const onClickBtnHandler = useCallback(
     (value: FilterValuesType) => {
-      dispatch(changeTodolistFilterAC(props.id, value));
+      dispatch(changeTodolistFilterAC({toDoListID:props.id, filter:value}));
     },
     [props.id],
   );

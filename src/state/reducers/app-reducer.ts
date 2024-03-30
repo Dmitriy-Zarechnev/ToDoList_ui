@@ -31,14 +31,14 @@ const slice = createSlice({
 
 // Создаем appReducer с помощью slice
 export const appReducer = slice.reducer;
-// Action creator также достаем с помощью slice
+// Action creators достаем с помощью slice
 export const {
   setAppStatusAC,
   setAppErrorAC,
   setAppInitializedAC
 } = slice.actions;
-// ❗ В дальнейшем пригодится
-export const appActions = slice.actions;
+// Типизация AppInitialStateType для тестов
+export type AppInitialStateType = ReturnType<typeof slice.getInitialState>
 
 /*
 // Типизация Actions всего appReducer

@@ -3,7 +3,102 @@ import { todolistAPI, TodolistType } from "api/todolist-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
 import { getTasksTC } from "./tasks-reducer";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// Типизация Filters
+export type FilterValuesType = "all" | "active" | "completed";
+
+// Типизация ToDoLists объединенный с filter
+export type ToDoListDomainType = TodolistType & {
+  filter: FilterValuesType;
+  entityStatus: RequestStatusType;
+};
+
+// slice - reducer создаем с помощью функции createSlice
+const slice = createSlice({
+  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+  name: "toDoLists",
+  initialState: [] as ToDoListDomainType[],
+  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+  reducers: {
+    removeTodolistAC: (state,
+                       action: PayloadAction<{ toDoListID: string }>) => {
+      const index = state.findIndex(el => el.id === action.payload.toDoListID);
+      if (index > -1) {
+        state.splice(index, 1);
+      }
+      //state.filter(el => el.id !== action.payload.toDoListID);
+    },
+    addTodolistAC: (state,
+                    action: PayloadAction<{ title: string, toDoListID: string }>) => {
+      state.unshift({
+        id: action.payload.toDoListID,
+        title: action.payload.title,
+        filter: "all",
+        addedDate: "",
+        order: 0,
+        entityStatus: "idle"
+      });
+    },
+    changeTodolistTitleAC: (state,
+                            action: PayloadAction<{ toDoListID: string, title: string }>) => {
+      const toDo =
+        state.find(el => el.id === action.payload.toDoListID);
+
+      if (toDo) {
+        toDo.title = action.payload.title;
+      }
+    },
+    changeTodolistFilterAC: (state,
+                             action: PayloadAction<{ toDoListID: string, filter: FilterValuesType }>) => {
+      const toDo =
+        state.find(el => el.id === action.payload.toDoListID);
+
+      if (toDo) {
+        toDo.filter = action.payload.filter;
+      }
+    },
+    setToDoListsAC: (state,
+                     action: PayloadAction<{ toDoLists: Array<TodolistType> }>) => {
+      return action.payload.toDoLists.map(el => ({ ...el, filter: "all", entityStatus: "idle" }));
+    },
+    changeTodolistEntityStatusAC: (state,
+                                   action: PayloadAction<{
+                                     toDoListID: string,
+                                     entityStatus: RequestStatusType
+                                   }>) => {
+      const toDo =
+        state.find(el => el.id === action.payload.toDoListID);
+
+      if (toDo) {
+        toDo.entityStatus = action.payload.entityStatus;
+      }
+    },
+    clearToDoDataAC: (state) => {
+      return state = [];
+    }
+  }
+});
+
+
+// Создаем toDoListsReducer с помощью slice
+export const toDoListsReducer = slice.reducer;
+// Action creators достаем с помощью slice
+export const {
+  removeTodolistAC,
+  addTodolistAC,
+  changeTodolistTitleAC,
+  changeTodolistFilterAC,
+  setToDoListsAC,
+  changeTodolistEntityStatusAC,
+  clearToDoDataAC
+} = slice.actions;
+
+// ❗ В дальнейшем пригодится
+export const toDoListsActions = slice.actions;
+
+
+/*
 // Типизация Actions всего todolistsReducer
 export type ToDoListActionsTypes =
   | RemoveTodolistActionType
@@ -94,6 +189,8 @@ export const changeTodolistEntityStatusAC = (id: string, status: RequestStatusTy
 export const clearToDoDataAC = () => {
   return { type: CLEAR_TO_DO_DATA } as const;
 };
+
+ */
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
 export const getTodoListsTC = () => async (dispatch: AppDispatch) => {
@@ -105,7 +202,7 @@ export const getTodoListsTC = () => async (dispatch: AppDispatch) => {
     const getTodoListsData = await todolistAPI.getTodolists();
 
     // Задиспатчили ответ от сервера
-    dispatch(setToDoListsAC(getTodoListsData));
+    dispatch(setToDoListsAC({ toDoLists: getTodoListsData }));
 
     // Задиспатчили tasks с сервера для каждого todolist
     getTodoListsData.forEach((el) => {
@@ -124,7 +221,7 @@ export const getTodoListsTC = () => async (dispatch: AppDispatch) => {
 export const updateTodoListsTC =
   (todolistId: string, title: string) => async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
     // Получили все todolists из state
-    const allTodoListsFromState = getState().todolists;
+    const allTodoListsFromState = getState().toDoLists;
 
     // Нашли нужный todolist по todolistId
     const todoList = allTodoListsFromState.find((t) => {
@@ -143,7 +240,7 @@ export const updateTodoListsTC =
         // Если успех
         if (updateTodolistData.resultCode === 0) {
           // Задиспатчили после ответа от сервера и поменяли title
-          dispatch(changeTodolistTitleAC(todolistId, title));
+          dispatch(changeTodolistTitleAC({ toDoListID: todolistId, title }));
 
           // Убираем Preloader после успешного ответа
           dispatch(setAppStatusAC({ status: "updated" }));
@@ -170,7 +267,7 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppDispatch) =
     // Если успех
     if (addTodoListsData.resultCode === 0) {
       // Задиспатчили ответ от сервера
-      dispatch(addTodolistAC(title, addTodoListsData.data.item.id));
+      dispatch(addTodolistAC({ title, toDoListID: addTodoListsData.data.item.id }));
 
       // Убираем Preloader после успешного ответа
       dispatch(setAppStatusAC({ status: "updated" }));
@@ -189,7 +286,7 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDis
   // Показываем Preloader во время запроса
   dispatch(setAppStatusAC({ status: "loading" }));
   // Отключаем кнопку во время запроса
-  dispatch(changeTodolistEntityStatusAC(toDoListID, "loading"));
+  dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "loading" }));
 
   try {
     // Запрос на удаление todolist
@@ -198,7 +295,7 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDis
     // Если успех
     if (deleteTodolistData.resultCode === 0) {
       // Задиспатчили после ответа от сервера и удалили todolist
-      dispatch(removeTodolistAC(toDoListID));
+      dispatch(removeTodolistAC({ toDoListID }));
 
       // Убираем Preloader после успешного ответа
       dispatch(setAppStatusAC({ status: "updated" }));

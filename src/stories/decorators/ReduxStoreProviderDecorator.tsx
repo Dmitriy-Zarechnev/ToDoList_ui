@@ -1,19 +1,19 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
-import { tasksReducer } from "../../state/reducers/tasks-reducer";
-import { todolistsReducer } from "../../state/reducers/todolists-reducer";
+import { tasksReducer } from "state/reducers/tasks-reducer";
+import { toDoListsReducer } from "state/reducers/todolists-reducer";
 import { v1 } from "uuid";
-import { AppRootStateType, RootReducerType } from "../../state/store";
-import { TasksPriorities, TasksStatuses } from "../../api/tasks-api";
-import { appReducer } from "../../state/reducers/app-reducer";
+import { AppRootStateType, RootReducerType } from "state/store";
+import { TasksPriorities, TasksStatuses } from "api/tasks-api";
+import { appReducer } from "state/reducers/app-reducer";
 import { thunk } from "redux-thunk";
-import { authReducer } from "../../state/reducers/auth-reducer";
+import { authReducer } from "state/reducers/auth-reducer";
 import { HashRouter } from "react-router-dom";
 
 const rootReducer: RootReducerType = combineReducers({
   tasks: tasksReducer,
-  todolists: todolistsReducer,
+  toDoLists: toDoListsReducer,
   app: appReducer,
   auth: authReducer,
 });
@@ -77,7 +77,7 @@ const initialGlobalState: AppRootStateType = {
       },
     ],
   },
-  todolists: [
+  toDoLists: [
     {
       id: "todolistId1",
       title: "What to learn",

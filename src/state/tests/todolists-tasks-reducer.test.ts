@@ -1,23 +1,23 @@
 import { tasksReducer, TasksInitialStateType } from "../reducers/tasks-reducer";
-import { addTodolistAC, clearToDoDataAC, ToDoListDomainType, todolistsReducer } from "../reducers/todolists-reducer";
+import { addTodolistAC, clearToDoDataAC, ToDoListDomainType, toDoListsReducer } from "../reducers/todolists-reducer";
 import { v1 } from "uuid";
-import { TasksPriorities, TasksStatuses } from "../../api/tasks-api";
+import { TasksPriorities, TasksStatuses } from "api/tasks-api";
 
 test("ids should be equals", () => {
   const startTasksState: TasksInitialStateType = {};
   const startTodolistsState: Array<ToDoListDomainType> = [];
 
-  const action = addTodolistAC("new todolist", "todolistId3");
+  const action = addTodolistAC({title:"new todolist", toDoListID:"todolistId3"});
 
   const endTasksState = tasksReducer(startTasksState, action);
-  const endTodolistsState = todolistsReducer(startTodolistsState, action);
+  const endTodolistsState = toDoListsReducer(startTodolistsState, action);
 
   const keys = Object.keys(endTasksState);
   const idFromTasks = keys[0];
   const idFromTodolists = endTodolistsState[0].id;
 
-  expect(idFromTasks).toBe(action.payload.todolistId);
-  expect(idFromTodolists).toBe(action.payload.todolistId);
+  expect(idFromTasks).toBe(action.payload.toDoListID);
+  expect(idFromTodolists).toBe(action.payload.toDoListID);
 });
 
 test("tasks and todolists should be empty", () => {
@@ -99,7 +99,7 @@ test("tasks and todolists should be empty", () => {
   ];
 
   const endTasksState = tasksReducer(startTasksState, clearToDoDataAC());
-  const endTodolistsState = todolistsReducer(startTodolistsState, clearToDoDataAC());
+  const endTodolistsState = toDoListsReducer(startTodolistsState, clearToDoDataAC());
 
   expect(endTasksState).toEqual({});
   expect(endTodolistsState).toEqual([]);
