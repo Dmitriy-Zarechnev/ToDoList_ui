@@ -1,19 +1,17 @@
-import type {Meta} from '@storybook/react'
-import App from './App'
-import {HashRouterDecorator, ReduxStoreProviderDecorator} from './stories/decorators/ReduxStoreProviderDecorator'
-
+import type { Meta } from "@storybook/react";
+import App from "./App";
+import { HashRouterDecorator, ReduxStoreProviderDecorator } from "./stories/decorators/ReduxStoreProviderDecorator";
 
 const meta: Meta<typeof App> = {
-    title: 'TODOLISTS/App',
-    component: App,
+  title: "TODOLISTS/App",
+  component: App,
 
-    tags: ['autodocs'],
-    decorators: [ReduxStoreProviderDecorator,HashRouterDecorator]
-}
+  tags: ["autodocs"],
+  decorators: [ReduxStoreProviderDecorator, HashRouterDecorator],
+};
 
-export default meta
-
+export default meta;
 
 export const AppStory = () => {
-    return <App demo={true}/>
-}
+  return <App demo={true} />;
+};

@@ -1,26 +1,26 @@
-@import './ColorVar.module.css';
+@import "./ColorVar.module.css";
 
 *,
 *::before,
 *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-size: 16px;
-    line-height: 1.2;
-    font-weight: 400;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 400;
 
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 body {
-    color: var(--text-color);
-    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--main-bg-color);
+  color: var(--text-color);
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--main-bg-color);
 }
 
 /*Стили для автокомплита в инпуте*/
@@ -28,8 +28,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px var(--main-bg-color) inset !important;
-    /* color: ${theme.colors.accent};*/
+  -webkit-box-shadow: 0 0 0 30px var(--main-bg-color) inset !important;
+  /* color: ${theme.colors.accent};*/
 }
 
 /* Анимация всех эффектов кнопки */

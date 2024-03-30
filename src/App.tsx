@@ -1,99 +1,91 @@
-import React, {useEffect} from 'react'
-import './App.css'
-import MenuIcon from '@mui/icons-material/Menu'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Container from '@mui/material/Container'
-import {useSelector} from 'react-redux'
-import LinearProgress from '@mui/material/LinearProgress'
-import {appIsInitializedSelector, appStatusSelector} from './state/selectors/app-selector'
-import {ErrorSnackbar} from './components/errorSnackBar/ErrorSnackbar'
-import {Navigate, Route, Routes} from 'react-router-dom'
-import {LogIn} from './components/logIn/LogIn'
-import {ToDoLists} from './components/toDoLists/ToDoLists'
-import {initializeMeTC, logOutTC} from './state/reducers/auth-reducer'
-import {useAppDispatch} from './state/store'
-import CircularProgress from '@mui/material/CircularProgress'
-import {isLoggedInSelector} from './state/selectors/auth-selector'
-
+import React, { useEffect } from "react";
+import "./App.css";
+import MenuIcon from "@mui/icons-material/Menu";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import { useSelector } from "react-redux";
+import LinearProgress from "@mui/material/LinearProgress";
+import { appIsInitializedSelector, appStatusSelector } from "state/selectors/app-selector";
+import { ErrorSnackbar } from "components/errorSnackBar/ErrorSnackbar";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { LogIn } from "components/logIn/LogIn";
+import { ToDoLists } from "components/toDoLists/ToDoLists";
+import { initializeMeTC, logOutTC } from "state/reducers/auth-reducer";
+import { useAppDispatch } from "state/store";
+import CircularProgress from "@mui/material/CircularProgress";
+import { isLoggedInSelector } from "state/selectors/auth-selector";
 
 type AppPropsType = {
-    demo?: boolean
-}
+  demo?: boolean;
+};
 
+function App({ demo = false }: AppPropsType) {
+  // Получили status из state используя хук - useSelector и selector - appStatusSelector
+  const status = useSelector(appStatusSelector);
+  // Получили isInitialized из state используя хук - useSelector и selector - appIsInitializedSelector
+  const isInitialized = useSelector(appIsInitializedSelector);
+  // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
+  const isLoggedIn = useSelector(isLoggedInSelector);
 
-function App({demo = false}: AppPropsType) {
+  // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
+  const dispatch = useAppDispatch();
 
-    // Получили status из state используя хук - useSelector и selector - appStatusSelector
-    const status = useSelector(appStatusSelector)
-    // Получили isInitialized из state используя хук - useSelector и selector - appIsInitializedSelector
-    const isInitialized = useSelector(appIsInitializedSelector)
-    // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
-    const isLoggedIn = useSelector(isLoggedInSelector)
-
-    // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-    const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        if (!demo) {
-            dispatch(initializeMeTC())
-        }
-    }, [])
-
-
-    // Крутилка во время инициализации
-    if (!isInitialized) {
-        return (
-            <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
-                <CircularProgress/>
-            </div>
-        )
+  useEffect(() => {
+    if (!demo) {
+      dispatch(initializeMeTC());
     }
+  }, []);
 
-    // Функция для вылогинизации
-    const onClickHandler = () => {
-        isLoggedIn
-            ? dispatch(logOutTC())
-            : <Navigate to={'/login'}/>
-    }
-
+  // Крутилка во время инициализации
+  if (!isInitialized) {
     return (
-        <div className="App">
-            {/*ErrorSnackbar который показываем во время ошибки*/}
-            <ErrorSnackbar/>
+      <div style={{ position: "fixed", top: "30%", textAlign: "center", width: "100%" }}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
+  // Функция для вылогинизации
+  const onClickHandler = () => {
+    isLoggedIn ? dispatch(logOutTC()) : <Navigate to={"/login"} />;
+  };
 
-            <AppBar position="static">
-                <Toolbar variant="dense">
-                    <IconButton edge="start" color="inherit" aria-label="menu" sx={{mr: 2}}>
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" color="inherit" component="div">
-                        TodoList
-                    </Typography>
-                    <Button color={'inherit'} onClick={onClickHandler}>{isLoggedIn ? 'LogOut' : 'LogIn'}</Button>
-                </Toolbar>
+  return (
+    <div className="App">
+      {/*ErrorSnackbar который показываем во время ошибки*/}
+      <ErrorSnackbar />
 
-                {/*Preloader который показываем во время связи с сервером*/}
-                {status === 'loading' && <LinearProgress/>}
+      <AppBar position="static">
+        <Toolbar variant="dense">
+          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" component="div">
+            TodoList
+          </Typography>
+          <Button color={"inherit"} onClick={onClickHandler}>
+            {isLoggedIn ? "LogOut" : "LogIn"}
+          </Button>
+        </Toolbar>
 
+        {/*Preloader который показываем во время связи с сервером*/}
+        {status === "loading" && <LinearProgress />}
+      </AppBar>
 
-            </AppBar>
+      <Container fixed>
+        <Routes>
+          <Route path={"/"} element={<ToDoLists demo={demo} />} />
+          <Route path={"/login"} element={<LogIn />} />
 
-            <Container fixed>
-                <Routes>
-                    <Route path={'/'} element={<ToDoLists demo={demo}/>}/>
-                    <Route path={'/login'} element={<LogIn/>}/>
-
-                    <Route path={'/*'} element={<h1>404: PAGE NOT FOUND</h1>}/>
-                </Routes>
-            </Container>
-
-        </div>
-    )
+          <Route path={"/*"} element={<h1>404: PAGE NOT FOUND</h1>} />
+        </Routes>
+      </Container>
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,38 +1,34 @@
-import type {Meta, StoryObj} from '@storybook/react'
-import {AddItemForm} from './AddItemForm'
-import {action} from '@storybook/addon-actions'
-
+import type { Meta, StoryObj } from "@storybook/react";
+import { AddItemForm } from "./AddItemForm";
+import { action } from "@storybook/addon-actions";
 
 const meta: Meta<typeof AddItemForm> = {
-    title: 'TODOLISTS/AddItemForm',
-    component: AddItemForm,
+  title: "TODOLISTS/AddItemForm",
+  component: AddItemForm,
 
-    tags: ['autodocs'],
+  tags: ["autodocs"],
 
-    argTypes: {
-        addItem: {
-            description: 'Button clicked inside form',
-            action: 'clicked'
-        }
-    }
-}
+  argTypes: {
+    addItem: {
+      description: "Button clicked inside form",
+      action: "clicked",
+    },
+  },
+};
 
-export default meta
-
+export default meta;
 
 type Story = StoryObj<typeof AddItemForm>;
 
-
 export const AddItemFormBase: Story = {
-
-    args: {
-        addItem: action('Button clicked inside form')
-    }
-}
+  args: {
+    addItem: action("Button clicked inside form"),
+  },
+};
 
 export const AddItemFormStoryDisabled: Story = {
-    args: {
-        disabled: 'loading',
-        addItem: action('Button clicked inside form')
-    }
-}
+  args: {
+    disabled: "loading",
+    addItem: action("Button clicked inside form"),
+  },
+};

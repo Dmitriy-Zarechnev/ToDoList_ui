@@ -1,23 +1,19 @@
-import type {Meta, StoryObj} from '@storybook/react'
-import {LogIn} from './LogIn'
-import {HashRouterDecorator, ReduxStoreProviderDecorator} from '../../stories/decorators/ReduxStoreProviderDecorator'
-
+import type { Meta, StoryObj } from "@storybook/react";
+import { LogIn } from "./LogIn";
+import { HashRouterDecorator, ReduxStoreProviderDecorator } from "../../stories/decorators/ReduxStoreProviderDecorator";
 
 const meta: Meta<typeof LogIn> = {
-    title: 'TODOLISTS/LogIn',
-    component: LogIn,
+  title: "TODOLISTS/LogIn",
+  component: LogIn,
 
-    tags: ['autodocs'],
-     decorators: [ReduxStoreProviderDecorator, HashRouterDecorator]
+  tags: ["autodocs"],
+  decorators: [ReduxStoreProviderDecorator, HashRouterDecorator],
+};
 
-}
-
-export default meta
+export default meta;
 
 type Story = StoryObj<typeof LogIn>;
 
-
-export const LogInStoryExample =()=> {
-    return <LogIn/>
-}
-
+export const LogInStoryExample = () => {
+  return <LogIn />;
+};
