@@ -8,10 +8,10 @@ import { handleServerAppError, handleServerNetworkError } from "utils/error-util
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-// Типизация Task
+// Типизация TaskWithEntityType
 export type TaskWithEntityType = TasksType & { entityTaskStatus: RequestStatusType }
 
-// Типизация TasksArray
+// Типизация TasksInitialStateType
 export type TasksInitialStateType = {
   [key: string]: Array<TaskWithEntityType>;
 };
@@ -71,7 +71,7 @@ const slice = createSlice({
       }
     }
   },
-  // Общие reducers
+  // Общие reducers с другими
   extraReducers: builder => {
     builder
       .addCase(toDoListsActions.addTodolistAC,
@@ -86,6 +86,12 @@ const slice = createSlice({
         (state, action) => {
           action.payload.toDoLists.forEach((el) => {
             state[el.id] = [];
+          });
+        })
+      .addCase(toDoListsActions.clearToDoDataAC,
+        (state) => {
+          Object.keys(state).forEach(el => {
+            delete state[el];
           });
         });
   }

@@ -75,7 +75,7 @@ const slice = createSlice({
       }
     },
     clearToDoDataAC: (state) => {
-      return state = [];
+      state.splice(0, state.length);
     }
   }
 });
@@ -94,7 +94,7 @@ export const {
   clearToDoDataAC
 } = slice.actions;
 
-// ❗ В дальнейшем пригодится
+// ❗ В дальнейшем пригодится в tasksReducer
 export const toDoListsActions = slice.actions;
 
 
@@ -191,6 +191,7 @@ export const clearToDoDataAC = () => {
 };
 
  */
+
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
 export const getTodoListsTC = () => async (dispatch: AppDispatch) => {

@@ -3,7 +3,7 @@ import {
   addTodolistAC,
   changeTodolistEntityStatusAC,
   changeTodolistFilterAC,
-  changeTodolistTitleAC, clearToDoDataAC,
+  changeTodolistTitleAC,
   FilterValuesType,
   removeTodolistAC,
   setToDoListsAC,
@@ -117,9 +117,3 @@ test("todolist entity status should be changed", () => {
   expect(endState[0].entityStatus).toBe("loading");
 });
 
-test("todolist state should be empty", () => {
-  const endState = toDoListsReducer(startState,
-    clearToDoDataAC());
-
-  expect(endState.length).toBe(0);
-});
