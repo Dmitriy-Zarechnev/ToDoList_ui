@@ -1,6 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
+import {  combineReducers } from "redux";
 import { tasksReducer } from "state/reducers/tasks-reducer";
 import { toDoListsReducer } from "state/reducers/todolists-reducer";
 import { v1 } from "uuid";
@@ -10,6 +10,7 @@ import { appReducer } from "state/reducers/app-reducer";
 import { thunk } from "redux-thunk";
 import { authReducer } from "state/reducers/auth-reducer";
 import { HashRouter } from "react-router-dom";
+import { configureStore } from "@reduxjs/toolkit";
 
 const rootReducer: RootReducerType = combineReducers({
   tasks: tasksReducer,
@@ -105,7 +106,11 @@ const initialGlobalState: AppRootStateType = {
   },
 };
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as any, applyMiddleware(thunk));
+export const storyBookStore = configureStore({
+  reducer: rootReducer,
+  preloadedState:initialGlobalState,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)
+});
 
 // Декоратор, предоставляющий доступ к Redux-хранилищу в историях
 export const ReduxStoreProviderDecorator = (storyFn: () => React.ReactNode) => {
