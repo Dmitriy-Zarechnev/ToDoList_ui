@@ -1,6 +1,6 @@
 import { AppDispatch } from "../store";
 import { setAppInitializedAC, setAppStatusAC } from "./app-reducer";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
+import {  handleServerNetworkError } from "utils/error-utils";
 import { authAPI, LoginParamsType } from "api/auth-api";
 import { clearToDoDataAC } from "./todolists-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -83,7 +83,7 @@ export const logInTC = (data: LoginParamsType) => async (dispatch: AppDispatch) 
       dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(logInData, dispatch);
+      handleServerNetworkError(logInData, dispatch);
     }
   } catch (error) {
     // Обработка сетевой ошибки
@@ -106,7 +106,7 @@ export const initializeMeTC = () => async (dispatch: AppDispatch) => {
       dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(meData, dispatch);
+      handleServerNetworkError(meData, dispatch);
     }
     // Инициализировали приложенеи после ответа
     dispatch(setAppInitializedAC({ isInitialized: true }));
@@ -137,7 +137,7 @@ export const logOutTC = () => async (dispatch: AppDispatch) => {
       dispatch(setAppStatusAC({ status: "idle" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(logOutData, dispatch);
+      handleServerNetworkError(logOutData, dispatch);
     }
   } catch (error) {
     // Обработка сетевой ошибки

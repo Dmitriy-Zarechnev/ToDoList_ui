@@ -4,9 +4,8 @@ import {
   changeTaskStatusAC,
   changeTaskTitleAC,
   removeTaskAC,
-  setTasksAC,
   tasksReducer,
-  TasksInitialStateType
+  TasksInitialStateType, getTasksTC
 } from "../reducers/tasks-reducer";
 import { addTodolistAC, removeTodolistAC, setToDoListsAC } from "../reducers/todolists-reducer";
 import { TasksPriorities, TasksStatuses } from "api/tasks-api";
@@ -278,7 +277,7 @@ test("new array should be added when new todolist is set", () => {
 test("tasks should be set from API ", () => {
   const endState = tasksReducer(
     startState,
-    setTasksAC({
+    getTasksTC.fulfilled({
       toDoListID: "todolistId1", tasks: [
         {
           id: "1",
@@ -305,7 +304,7 @@ test("tasks should be set from API ", () => {
           todoListId: "TodolistId"
         }
       ]
-    })
+    }, "requestId", "todolistId1")
   );
 
   expect(endState["todolistId1"].length).toBe(2);

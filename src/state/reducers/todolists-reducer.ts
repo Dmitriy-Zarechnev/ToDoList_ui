@@ -1,7 +1,7 @@
 import { AppDispatch, AppRootStateType } from "../store";
 import { todolistAPI, TodolistType } from "api/todolist-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
+import {  handleServerNetworkError } from "utils/error-utils";
 import { getTasksTC } from "./tasks-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -244,7 +244,7 @@ export const updateTodoListsTC =
           dispatch(setAppStatusAC({ status: "updated" }));
         } else {
           // Обработка серверной ошибки
-          handleServerAppError(updateTodolistData, dispatch);
+          handleServerNetworkError(updateTodolistData, dispatch);
         }
       } catch (error: any) {
         // Обработка сетевой ошибки
@@ -271,7 +271,7 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppDispatch) =
       dispatch(setAppStatusAC({ status: "updated" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(addTodoListsData, dispatch);
+      handleServerNetworkError(addTodoListsData, dispatch);
     }
   } catch (error: any) {
     // Обработка сетевой ошибки
@@ -299,7 +299,7 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDis
       dispatch(setAppStatusAC({ status: "updated" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(deleteTodolistData, dispatch);
+      handleServerNetworkError(deleteTodolistData, dispatch);
     }
   } catch (error: any) {
     // Обработка сетевой ошибки

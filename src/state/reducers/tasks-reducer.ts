@@ -5,8 +5,8 @@ import {
 import { AppDispatch, AppRootStateType } from "../store";
 import { tasksAPI, TasksStatuses, TasksType } from "api/tasks-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { handleServerNetworkError } from "utils/error-utils";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 // Типизация TaskWithEntityType
@@ -16,6 +16,48 @@ export type TaskWithEntityType = TasksType & { entityTaskStatus: RequestStatusTy
 export type TasksInitialStateType = {
   [key: string]: Array<TaskWithEntityType>;
 };
+
+// Типизировали createAsyncThunk и внутри state, dispatch, rejectValue
+export const createAppAsyncThunk = createAsyncThunk.withTypes<{
+  state: AppRootStateType
+  dispatch: AppDispatch
+  rejectValue: null
+}>()
+
+// *********** Thunk - необходимые для общения с DAL ****************
+// ------------- Получение tasks с сервера -----------------------
+export const getTasksTC = createAppAsyncThunk<{
+  toDoListID: string, tasks: TasksType[]
+}, string>(
+  // 1 - prefix
+  "tasks/getTasks",
+  // 2 - callback (условно наша старая санка), в которую:
+  // Первым параметром мы передаем параметры необходимые для санки
+  // (если параметров больше чем один упаковываем их в объект)
+  // Вторым параметром thunkAPI, обратившись к которому получим dispatch ...
+  async (toDoListID, thunkAPI) => {
+    // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC({ status: "loading" }));
+    try {
+      // Запрос на получение tasks с сервера
+      const getTasksData = await tasksAPI.getTasks(toDoListID);
+
+      // Убираем Preloader после успешного ответа
+      dispatch(setAppStatusAC({ status: "succeeded" }));
+
+      // return ответ от сервера
+      return { toDoListID, tasks: getTasksData.items };
+    } catch (error) {
+      // Обработка сетевой ошибки
+      handleServerNetworkError(error, dispatch);
+      // Здесь будет упакована ошибка
+      return rejectWithValue(null);
+    }
+  });
+
 
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -53,12 +95,12 @@ const slice = createSlice({
         tasks[index].title = action.payload.title;
       }
     },
-    setTasksAC: (state,
-                 action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
-      state[action.payload.toDoListID] = action.payload.tasks.map(el => {
-        return { ...el, entityTaskStatus: "idle" };
-      });
-    },
+    // setTasksAC: (state,
+    //              action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
+    //   state[action.payload.toDoListID] = action.payload.tasks.map(el => {
+    //     return { ...el, entityTaskStatus: "idle" };
+    //   });
+    // },
     changeTaskEntityStatusAC: (state,
                                action: PayloadAction<{
                                  toDoListID: string,
@@ -94,6 +136,14 @@ const slice = createSlice({
           Object.keys(state).forEach(el => {
             delete state[el];
           });
+        })
+      .addCase(getTasksTC.fulfilled,
+        (state, action) => {
+          if (action.payload) {
+            state[action.payload.toDoListID] = action.payload.tasks.map(el => {
+              return { ...el, entityTaskStatus: "idle" };
+            });
+          }
         });
   }
 });
@@ -101,15 +151,17 @@ const slice = createSlice({
 
 // Создаем tasksReducer с помощью slice
 export const tasksReducer = slice.reducer;
-// Action creators достаем с помощью slice
+// Action creators достаем с помощью slice и деструктуризации
 export const {
   removeTaskAC,
   addTaskAC,
   changeTaskStatusAC,
   changeTaskTitleAC,
-  setTasksAC,
+  // setTasksAC,
   changeTaskEntityStatusAC
 } = slice.actions;
+// Thunks упаковываем в объект
+export const tasksThunks = { getTasksTC };
 
 
 /*
@@ -234,6 +286,7 @@ export const changeTaskEntityStatusAC = (toDoListID: string, id: string, entityT
 
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение tasks с сервера -----------------------
+/*
 export const getTasksTC = (todolistId: string) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
   dispatch(setAppStatusAC({ status: "loading" }));
@@ -252,6 +305,8 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppDispatch) 
     handleServerNetworkError(error, dispatch);
   }
 };
+
+ */
 
 // ------------- Удаление task -----------------------
 export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispatch: AppDispatch) => {
@@ -275,7 +330,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispa
       dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "idle" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(deleteTaskData, dispatch);
+      handleServerNetworkError(deleteTaskData, dispatch);
     }
   } catch (error: any) {
     // Обработка сетевой ошибки
@@ -305,7 +360,7 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
       dispatch(changeTodolistEntityStatusAC({ toDoListID: todolistId, entityStatus: "idle" }));
     } else {
       // Обработка серверной ошибки
-      handleServerAppError(addTaskData, dispatch);
+      handleServerNetworkError(addTaskData, dispatch);
     }
   } catch (error: any) {
     // Обработка сетевой ошибки
@@ -354,7 +409,7 @@ export const updateTaskStatusTC =
             dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "idle" }));
           } else {
             // Обработка серверной ошибки
-            handleServerAppError(updateTaskData, dispatch);
+            handleServerNetworkError(updateTaskData, dispatch);
           }
         } catch (error: any) {
           // Обработка сетевой ошибки
@@ -404,7 +459,7 @@ export const updateTaskTitleTC =
             dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "idle" }));
           } else {
             // Обработка серверной ошибки
-            handleServerAppError(updateTaskData, dispatch);
+            handleServerNetworkError(updateTaskData, dispatch);
           }
         } catch (error: any) {
           // Обработка сетевой ошибки
