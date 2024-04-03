@@ -4,6 +4,7 @@ import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {handleServerNetworkError} from 'utils/handle-server-network-error'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {ResultCode} from '../../api/enums'
+import {handleServerAppError} from '../../utils/handle-server-app-error'
 
 
 // Типизация Filters
@@ -94,7 +95,7 @@ export const updateTodoListsTC = createAppAsyncThunk<{
                     return {toDoListID, title}
                 } else {
                     // Обработка серверной ошибки
-                    handleServerNetworkError(updateTodolistData, dispatch)
+                    handleServerAppError(updateTodolistData, dispatch)
                     // Здесь будет упакована ошибка
                     return rejectWithValue(null)
                 }
@@ -138,7 +139,7 @@ export const addTodoListsTC = createAppAsyncThunk<{
                 return {title, toDoListID: addTodoListsData.data.item.id}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(addTodoListsData, dispatch)
+                handleServerAppError(addTodoListsData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }
@@ -180,7 +181,7 @@ export const deleteTodoListsTC = createAppAsyncThunk<{
                 return {toDoListID}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(deleteTodolistData, dispatch)
+                handleServerAppError(deleteTodolistData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }

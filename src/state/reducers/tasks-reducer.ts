@@ -4,6 +4,7 @@ import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {handleServerNetworkError} from '../../utils/handle-server-network-error'
 import {ResultCode, TasksStatuses} from '../../api/enums'
+import {handleServerAppError} from '../../utils/handle-server-app-error'
 
 
 // Типизация TaskWithEntityType
@@ -79,7 +80,7 @@ export const addTaskTC = createAppAsyncThunk<{
                 return {task: {...addTaskData.data.item, entityTaskStatus: 'idle'}}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(addTaskData, dispatch)
+                handleServerAppError(addTaskData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }
@@ -125,7 +126,7 @@ export const deleteTaskTC = createAppAsyncThunk<{
                 return {toDoListID, taskId}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(deleteTaskData, dispatch)
+                handleServerAppError(deleteTaskData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }
@@ -187,7 +188,7 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
                     return {toDoListID, taskId, status}
                 } else {
                     // Обработка серверной ошибки
-                    handleServerNetworkError(updateTaskData, dispatch)
+                    handleServerAppError(updateTaskData, dispatch)
                     // Здесь будет упакована ошибка
                     return rejectWithValue(null)
                 }
@@ -252,7 +253,7 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
                     return {toDoListID, taskId, title}
                 } else {
                     // Обработка серверной ошибки
-                    handleServerNetworkError(updateTaskData, dispatch)
+                    handleServerAppError(updateTaskData, dispatch)
                     // Здесь будет упакована ошибка
                     return rejectWithValue(null)
                 }
