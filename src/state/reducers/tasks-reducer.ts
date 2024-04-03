@@ -1,9 +1,10 @@
 import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, removeTodolistAC, setToDoListsAC} from './todolists-reducer'
 import {AppDispatch, AppRootStateType} from '../store'
-import {tasksAPI, TasksStatuses, TasksType} from 'api/tasks-api'
+import {tasksAPI,  TasksType} from 'api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {handleServerNetworkError} from '../../utils/handle-server-network-error'
+import {ResultCode, TasksStatuses} from '../../api/enums'
 
 
 // Типизация TaskWithEntityType
@@ -75,7 +76,7 @@ export const addTaskTC = createAppAsyncThunk<{
             const addTaskData = await tasksAPI.createTask(toDoListID, title)
 
             // Если успех
-            if (addTaskData.resultCode === 0) {
+            if (addTaskData.resultCode === ResultCode.success) {
 
                 // Убираем Preloader после успешного ответа
                 dispatch(setAppStatusAC({status: 'updated'}))
@@ -121,7 +122,7 @@ export const deleteTaskTC = createAppAsyncThunk<{
             const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId)
 
             // Если успех
-            if (deleteTaskData.resultCode === 0) {
+            if (deleteTaskData.resultCode === ResultCode.success) {
 
                 // Убираем Preloader после успешного ответа
                 dispatch(setAppStatusAC({status: 'updated'}))
@@ -183,7 +184,7 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
                 })
 
                 // Если успех
-                if (updateTaskData.resultCode === 0) {
+                if (updateTaskData.resultCode === ResultCode.success) {
 
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC({status: 'updated'}))
@@ -248,7 +249,7 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
                 })
 
                 // Если успех
-                if (updateTaskData.resultCode === 0) {
+                if (updateTaskData.resultCode === ResultCode.success) {
 
                     // Убираем Preloader после успешного ответа
                     dispatch(setAppStatusAC({status: 'updated'}))

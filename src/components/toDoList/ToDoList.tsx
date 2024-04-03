@@ -10,9 +10,9 @@ import {useSelector} from 'react-redux'
 import {changeTodolistFilterAC, deleteTodoListsTC, FilterValuesType, updateTodoListsTC} from 'state/reducers/todolists-reducer'
 import {addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC} from 'state/reducers/tasks-reducer'
 import {tasksSelector} from 'state/selectors/tasks-selector'
-import {TasksStatuses} from 'api/tasks-api'
 import {useAppDispatch} from 'state/store'
 import {RequestStatusType} from 'state/reducers/app-reducer'
+import {TasksStatuses} from '../../api/enums'
 
 type TodoListPropsType = {
     id: string;

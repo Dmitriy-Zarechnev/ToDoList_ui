@@ -1,7 +1,7 @@
 import { tasksReducer, TasksInitialStateType } from "../reducers/tasks-reducer";
 import { addTodolistAC, clearToDoDataAC, ToDoListDomainType, toDoListsReducer } from "../reducers/todolists-reducer";
 import { v1 } from "uuid";
-import { TasksPriorities, TasksStatuses } from "api/tasks-api";
+import { TasksPriorities, TasksStatuses } from "api/enums";
 
 test("ids should be equals", () => {
   const startTasksState: TasksInitialStateType = {};

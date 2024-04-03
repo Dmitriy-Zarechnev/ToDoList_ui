@@ -4,8 +4,9 @@ import Checkbox from "@mui/material/Checkbox";
 import { EditableSpan } from "../editableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { TasksStatuses, TasksType } from "api/tasks-api";
+import {  TasksType } from "api/tasks-api";
 import { RequestStatusType } from "state/reducers/app-reducer";
+import {TasksStatuses} from '../../api/enums'
 
 type TaskPropsType = {
   task: TasksType;

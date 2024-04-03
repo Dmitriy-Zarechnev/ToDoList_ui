@@ -1,6 +1,6 @@
 import {addTaskTC, changeTaskEntityStatusAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC, updateTaskTitleTC} from '../reducers/tasks-reducer'
 import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../reducers/todolists-reducer'
-import {TasksPriorities, TasksStatuses} from 'api/tasks-api'
+import {TasksPriorities, TasksStatuses} from 'api/enums'
 
 let startState: TasksInitialStateType
 

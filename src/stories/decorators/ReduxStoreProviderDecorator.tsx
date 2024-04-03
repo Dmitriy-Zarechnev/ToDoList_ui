@@ -5,7 +5,7 @@ import { tasksReducer } from "state/reducers/tasks-reducer";
 import { toDoListsReducer } from "state/reducers/todolists-reducer";
 import { v1 } from "uuid";
 import { AppRootStateType, RootReducerType } from "state/store";
-import { TasksPriorities, TasksStatuses } from "api/tasks-api";
+import { TasksPriorities, TasksStatuses } from "api/enums";
 import { appReducer } from "state/reducers/app-reducer";
 import { thunk } from "redux-thunk";
 import { authReducer } from "state/reducers/auth-reducer";
