@@ -21,6 +21,7 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     rejectValue: null
 }>()
 
+
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение tasks с сервера -----------------------
 export const getTasksTC = createAppAsyncThunk<{
@@ -54,6 +55,7 @@ export const getTasksTC = createAppAsyncThunk<{
             return rejectWithValue(null)
         }
     })
+
 
 // ------------- Добавление task -----------------------
 export const addTaskTC = createAppAsyncThunk<{
@@ -211,6 +213,7 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
     }
 )
 
+
 // ------------- Изменение tasks title -----------------------
 export const updateTaskTitleTC = createAppAsyncThunk<{
     toDoListID: string, taskId: string, title: string
@@ -275,6 +278,7 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
     }
 )
 
+
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -283,41 +287,6 @@ const slice = createSlice({
     initialState: {} as TasksInitialStateType,
     // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
     reducers: {
-        // removeTaskAC: (state,
-        //                action: PayloadAction<{ toDoListID: string, id: string }>) => {
-        //     const tasks = state[action.payload.toDoListID]
-        //     const index = tasks.findIndex(el => el.id === action.payload.id)
-        //     if (index > -1) {
-        //         tasks.splice(index, 1)
-        //     }
-        // },
-        // addTaskAC: (state,
-        //             action: PayloadAction<{ task: TaskWithEntityType }>) => {
-        //   const tasks = state[action.payload.task.todoListId];
-        //   tasks.unshift(action.payload.task);
-        // },
-        // changeTaskStatusAC: (state,
-        //                      action: PayloadAction<{ toDoListID: string, id: string, status: TasksStatuses }>) => {
-        //     const tasks = state[action.payload.toDoListID]
-        //     const index = tasks.findIndex(el => el.id === action.payload.id)
-        //     if (index > -1) {
-        //         tasks[index].status = action.payload.status
-        //     }
-        // },
-        // changeTaskTitleAC: (state,
-        //                     action: PayloadAction<{ toDoListID: string, id: string, title: string }>) => {
-        //     const tasks = state[action.payload.toDoListID]
-        //     const index = tasks.findIndex(el => el.id === action.payload.id)
-        //     if (index > -1) {
-        //         tasks[index].title = action.payload.title
-        //     }
-        // },
-        // setTasksAC: (state,
-        //              action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
-        //   state[action.payload.toDoListID] = action.payload.tasks.map(el => {
-        //     return { ...el, entityTaskStatus: "idle" };
-        //   });
-        // },
         changeTaskEntityStatusAC: (state,
                                    action: PayloadAction<{
                                        toDoListID: string,
@@ -406,16 +375,9 @@ const slice = createSlice({
 // Создаем tasksReducer с помощью slice
 export const tasksReducer = slice.reducer
 // Action creators достаем с помощью slice и деструктуризации
-export const {
-    // removeTaskAC,
-    // addTaskAC,
-    // changeTaskStatusAC,
-    // changeTaskTitleAC,
-    // setTasksAC,
-    changeTaskEntityStatusAC
-} = slice.actions
+export const {changeTaskEntityStatusAC} = slice.actions
 // Thunks упаковываем в объект
-export const tasksThunks = {getTasksTC}
+//export const tasksThunks = {getTasksTC}
 
 
 /*
