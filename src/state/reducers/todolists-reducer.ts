@@ -1,7 +1,7 @@
 import { AppDispatch, AppRootStateType } from "../store";
 import { todolistAPI, TodolistType } from "api/todolist-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
-import {  handleServerNetworkError } from "utils/error-utils";
+import {  handleServerNetworkError } from "utils/handle-server-network-error";
 import { getTasksTC } from "./tasks-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

@@ -2,8 +2,8 @@ import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, removeTodo
 import {AppDispatch, AppRootStateType} from '../store'
 import {tasksAPI, TasksStatuses, TasksType} from 'api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
-import {handleServerNetworkError} from 'utils/error-utils'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {handleServerNetworkError} from '../../utils/handle-server-network-error'
 
 
 // Типизация TaskWithEntityType
@@ -29,10 +29,7 @@ export const getTasksTC = createAppAsyncThunk<{
 }, string>(
     // 1 - prefix
     'tasks/getTasks',
-    // 2 - callback (условно наша старая санка), в которую:
-    // Первым параметром мы передаем параметры необходимые для санки
-    // (если параметров больше чем один упаковываем их в объект)
-    // Вторым параметром thunkAPI, обратившись к которому получим dispatch ...
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
     async (toDoListID, thunkAPI) => {
         // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
         const {dispatch, rejectWithValue} = thunkAPI
@@ -374,36 +371,13 @@ const slice = createSlice({
 
 // Создаем tasksReducer с помощью slice
 export const tasksReducer = slice.reducer
-// Action creators достаем с помощью slice и деструктуризации
+// Action creators достаем с помощью slice
 export const {changeTaskEntityStatusAC} = slice.actions
 // Thunks упаковываем в объект
 //export const tasksThunks = {getTasksTC}
 
 
 /*
-// Типизация Actions всего tasksReducer
-export type TasksActionsType =
-  | ReturnType<typeof removeTaskAC>
-  | ReturnType<typeof addTaskAC>
-  | ReturnType<typeof changeTaskStatusAC>
-  | ReturnType<typeof changeTaskTitleAC>
-  | ReturnType<typeof setTasksAC>
-  | ReturnType<typeof changeTaskEntityStatusAC>
-
-
-// Типизация TasksArray
-export type TasksInitialStateType = {
-  [key: string]: Array<TasksType & { entityTaskStatus: RequestStatusType }>;
-};
-
-// Константы для работы с action в tasksReducer
-const REMOVE_TASK = "TASKS/REMOVE-TASK";
-const ADD_TASK = "TASKS/ADD-TASK";
-const CHANGE_TASK_STATUS = "TASKS/CHANGE-TASK-STATUS";
-const CHANGE_TASK_TITLE = "TASKS/CHANGE-TASK-TITLE";
-const SET_TASKS = "TASKS/SET-TASKS";
-const CHANGE_TASK_ENTITY_STATUS = "TASKS/CHANGE-TASK-ENTITY-STATUS";
-
 // *********** Первоначальный state для tasksReducer ****************
 const initialState: TasksInitialStateType = {};
 

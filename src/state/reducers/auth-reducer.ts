@@ -1,6 +1,6 @@
 import { AppDispatch } from "../store";
 import { setAppInitializedAC, setAppStatusAC } from "./app-reducer";
-import {  handleServerNetworkError } from "utils/error-utils";
+import {  handleServerNetworkError } from "utils/handle-server-network-error";
 import { authAPI, LoginParamsType } from "api/auth-api";
 import { clearToDoDataAC } from "./todolists-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
