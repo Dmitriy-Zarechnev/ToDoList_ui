@@ -1,5 +1,5 @@
 import {addTaskTC, changeTaskEntityStatusAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC, updateTaskTitleTC} from '../reducers/tasks-reducer'
-import {addTodolistAC, getTodoListsTC, removeTodolistAC} from '../reducers/todolists-reducer'
+import {addTodoListsTC, deleteTodoListsTC, getTodoListsTC} from '../reducers/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from 'api/enums'
 
 let startState: TasksInitialStateType
@@ -200,9 +200,11 @@ test('correct task should be added to correct array', () => {
 
 
 test('status of specified task should be changed', () => {
-    const args = {toDoListID: 'todolistId2',
+    const args = {
+        toDoListID: 'todolistId2',
         taskId: '2',
-        status: TasksStatuses.New}
+        status: TasksStatuses.New
+    }
 
     const endState = tasksReducer(startState,
         updateTaskStatusTC.fulfilled(args, 'requestId', args))
@@ -225,7 +227,9 @@ test('title of specified task should be changed', () => {
 
 test('new array should be added when new todolist is added', () => {
     const endState = tasksReducer(startState,
-        addTodolistAC({title: 'new todolist', toDoListID: 'todolistId'}))
+        addTodoListsTC.fulfilled({title: 'new todolist', toDoListID: 'todolistId'},
+            'requestId',
+            'new todolist'))
 
     const keys = Object.keys(endState)
     const newKey = keys.find((k) => k != 'todolistId1' && k != 'todolistId2')
@@ -240,7 +244,7 @@ test('new array should be added when new todolist is added', () => {
 
 test('property with todolistId should be deleted', () => {
     const endState = tasksReducer(startState,
-        removeTodolistAC({toDoListID: 'todolistId2'}))
+        deleteTodoListsTC.fulfilled({toDoListID: 'todolistId2'}, 'requestId', 'todolistId2'))
 
     const keys = Object.keys(endState)
 
@@ -272,7 +276,7 @@ test('new array should be added when new todolist is set', () => {
                     order: 0
                 }
             ]
-        },'requestId')
+        }, 'requestId')
     )
 
     const keys = Object.keys(endState)

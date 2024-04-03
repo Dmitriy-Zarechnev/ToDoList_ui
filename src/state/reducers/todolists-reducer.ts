@@ -3,6 +3,7 @@ import {todolistAPI, TodolistType} from 'api/todolist-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {handleServerNetworkError} from 'utils/handle-server-network-error'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {ResultCode} from '../../api/enums'
 
 
 // Типизация Filters
@@ -20,6 +21,7 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     dispatch: AppDispatch
     rejectValue: null
 }>()
+
 
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение todolist с сервера -----------------------
@@ -40,15 +42,12 @@ export const getTodoListsTC = createAppAsyncThunk<{
             // Запрос на получение todolist с сервера
             const getTodoListsData = await todolistAPI.getTodolists()
 
-            // Задиспатчили tasks с сервера для каждого todolist
-            //await Promise.all(getTodoListsData.map((el) => dispatch(getTasksTC(el.id))))
-
             // Убираем Preloader после успешного ответа
             dispatch(setAppStatusAC({status: 'succeeded'}))
 
             // Return ответ от сервера
             return {toDoLists: getTodoListsData}
-        } catch (error: any) {
+        } catch (error) {
             // Обработка сетевой ошибки
             handleServerNetworkError(error, dispatch)
             // Здесь будет упакована ошибка
@@ -58,6 +57,141 @@ export const getTodoListsTC = createAppAsyncThunk<{
 )
 
 
+// ------------- Изменение toDoList's title -----------------------
+export const updateTodoListsTC = createAppAsyncThunk<{
+    toDoListID: string, title: string
+}, { toDoListID: string, title: string }>(
+    // 1 - prefix
+    'toDoLists/updateTodoLists',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async ({toDoListID, title}, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue, getState} = thunkAPI
+
+        // Получили все toDoLists из state
+        const allTodoListsFromState = getState().toDoLists
+
+        // Нашли нужный todolist по todolistId
+        const toDoList = allTodoListsFromState.find((t) => {
+            return t.id === toDoListID
+        })
+
+        // Проверка, т.к find может вернуть undefined
+        if (toDoList) {
+            // Показываем Preloader во время запроса
+            dispatch(setAppStatusAC({status: 'loading'}))
+
+            try {
+                // Запрос на изменение toDoList's title
+                const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title)
+
+                // Если успех
+                if (updateTodolistData.resultCode === ResultCode.success) {
+                    // Убираем Preloader после успешного ответа
+                    dispatch(setAppStatusAC({status: 'updated'}))
+
+                    // return после ответа от сервера и поменяли title
+                    return {toDoListID, title}
+                } else {
+                    // Обработка серверной ошибки
+                    handleServerNetworkError(updateTodolistData, dispatch)
+                    // Здесь будет упакована ошибка
+                    return rejectWithValue(null)
+                }
+            } catch (error) {
+                // Обработка сетевой ошибки
+                handleServerNetworkError(error, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        }
+        // Здесь будет упакована ошибка
+        return rejectWithValue(null)
+    }
+)
+
+
+// ------------- Добавление нового todolist -----------------------
+export const addTodoListsTC = createAppAsyncThunk<{
+    title: string, toDoListID: string
+}, string>(
+    // 1 - prefix
+    'toDoLists/addTodoLists',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async (title, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
+
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC({status: 'loading'}))
+
+        try {
+            // Запрос на добавление todolist
+            const addTodoListsData = await todolistAPI.createTodolist(title)
+
+            // Если успех
+            if (addTodoListsData.resultCode === ResultCode.success) {
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'updated'}))
+
+                // return ответ от сервера
+                return {title, toDoListID: addTodoListsData.data.item.id}
+            } else {
+                // Обработка серверной ошибки
+                handleServerNetworkError(addTodoListsData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        } catch (error) {
+            // Обработка сетевой ошибки
+            handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(null)
+        }
+    }
+)
+
+// ------------- Удаление todolist -----------------------
+export const deleteTodoListsTC = createAppAsyncThunk<{
+    toDoListID: string
+}, string>(
+    // 1 - prefix
+    'toDoLists/deleteTodoLists',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async (toDoListID, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC({status: 'loading'}))
+        // Отключаем кнопку во время запроса
+        dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'loading'}))
+
+        try {
+            // Запрос на удаление todolist
+            const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID)
+
+            // Если успех
+            if (deleteTodolistData.resultCode === ResultCode.success) {
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'updated'}))
+
+                // return после ответа от сервера и удалили todolist
+                return {toDoListID}
+            } else {
+                // Обработка серверной ошибки
+                handleServerNetworkError(deleteTodolistData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        } catch (error) {
+            // Обработка сетевой ошибки
+            handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(null)
+        }
+    }
+)
+
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -66,34 +200,26 @@ const slice = createSlice({
     initialState: [] as ToDoListDomainType[],
     // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
     reducers: {
-        removeTodolistAC: (state,
-                           action: PayloadAction<{ toDoListID: string }>) => {
-            const index = state.findIndex(el => el.id === action.payload.toDoListID)
-            if (index > -1) {
-                state.splice(index, 1)
-            }
-            //state.filter(el => el.id !== action.payload.toDoListID);
-        },
-        addTodolistAC: (state,
-                        action: PayloadAction<{ title: string, toDoListID: string }>) => {
-            state.unshift({
-                id: action.payload.toDoListID,
-                title: action.payload.title,
-                filter: 'all',
-                addedDate: '',
-                order: 0,
-                entityStatus: 'idle'
-            })
-        },
-        changeTodolistTitleAC: (state,
-                                action: PayloadAction<{ toDoListID: string, title: string }>) => {
-            const toDo =
-                state.find(el => el.id === action.payload.toDoListID)
+        // removeTodolistAC: (state,
+        //                    action: PayloadAction<{ toDoListID: string }>) => {
+        //     const index = state.findIndex(el => el.id === action.payload.toDoListID)
+        //     if (index > -1) {
+        //         state.splice(index, 1)
+        //     }
+        //     //state.filter(el => el.id !== action.payload.toDoListID);
+        // },
+        // addTodolistAC: (state,
+        //                 action: PayloadAction<{ title: string, toDoListID: string }>) => {
+        //     state.unshift({
+        //         id: action.payload.toDoListID,
+        //         title: action.payload.title,
+        //         filter: 'all',
+        //         addedDate: '',
+        //         order: 0,
+        //         entityStatus: 'idle'
+        //     })
+        // },
 
-            if (toDo) {
-                toDo.title = action.payload.title
-            }
-        },
         changeTodolistFilterAC: (state,
                                  action: PayloadAction<{ toDoListID: string, filter: FilterValuesType }>) => {
             const toDo =
@@ -129,6 +255,33 @@ const slice = createSlice({
                 (state, action) => {
                     return action.payload.toDoLists.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
                 })
+            .addCase(updateTodoListsTC.fulfilled,
+                (state, action) => {
+                    const toDo =
+                        state.find(el => el.id === action.payload.toDoListID)
+
+                    if (toDo) {
+                        toDo.title = action.payload.title
+                    }
+                })
+            .addCase(addTodoListsTC.fulfilled,
+                (state, action) => {
+                    state.unshift({
+                        id: action.payload.toDoListID,
+                        title: action.payload.title,
+                        filter: 'all',
+                        addedDate: '',
+                        order: 0,
+                        entityStatus: 'idle'
+                    })
+                })
+            .addCase(deleteTodoListsTC.fulfilled,
+                (state, action) => {
+                    const index = state.findIndex(el => el.id === action.payload.toDoListID)
+                    if (index > -1) {
+                        state.splice(index, 1)
+                    }
+                })
     }
 })
 
@@ -137,9 +290,9 @@ const slice = createSlice({
 export const toDoListsReducer = slice.reducer
 // Action creators достаем с помощью slice
 export const {
-    removeTodolistAC,
-    addTodolistAC,
-    changeTodolistTitleAC,
+    // removeTodolistAC,
+    // addTodolistAC,
+    // changeTodolistTitleAC,
     changeTodolistFilterAC,
     // setToDoListsAC,
     changeTodolistEntityStatusAC,
@@ -268,7 +421,7 @@ export const getTodoListsTC = () => async (dispatch: AppDispatch) => {
 };
 
  */
-
+/*
 // ------------- Изменение todolist's title -----------------------
 export const updateTodoListsTC =
     (todolistId: string, title: string) => async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
@@ -307,6 +460,8 @@ export const updateTodoListsTC =
         }
     }
 
+ */
+/*
 // ------------- Добавление нового todolist -----------------------
 export const addTodoListsTC = (title: string) => async (dispatch: AppDispatch) => {
     // Показываем Preloader во время запроса
@@ -333,6 +488,8 @@ export const addTodoListsTC = (title: string) => async (dispatch: AppDispatch) =
     }
 }
 
+ */
+/*
 // ------------- Удаление todolist -----------------------
 export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDispatch) => {
     // Показываем Preloader во время запроса
@@ -360,3 +517,5 @@ export const deleteTodoListsTC = (toDoListID: string) => async (dispatch: AppDis
         handleServerNetworkError(error, dispatch)
     }
 }
+
+ */

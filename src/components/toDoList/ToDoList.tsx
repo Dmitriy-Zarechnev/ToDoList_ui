@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo, useCallback, useEffect} from 'react'
 import S from './ToDoList.module.css'
 import {AddItemForm} from '../addItemForm/AddItemForm'
 import {EditableSpan} from '../editableSpan/EditableSpan'
@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 import {Task} from '../task/Task'
 import {useSelector} from 'react-redux'
 import {changeTodolistFilterAC, deleteTodoListsTC, FilterValuesType, updateTodoListsTC} from 'state/reducers/todolists-reducer'
-import {addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC} from 'state/reducers/tasks-reducer'
+import {addTaskTC, deleteTaskTC, getTasksTC, updateTaskStatusTC, updateTaskTitleTC} from 'state/reducers/tasks-reducer'
 import {tasksSelector} from 'state/selectors/tasks-selector'
 import {useAppDispatch} from 'state/store'
 import {RequestStatusType} from 'state/reducers/app-reducer'
@@ -30,16 +30,16 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     const dispatch = useAppDispatch()
 
     // -------------- Получили Tasks с сервера после загрузки страницы ----------------
-    // useEffect(() => {
-    //     if (!demo) {
-    //         dispatch(getTasksTC(props.id))
-    //     }
-    // }, [])
+    useEffect(() => {
+        if (!demo) {
+            dispatch(getTasksTC(props.id))
+        }
+    }, [])
 
     // -------------- Меняем название todolist ----------------
     const changeToDoListTitle = useCallback(
         (newTitle: string) => {
-            dispatch(updateTodoListsTC(props.id, newTitle))
+            dispatch(updateTodoListsTC({toDoListID:props.id, title:newTitle}))
         },
         [props.id]
     )
@@ -71,7 +71,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // -------------- Меняем checkbox ----------------
     const onChangeStatusHandler = useCallback(
         (taskId: string, status: TasksStatuses) => {
-            dispatch(updateTaskStatusTC({toDoListID:props.id, taskId, status}))
+            dispatch(updateTaskStatusTC({toDoListID: props.id, taskId, status}))
         },
         [props.id]
     )
@@ -84,7 +84,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // -------------- Меняем Task's title ----------------
     const changeTaskTitle = useCallback(
         (id: string, newTitle: string) => {
-            dispatch(updateTaskTitleTC({toDoListID:props.id, taskId:id, title:newTitle}))
+            dispatch(updateTaskTitleTC({toDoListID: props.id, taskId: id, title: newTitle}))
         },
         [props.id]
     )

@@ -1,4 +1,4 @@
-import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, createAppAsyncThunk, getTodoListsTC, removeTodolistAC} from './todolists-reducer'
+import {addTodoListsTC, changeTodolistEntityStatusAC, clearToDoDataAC, createAppAsyncThunk, deleteTodoListsTC, getTodoListsTC} from './todolists-reducer'
 import {tasksAPI, TasksType} from 'api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
@@ -13,8 +13,6 @@ export type TaskWithEntityType = TasksType & { entityTaskStatus: RequestStatusTy
 export type TasksInitialStateType = {
     [key: string]: Array<TaskWithEntityType>;
 };
-
-
 
 
 // *********** Thunk - необходимые для общения с DAL ****************
@@ -34,7 +32,7 @@ export const getTasksTC = createAppAsyncThunk<{
         try {
             // Запрос на получение tasks с сервера
             const getTasksData = await tasksAPI.getTasks(toDoListID)
-            debugger
+
             // Убираем Preloader после успешного ответа
             dispatch(setAppStatusAC({status: 'succeeded'}))
 
@@ -295,11 +293,11 @@ const slice = createSlice({
     // Общие reducers с другими
     extraReducers: builder => {
         builder
-            .addCase(addTodolistAC,
+            .addCase(addTodoListsTC.fulfilled,
                 (state, action) => {
                     state[action.payload.toDoListID] = []
                 })
-            .addCase(removeTodolistAC,
+            .addCase(deleteTodoListsTC.fulfilled,
                 (state, action) => {
                     delete state[action.payload.toDoListID]
                 })
