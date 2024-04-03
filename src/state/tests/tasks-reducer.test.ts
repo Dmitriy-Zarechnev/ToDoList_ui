@@ -1,5 +1,5 @@
 import {addTaskTC, changeTaskEntityStatusAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC, updateTaskTitleTC} from '../reducers/tasks-reducer'
-import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../reducers/todolists-reducer'
+import {addTodolistAC, getTodoListsTC, removeTodolistAC} from '../reducers/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from 'api/enums'
 
 let startState: TasksInitialStateType
@@ -257,7 +257,7 @@ test('new array should be added when new todolist is set', () => {
 
     const endState = tasksReducer(
         startState,
-        setToDoListsAC({
+        getTodoListsTC.fulfilled({
             toDoLists: [
                 {
                     id: '123',
@@ -272,7 +272,7 @@ test('new array should be added when new todolist is set', () => {
                     order: 0
                 }
             ]
-        })
+        },'requestId')
     )
 
     const keys = Object.keys(endState)

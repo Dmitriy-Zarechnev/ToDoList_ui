@@ -1,8 +1,7 @@
-import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, removeTodolistAC, setToDoListsAC} from './todolists-reducer'
-import {AppDispatch, AppRootStateType} from '../store'
-import {tasksAPI,  TasksType} from 'api/tasks-api'
+import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, createAppAsyncThunk, getTodoListsTC, removeTodolistAC} from './todolists-reducer'
+import {tasksAPI, TasksType} from 'api/tasks-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
-import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {handleServerNetworkError} from '../../utils/handle-server-network-error'
 import {ResultCode, TasksStatuses} from '../../api/enums'
 
@@ -15,12 +14,7 @@ export type TasksInitialStateType = {
     [key: string]: Array<TaskWithEntityType>;
 };
 
-// Типизировали createAsyncThunk и внутри state, dispatch, rejectValue
-export const createAppAsyncThunk = createAsyncThunk.withTypes<{
-    state: AppRootStateType
-    dispatch: AppDispatch
-    rejectValue: null
-}>()
+
 
 
 // *********** Thunk - необходимые для общения с DAL ****************
@@ -40,7 +34,7 @@ export const getTasksTC = createAppAsyncThunk<{
         try {
             // Запрос на получение tasks с сервера
             const getTasksData = await tasksAPI.getTasks(toDoListID)
-
+            debugger
             // Убираем Preloader после успешного ответа
             dispatch(setAppStatusAC({status: 'succeeded'}))
 
@@ -309,10 +303,10 @@ const slice = createSlice({
                 (state, action) => {
                     delete state[action.payload.toDoListID]
                 })
-            .addCase(setToDoListsAC,
+            .addCase(getTodoListsTC.fulfilled,
                 (state, action) => {
-                    action.payload.toDoLists.forEach((el) => {
-                        state[el.id] = []
+                    action.payload.toDoLists.forEach((tl) => {
+                        state[tl.id] = []
                     })
                 })
             .addCase(clearToDoDataAC,
@@ -366,6 +360,7 @@ const slice = createSlice({
                         }
                     }
                 })
+
     }
 })
 

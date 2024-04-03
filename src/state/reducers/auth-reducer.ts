@@ -4,7 +4,7 @@ import {authAPI, LoginParamsType} from 'api/auth-api'
 import {clearToDoDataAC} from './todolists-reducer'
 import {createSlice} from '@reduxjs/toolkit'
 import {ResultCode} from '../../api/enums'
-import {createAppAsyncThunk} from './tasks-reducer'
+import {createAppAsyncThunk} from './todolists-reducer'
 
 
 // *********** Thunk - необходимы для общения с DAL ****************
