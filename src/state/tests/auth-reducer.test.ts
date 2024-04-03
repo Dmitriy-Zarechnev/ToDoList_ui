@@ -1,4 +1,4 @@
-import { AuthInitialStateType, authReducer, setIsLoggedInAC } from "../reducers/auth-reducer";
+import {AuthInitialStateType, authReducer, initializeMeTC} from '../reducers/auth-reducer'
 
 let startState: AuthInitialStateType;
 
@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 test("isLoggedIn should be changed", () => {
-  const endState = authReducer(startState, setIsLoggedInAC({ isLoggedIn: true }));
+  const endState = authReducer(startState, initializeMeTC.fulfilled({ isLoggedIn: true }, 'requestId'));
 
   expect(endState.isLoggedIn).toEqual(true);
 });
