@@ -31,6 +31,7 @@ const slice = createSlice({
 
 // Создаем appReducer с помощью slice
 export const appReducer = slice.reducer;
+
 // Action creators достаем с помощью slice
 export const {
   setAppStatusAC,

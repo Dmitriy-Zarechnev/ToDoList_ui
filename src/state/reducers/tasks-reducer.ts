@@ -372,6 +372,7 @@ const slice = createSlice({
 
 // Создаем tasksReducer с помощью slice
 export const tasksReducer = slice.reducer
+
 // Action creators достаем с помощью slice
 export const {changeTaskEntityStatusAC} = slice.actions
 // Thunks упаковываем в объект

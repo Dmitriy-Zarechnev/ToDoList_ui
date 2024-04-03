@@ -129,7 +129,7 @@ export const logOutTC = createAppAsyncThunk<{
     }
 )
 
-
+// *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
     // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
@@ -163,6 +163,7 @@ const slice = createSlice({
 
 // Создаем authReducer с помощью slice
 export const authReducer = slice.reducer
+
 // Action creator достаем с помощью slice
 //export const {setIsLoggedInAC} = slice.actions
 // Типизация AuthInitialStateType для тестов
