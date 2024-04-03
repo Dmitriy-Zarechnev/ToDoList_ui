@@ -71,7 +71,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // -------------- Меняем checkbox ----------------
     const onChangeStatusHandler = useCallback(
         (taskId: string, status: TasksStatuses) => {
-            dispatch(updateTaskStatusTC(props.id, taskId, status))
+            dispatch(updateTaskStatusTC({toDoListID:props.id, taskId, status}))
         },
         [props.id]
     )

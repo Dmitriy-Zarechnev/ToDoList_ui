@@ -1,4 +1,4 @@
-import {addTaskTC, changeTaskEntityStatusAC, changeTaskStatusAC, changeTaskTitleAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer} from '../reducers/tasks-reducer'
+import {addTaskTC, changeTaskEntityStatusAC, changeTaskTitleAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC} from '../reducers/tasks-reducer'
 import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../reducers/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from 'api/tasks-api'
 
@@ -93,9 +93,9 @@ beforeEach(() => {
 
 
 test('correct task should be deleted from correct array', () => {
+    const args = {toDoListID: 'todolistId2', taskId: '2'}
     const endState = tasksReducer(startState,
-        deleteTaskTC.fulfilled({toDoListID: 'todolistId2', taskId: '2'},
-            'requestId', {toDoListID: 'todolistId2', taskId: '2'}))
+        deleteTaskTC.fulfilled(args, 'requestId', args))
 
     expect(endState).toEqual({
         todolistId1: [
@@ -200,8 +200,10 @@ test('correct task should be added to correct array', () => {
 
 
 test('status of specified task should be changed', () => {
+    const args = {toDoListID: 'todolistId2', taskId: '2', status: TasksStatuses.New}
+
     const endState = tasksReducer(startState,
-        changeTaskStatusAC({toDoListID: 'todolistId2', id: '2', status: TasksStatuses.New}))
+        updateTaskStatusTC.fulfilled(args, 'requestId', args))
 
     expect(endState['todolistId2'][1].status).toBe(TasksStatuses.New)
     expect(endState['todolistId1'][1].status).toBe(TasksStatuses.Completed)
@@ -318,6 +320,7 @@ test('tasks should be set from API ', () => {
 
 
 test('tasks entity status should be changed', () => {
+
     const endState = tasksReducer(startState,
         changeTaskEntityStatusAC({toDoListID: 'todolistId1', taskId: '1', entityTaskStatus: 'loading'}))
 
