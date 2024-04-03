@@ -199,7 +199,7 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
                     // Здесь будет упакована ошибка
                     return rejectWithValue(null)
                 }
-            } catch (error: any) {
+            } catch (error) {
                 // Обработка сетевой ошибки
                 handleServerNetworkError(error, dispatch)
                 // Здесь будет упакована ошибка
@@ -263,7 +263,7 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
                     // Здесь будет упакована ошибка
                     return rejectWithValue(null)
                 }
-            } catch (error: any) {
+            } catch (error) {
                 // Обработка сетевой ошибки
                 handleServerNetworkError(error, dispatch)
                 // Здесь будет упакована ошибка
