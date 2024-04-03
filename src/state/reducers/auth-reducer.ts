@@ -1,10 +1,10 @@
 import {setAppInitializedAC, setAppStatusAC} from './app-reducer'
 import {handleServerNetworkError} from 'utils/handle-server-network-error'
 import {authAPI, LoginParamsType} from 'api/auth-api'
-import {clearToDoDataAC} from './todolists-reducer'
+import {clearToDoDataAC, createAppAsyncThunk} from './todolists-reducer'
 import {createSlice} from '@reduxjs/toolkit'
 import {ResultCode} from '../../api/enums'
-import {createAppAsyncThunk} from './todolists-reducer'
+import {handleServerAppError} from '../../utils/handle-server-app-error'
 
 
 // *********** Thunk - необходимы для общения с DAL ****************
@@ -34,7 +34,7 @@ export const logInTC = createAppAsyncThunk<{
                 return {isLoggedIn: true}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(logInData, dispatch)
+                handleServerAppError(logInData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }
@@ -73,7 +73,7 @@ export const initializeMeTC = createAppAsyncThunk<{
                 return {isLoggedIn: true}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(meData, dispatch)
+                handleServerAppError(meData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }
@@ -115,7 +115,7 @@ export const logOutTC = createAppAsyncThunk<{
                 return {isLoggedIn: false}
             } else {
                 // Обработка серверной ошибки
-                handleServerNetworkError(logOutData, dispatch)
+                handleServerAppError(logOutData, dispatch)
                 // Здесь будет упакована ошибка
                 return rejectWithValue(null)
             }

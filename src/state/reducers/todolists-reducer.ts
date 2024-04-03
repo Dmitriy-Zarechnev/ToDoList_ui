@@ -151,6 +151,7 @@ export const addTodoListsTC = createAppAsyncThunk<{
     }
 )
 
+
 // ------------- Удаление todolist -----------------------
 export const deleteTodoListsTC = createAppAsyncThunk<{
     toDoListID: string
@@ -200,26 +201,6 @@ const slice = createSlice({
     initialState: [] as ToDoListDomainType[],
     // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
     reducers: {
-        // removeTodolistAC: (state,
-        //                    action: PayloadAction<{ toDoListID: string }>) => {
-        //     const index = state.findIndex(el => el.id === action.payload.toDoListID)
-        //     if (index > -1) {
-        //         state.splice(index, 1)
-        //     }
-        //     //state.filter(el => el.id !== action.payload.toDoListID);
-        // },
-        // addTodolistAC: (state,
-        //                 action: PayloadAction<{ title: string, toDoListID: string }>) => {
-        //     state.unshift({
-        //         id: action.payload.toDoListID,
-        //         title: action.payload.title,
-        //         filter: 'all',
-        //         addedDate: '',
-        //         order: 0,
-        //         entityStatus: 'idle'
-        //     })
-        // },
-
         changeTodolistFilterAC: (state,
                                  action: PayloadAction<{ toDoListID: string, filter: FilterValuesType }>) => {
             const toDo =
@@ -229,10 +210,6 @@ const slice = createSlice({
                 toDo.filter = action.payload.filter
             }
         },
-        // setToDoListsAC: (state,
-        //                  action: PayloadAction<{ toDoLists: Array<TodolistType> }>) => {
-        //     return action.payload.toDoLists.map(el => ({...el, filter: 'all', entityStatus: 'idle'}))
-        // },
         changeTodolistEntityStatusAC: (state,
                                        action: PayloadAction<{
                                            toDoListID: string,
@@ -290,11 +267,7 @@ const slice = createSlice({
 export const toDoListsReducer = slice.reducer
 // Action creators достаем с помощью slice
 export const {
-    // removeTodolistAC,
-    // addTodolistAC,
-    // changeTodolistTitleAC,
     changeTodolistFilterAC,
-    // setToDoListsAC,
     changeTodolistEntityStatusAC,
     clearToDoDataAC
 } = slice.actions

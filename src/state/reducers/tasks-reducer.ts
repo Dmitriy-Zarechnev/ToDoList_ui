@@ -315,11 +315,9 @@ const slice = createSlice({
                 })
             .addCase(getTasksTC.fulfilled,
                 (state, action) => {
-                    if (action.payload) {
-                        state[action.payload.toDoListID] = action.payload.tasks.map(el => {
-                            return {...el, entityTaskStatus: 'idle'}
-                        })
-                    }
+                    state[action.payload.toDoListID] = action.payload.tasks.map(el => {
+                        return {...el, entityTaskStatus: 'idle'}
+                    })
                 })
             .addCase(addTaskTC.fulfilled,
                 (state, action) => {
@@ -330,35 +328,28 @@ const slice = createSlice({
                 })
             .addCase(deleteTaskTC.fulfilled,
                 (state, action) => {
-                    if (action.payload) {
-                        const tasks = state[action.payload.toDoListID]
-                        const index = tasks.findIndex(el => el.id === action.payload.taskId)
-                        if (index > -1) {
-                            tasks.splice(index, 1)
-                        }
+                    const tasks = state[action.payload.toDoListID]
+                    const index = tasks.findIndex(el => el.id === action.payload.taskId)
+                    if (index > -1) {
+                        tasks.splice(index, 1)
                     }
                 })
             .addCase(updateTaskStatusTC.fulfilled,
                 (state, action) => {
-                    if (action.payload) {
-                        const tasks = state[action.payload.toDoListID]
-                        const index = tasks.findIndex(el => el.id === action.payload.taskId)
-                        if (index > -1) {
-                            tasks[index].status = action.payload.status
-                        }
+                    const tasks = state[action.payload.toDoListID]
+                    const index = tasks.findIndex(el => el.id === action.payload.taskId)
+                    if (index > -1) {
+                        tasks[index].status = action.payload.status
                     }
                 })
             .addCase(updateTaskTitleTC.fulfilled,
                 (state, action) => {
-                    if (action.payload) {
-                        const tasks = state[action.payload.toDoListID]
-                        const index = tasks.findIndex(el => el.id === action.payload.taskId)
-                        if (index > -1) {
-                            tasks[index].title = action.payload.title
-                        }
+                    const tasks = state[action.payload.toDoListID]
+                    const index = tasks.findIndex(el => el.id === action.payload.taskId)
+                    if (index > -1) {
+                        tasks[index].title = action.payload.title
                     }
                 })
-
     }
 })
 
