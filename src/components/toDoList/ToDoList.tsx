@@ -84,7 +84,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // -------------- Меняем Task's title ----------------
     const changeTaskTitle = useCallback(
         (id: string, newTitle: string) => {
-            dispatch(updateTaskTitleTC(props.id, id, newTitle))
+            dispatch(updateTaskTitleTC({toDoListID:props.id, taskId:id, title:newTitle}))
         },
         [props.id]
     )

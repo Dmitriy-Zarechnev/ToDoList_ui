@@ -1,4 +1,4 @@
-import {addTaskTC, changeTaskEntityStatusAC, changeTaskTitleAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC} from '../reducers/tasks-reducer'
+import {addTaskTC, changeTaskEntityStatusAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC, updateTaskTitleTC} from '../reducers/tasks-reducer'
 import {addTodolistAC, removeTodolistAC, setToDoListsAC} from '../reducers/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from 'api/tasks-api'
 
@@ -211,8 +211,10 @@ test('status of specified task should be changed', () => {
 
 
 test('title of specified task should be changed', () => {
+    const args = {toDoListID: 'todolistId1', taskId: '3', title: 'NodeJs'}
+
     const endState = tasksReducer(startState,
-        changeTaskTitleAC({toDoListID: 'todolistId1', id: '3', title: 'NodeJs'}))
+        updateTaskTitleTC.fulfilled(args, 'requestId', args))
 
     expect(endState['todolistId2'][2].title).toBe('tea')
     expect(endState['todolistId1'][2].title).toBe('NodeJs')

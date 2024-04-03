@@ -212,54 +212,68 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
 )
 
 // ------------- Изменение tasks title -----------------------
-export const updateTaskTitleTC =
-    (todolistId: string, taskId: string, title: string) =>
-        async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
-            // Получили все tasks из state
-            const allTasksFromState = getState().tasks
+export const updateTaskTitleTC = createAppAsyncThunk<{
+    toDoListID: string, taskId: string, title: string
+}, { toDoListID: string, taskId: string, title: string }>(
+    // 1 - prefix
+    'tasks/updateTaskTitle',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async ({toDoListID, taskId, title}, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue, getState} = thunkAPI
+        // Получили все tasks из state
+        const allTasksFromState = getState().tasks
 
-            // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
-            const task = allTasksFromState[todolistId].find((t) => {
-                return t.id === taskId
-            })
+        // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
+        const task = allTasksFromState[toDoListID].find((t) => {
+            return t.id === taskId
+        })
 
-            // Проверка, т.к find может вернуть undefined
-            if (task) {
-                // Показываем Preloader во время запроса
-                dispatch(setAppStatusAC({status: 'loading'}))
-                // Отключаем кнопку во время запроса
-                dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'loading'}))
+        // Проверка, т.к find может вернуть undefined
+        if (task) {
+            // Показываем Preloader во время запроса
+            dispatch(setAppStatusAC({status: 'loading'}))
+            // Отключаем кнопку во время запроса
+            dispatch(changeTaskEntityStatusAC({toDoListID, taskId, entityTaskStatus: 'loading'}))
 
-                try {
-                    // Запрос на изменение task's title
-                    const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
-                        title: title,
-                        startDate: task.startDate,
-                        priority: task.priority,
-                        description: task.description,
-                        deadline: task.deadline,
-                        status: task.status
-                    })
+            try {
+                // Запрос на изменение task's title
+                const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
+                    title: title,
+                    startDate: task.startDate,
+                    priority: task.priority,
+                    description: task.description,
+                    deadline: task.deadline,
+                    status: task.status
+                })
 
-                    // Если успех
-                    if (updateTaskData.resultCode === 0) {
-                        // Dispatch после ответа от сервера и поменяли title
-                        dispatch(changeTaskTitleAC({toDoListID: todolistId, id: taskId, title}))
+                // Если успех
+                if (updateTaskData.resultCode === 0) {
 
-                        // Убираем Preloader после успешного ответа
-                        dispatch(setAppStatusAC({status: 'updated'}))
-                        // Включили после успеха
-                        dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'idle'}))
-                    } else {
-                        // Обработка серверной ошибки
-                        handleServerNetworkError(updateTaskData, dispatch)
-                    }
-                } catch (error: any) {
-                    // Обработка сетевой ошибки
-                    handleServerNetworkError(error, dispatch)
+                    // Убираем Preloader после успешного ответа
+                    dispatch(setAppStatusAC({status: 'updated'}))
+                    // Включили после успеха
+                    dispatch(changeTaskEntityStatusAC({toDoListID, taskId, entityTaskStatus: 'idle'}))
+
+                    // Dispatch после ответа от сервера и поменяли title
+                    return {toDoListID, taskId, title}
+                } else {
+                    // Обработка серверной ошибки
+                    handleServerNetworkError(updateTaskData, dispatch)
+                    // Здесь будет упакована ошибка
+                    return rejectWithValue(null)
                 }
+            } catch (error: any) {
+                // Обработка сетевой ошибки
+                handleServerNetworkError(error, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
             }
         }
+        // Здесь будет упакована ошибка
+        return rejectWithValue(null)
+    }
+)
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
@@ -290,14 +304,14 @@ const slice = createSlice({
         //         tasks[index].status = action.payload.status
         //     }
         // },
-        changeTaskTitleAC: (state,
-                            action: PayloadAction<{ toDoListID: string, id: string, title: string }>) => {
-            const tasks = state[action.payload.toDoListID]
-            const index = tasks.findIndex(el => el.id === action.payload.id)
-            if (index > -1) {
-                tasks[index].title = action.payload.title
-            }
-        },
+        // changeTaskTitleAC: (state,
+        //                     action: PayloadAction<{ toDoListID: string, id: string, title: string }>) => {
+        //     const tasks = state[action.payload.toDoListID]
+        //     const index = tasks.findIndex(el => el.id === action.payload.id)
+        //     if (index > -1) {
+        //         tasks[index].title = action.payload.title
+        //     }
+        // },
         // setTasksAC: (state,
         //              action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
         //   state[action.payload.toDoListID] = action.payload.tasks.map(el => {
@@ -375,6 +389,16 @@ const slice = createSlice({
                         }
                     }
                 })
+            .addCase(updateTaskTitleTC.fulfilled,
+                (state, action) => {
+                    if (action.payload) {
+                        const tasks = state[action.payload.toDoListID]
+                        const index = tasks.findIndex(el => el.id === action.payload.taskId)
+                        if (index > -1) {
+                            tasks[index].title = action.payload.title
+                        }
+                    }
+                })
     }
 })
 
@@ -386,7 +410,7 @@ export const {
     // removeTaskAC,
     // addTaskAC,
     // changeTaskStatusAC,
-    changeTaskTitleAC,
+    // changeTaskTitleAC,
     // setTasksAC,
     changeTaskEntityStatusAC
 } = slice.actions
