@@ -1,12 +1,9 @@
-import {
-  addTodolistAC,
-  changeTodolistEntityStatusAC, clearToDoDataAC, removeTodolistAC, setToDoListsAC
-} from "./todolists-reducer";
-import { AppDispatch, AppRootStateType } from "../store";
-import { tasksAPI, TasksStatuses, TasksType } from "api/tasks-api";
-import { RequestStatusType, setAppStatusAC } from "./app-reducer";
-import { handleServerNetworkError } from "utils/error-utils";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {addTodolistAC, changeTodolistEntityStatusAC, clearToDoDataAC, removeTodolistAC, setToDoListsAC} from './todolists-reducer'
+import {AppDispatch, AppRootStateType} from '../store'
+import {tasksAPI, TasksStatuses, TasksType} from 'api/tasks-api'
+import {RequestStatusType, setAppStatusAC} from './app-reducer'
+import {handleServerNetworkError} from 'utils/error-utils'
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 
 // Типизация TaskWithEntityType
@@ -14,206 +11,262 @@ export type TaskWithEntityType = TasksType & { entityTaskStatus: RequestStatusTy
 
 // Типизация TasksInitialStateType
 export type TasksInitialStateType = {
-  [key: string]: Array<TaskWithEntityType>;
+    [key: string]: Array<TaskWithEntityType>;
 };
 
 // Типизировали createAsyncThunk и внутри state, dispatch, rejectValue
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
-  state: AppRootStateType
-  dispatch: AppDispatch
-  rejectValue: null
-}>();
+    state: AppRootStateType
+    dispatch: AppDispatch
+    rejectValue: null
+}>()
 
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение tasks с сервера -----------------------
 export const getTasksTC = createAppAsyncThunk<{
-  toDoListID: string, tasks: TasksType[]
+    toDoListID: string, tasks: TasksType[]
 }, string>(
-  // 1 - prefix
-  "tasks/getTasks",
-  // 2 - callback (условно наша старая санка), в которую:
-  // Первым параметром мы передаем параметры необходимые для санки
-  // (если параметров больше чем один упаковываем их в объект)
-  // Вторым параметром thunkAPI, обратившись к которому получим dispatch ...
-  async (toDoListID, thunkAPI) => {
-    // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
-    const { dispatch, rejectWithValue } = thunkAPI;
+    // 1 - prefix
+    'tasks/getTasks',
+    // 2 - callback (условно наша старая санка), в которую:
+    // Первым параметром мы передаем параметры необходимые для санки
+    // (если параметров больше чем один упаковываем их в объект)
+    // Вторым параметром thunkAPI, обратившись к которому получим dispatch ...
+    async (toDoListID, thunkAPI) => {
+        // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
+        const {dispatch, rejectWithValue} = thunkAPI
 
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
-    try {
-      // Запрос на получение tasks с сервера
-      const getTasksData = await tasksAPI.getTasks(toDoListID);
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC({status: 'loading'}))
+        try {
+            // Запрос на получение tasks с сервера
+            const getTasksData = await tasksAPI.getTasks(toDoListID)
 
-      // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC({ status: "succeeded" }));
+            // Убираем Preloader после успешного ответа
+            dispatch(setAppStatusAC({status: 'succeeded'}))
 
-      // return ответ от сервера
-      return { toDoListID, tasks: getTasksData.items };
-    } catch (error) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    }
-  });
+            // return ответ от сервера
+            return {toDoListID, tasks: getTasksData.items}
+        } catch (error) {
+            // Обработка сетевой ошибки
+            handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(null)
+        }
+    })
 
 // ------------- Добавление task -----------------------
 export const addTaskTC = createAppAsyncThunk<{
-  task: TaskWithEntityType
+    task: TaskWithEntityType
 }, { toDoListID: string, title: string }>(
-  // 1 - prefix
-  "tasks/addTask",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, title }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
+    // 1 - prefix
+    'tasks/addTask',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async ({toDoListID, title}, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
 
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
-    // Отключаем кнопку во время запроса
-    dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "loading" }));
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC({status: 'loading'}))
+        // Отключаем кнопку во время запроса
+        dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'loading'}))
 
-    try {
-      // Запрос на добавление task
-      const addTaskData = await tasksAPI.createTask(toDoListID, title);
+        try {
+            // Запрос на добавление task
+            const addTaskData = await tasksAPI.createTask(toDoListID, title)
 
-      // Если успех
-      if (addTaskData.resultCode === 0) {
+            // Если успех
+            if (addTaskData.resultCode === 0) {
 
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "updated" }));
-        // Включаем кнопку после успешного ответа
-        dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "idle" }));
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'updated'}))
+                // Включаем кнопку после успешного ответа
+                dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'idle'}))
 
-        // Return ответ от сервера и прибавили entityTaskStatus
-        return { task: { ...addTaskData.data.item, entityTaskStatus: "idle" } };
-      } else {
-        // Обработка серверной ошибки
-        handleServerNetworkError(addTaskData, dispatch);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(null);
-      }
-    } catch (error: any) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
+                // Return ответ от сервера и прибавили entityTaskStatus
+                return {task: {...addTaskData.data.item, entityTaskStatus: 'idle'}}
+            } else {
+                // Обработка серверной ошибки
+                handleServerNetworkError(addTaskData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        } catch (error: any) {
+            // Обработка сетевой ошибки
+            handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(null)
+        }
     }
-  }
-);
+)
 
 
+// ------------- Удаление task -----------------------
+export const deleteTaskTC = createAppAsyncThunk<{
+    toDoListID: string, taskId: string
+}, { toDoListID: string, taskId: string }>(
+    // 1 - prefix
+    'tasks/deleteTask',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async ({toDoListID, taskId}, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
+
+        // Показываем Preloader во время запроса
+        dispatch(setAppStatusAC({status: 'loading'}))
+        // Отключаем кнопку во время запроса
+        dispatch(changeTaskEntityStatusAC({toDoListID, taskId, entityTaskStatus: 'loading'}))
+
+        try {
+            // Запрос на удаление task
+            const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId)
+
+            // Если успех
+            if (deleteTaskData.resultCode === 0) {
+
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'updated'}))
+                // Включили после успеха
+                dispatch(changeTaskEntityStatusAC({toDoListID, taskId, entityTaskStatus: 'idle'}))
+
+                // Return после ответа от сервера и удалили task
+                return {toDoListID, taskId}
+            } else {
+                // Обработка серверной ошибки
+                handleServerNetworkError(deleteTaskData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        } catch (error) {
+            // Обработка сетевой ошибки
+            handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(null)
+        }
+    })
+
+
+// *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
-  name: "tasks",
-  initialState: {} as TasksInitialStateType,
-  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
-  reducers: {
-    removeTaskAC: (state,
-                   action: PayloadAction<{ toDoListID: string, id: string }>) => {
-      const tasks = state[action.payload.toDoListID];
-      const index = tasks.findIndex(el => el.id === action.payload.id);
-      if (index > -1) {
-        tasks.splice(index, 1);
-      }
+    // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+    name: 'tasks',
+    initialState: {} as TasksInitialStateType,
+    // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+    reducers: {
+        // removeTaskAC: (state,
+        //                action: PayloadAction<{ toDoListID: string, id: string }>) => {
+        //     const tasks = state[action.payload.toDoListID]
+        //     const index = tasks.findIndex(el => el.id === action.payload.id)
+        //     if (index > -1) {
+        //         tasks.splice(index, 1)
+        //     }
+        // },
+        // addTaskAC: (state,
+        //             action: PayloadAction<{ task: TaskWithEntityType }>) => {
+        //   const tasks = state[action.payload.task.todoListId];
+        //   tasks.unshift(action.payload.task);
+        // },
+        changeTaskStatusAC: (state,
+                             action: PayloadAction<{ toDoListID: string, id: string, status: TasksStatuses }>) => {
+            const tasks = state[action.payload.toDoListID]
+            const index = tasks.findIndex(el => el.id === action.payload.id)
+            if (index > -1) {
+                tasks[index].status = action.payload.status
+            }
+        },
+        changeTaskTitleAC: (state,
+                            action: PayloadAction<{ toDoListID: string, id: string, title: string }>) => {
+            const tasks = state[action.payload.toDoListID]
+            const index = tasks.findIndex(el => el.id === action.payload.id)
+            if (index > -1) {
+                tasks[index].title = action.payload.title
+            }
+        },
+        // setTasksAC: (state,
+        //              action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
+        //   state[action.payload.toDoListID] = action.payload.tasks.map(el => {
+        //     return { ...el, entityTaskStatus: "idle" };
+        //   });
+        // },
+        changeTaskEntityStatusAC: (state,
+                                   action: PayloadAction<{
+                                       toDoListID: string,
+                                       taskId: string,
+                                       entityTaskStatus: RequestStatusType
+                                   }>) => {
+            const tasks = state[action.payload.toDoListID]
+            const index = tasks.findIndex(el => el.id === action.payload.taskId)
+            if (index > -1) {
+                tasks[index].entityTaskStatus = action.payload.entityTaskStatus
+            }
+        }
     },
-    // addTaskAC: (state,
-    //             action: PayloadAction<{ task: TaskWithEntityType }>) => {
-    //   const tasks = state[action.payload.task.todoListId];
-    //   tasks.unshift(action.payload.task);
-    // },
-    changeTaskStatusAC: (state,
-                         action: PayloadAction<{ toDoListID: string, id: string, status: TasksStatuses }>) => {
-      const tasks = state[action.payload.toDoListID];
-      const index = tasks.findIndex(el => el.id === action.payload.id);
-      if (index > -1) {
-        tasks[index].status = action.payload.status;
-      }
-    },
-    changeTaskTitleAC: (state,
-                        action: PayloadAction<{ toDoListID: string, id: string, title: string }>) => {
-      const tasks = state[action.payload.toDoListID];
-      const index = tasks.findIndex(el => el.id === action.payload.id);
-      if (index > -1) {
-        tasks[index].title = action.payload.title;
-      }
-    },
-    // setTasksAC: (state,
-    //              action: PayloadAction<{ toDoListID: string, tasks: Array<TasksType> }>) => {
-    //   state[action.payload.toDoListID] = action.payload.tasks.map(el => {
-    //     return { ...el, entityTaskStatus: "idle" };
-    //   });
-    // },
-    changeTaskEntityStatusAC: (state,
-                               action: PayloadAction<{
-                                 toDoListID: string,
-                                 id: string,
-                                 entityTaskStatus: RequestStatusType
-                               }>) => {
-      const tasks = state[action.payload.toDoListID];
-      const index = tasks.findIndex(el => el.id === action.payload.id);
-      if (index > -1) {
-        tasks[index].entityTaskStatus = action.payload.entityTaskStatus;
-      }
+    // Общие reducers с другими
+    extraReducers: builder => {
+        builder
+            .addCase(addTodolistAC,
+                (state, action) => {
+                    state[action.payload.toDoListID] = []
+                })
+            .addCase(removeTodolistAC,
+                (state, action) => {
+                    delete state[action.payload.toDoListID]
+                })
+            .addCase(setToDoListsAC,
+                (state, action) => {
+                    action.payload.toDoLists.forEach((el) => {
+                        state[el.id] = []
+                    })
+                })
+            .addCase(clearToDoDataAC,
+                (state) => {
+                    Object.keys(state).forEach(el => {
+                        delete state[el]
+                    })
+                })
+            .addCase(getTasksTC.fulfilled,
+                (state, action) => {
+                    if (action.payload) {
+                        state[action.payload.toDoListID] = action.payload.tasks.map(el => {
+                            return {...el, entityTaskStatus: 'idle'}
+                        })
+                    }
+                })
+            .addCase(addTaskTC.fulfilled,
+                (state, action) => {
+                    if (action.payload) {
+                        const tasks = state[action.payload.task.todoListId]
+                        tasks.unshift(action.payload.task)
+                    }
+                })
+            .addCase(deleteTaskTC.fulfilled,
+                (state, action) => {
+                    if (action.payload) {
+                        const tasks = state[action.payload.toDoListID]
+                        const index = tasks.findIndex(el => el.id === action.payload.taskId)
+                        if (index > -1) {
+                            tasks.splice(index, 1)
+                        }
+                    }
+                })
     }
-  },
-  // Общие reducers с другими
-  extraReducers: builder => {
-    builder
-      .addCase(addTodolistAC,
-        (state, action) => {
-          state[action.payload.toDoListID] = [];
-        })
-      .addCase(removeTodolistAC,
-        (state, action) => {
-          delete state[action.payload.toDoListID];
-        })
-      .addCase(setToDoListsAC,
-        (state, action) => {
-          action.payload.toDoLists.forEach((el) => {
-            state[el.id] = [];
-          });
-        })
-      .addCase(clearToDoDataAC,
-        (state) => {
-          Object.keys(state).forEach(el => {
-            delete state[el];
-          });
-        })
-      .addCase(getTasksTC.fulfilled,
-        (state, action) => {
-          if (action.payload) {
-            state[action.payload.toDoListID] = action.payload.tasks.map(el => {
-              return { ...el, entityTaskStatus: "idle" };
-            });
-          }
-        })
-      .addCase(addTaskTC.fulfilled,
-        (state, action) => {
-          if (action.payload) {
-            const tasks = state[action.payload.task.todoListId];
-            tasks.unshift(action.payload.task);
-          }
-        });
-  }
-});
+})
 
 
 // Создаем tasksReducer с помощью slice
-export const tasksReducer = slice.reducer;
+export const tasksReducer = slice.reducer
 // Action creators достаем с помощью slice и деструктуризации
 export const {
-  removeTaskAC,
-  // addTaskAC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
-  // setTasksAC,
-  changeTaskEntityStatusAC
-} = slice.actions;
+    // removeTaskAC,
+    // addTaskAC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    // setTasksAC,
+    changeTaskEntityStatusAC
+} = slice.actions
 // Thunks упаковываем в объект
-export const tasksThunks = { getTasksTC };
+export const tasksThunks = {getTasksTC}
 
 
 /*
@@ -359,7 +412,7 @@ export const getTasksTC = (todolistId: string) => async (dispatch: AppDispatch) 
 };
 
  */
-
+/*
 // ------------- Удаление task -----------------------
 export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
@@ -389,6 +442,8 @@ export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispa
     handleServerNetworkError(error, dispatch);
   }
 };
+
+ */
 /*
 // ------------- Добавление task -----------------------
 export const addTaskTC = (todolistId: string, title: string) => async (dispatch: AppDispatch) => {
@@ -424,100 +479,100 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
 
 // ------------- Изменение task's status -----------------------
 export const updateTaskStatusTC =
-  (todolistId: string, taskId: string, status: TasksStatuses) =>
-    async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
-      // Получили все tasks из state
-      const allTasksFromState = getState().tasks;
+    (todolistId: string, taskId: string, status: TasksStatuses) =>
+        async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
+            // Получили все tasks из state
+            const allTasksFromState = getState().tasks
 
-      // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
-      const task = allTasksFromState[todolistId].find((t) => {
-        return t.id === taskId;
-      });
+            // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
+            const task = allTasksFromState[todolistId].find((t) => {
+                return t.id === taskId
+            })
 
-      // Проверка, т.к find может вернуть undefined
-      if (task) {
-        // Показываем Preloader во время запроса
-        dispatch(setAppStatusAC({ status: "loading" }));
-        // Отключаем кнопку во время запроса
-        dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "loading" }));
+            // Проверка, т.к find может вернуть undefined
+            if (task) {
+                // Показываем Preloader во время запроса
+                dispatch(setAppStatusAC({status: 'loading'}))
+                // Отключаем кнопку во время запроса
+                dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'loading'}))
 
-        try {
-          // Запрос на изменение task's status
-          const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
-            title: task.title,
-            startDate: task.startDate,
-            priority: task.priority,
-            description: task.description,
-            deadline: task.deadline,
-            status: status
-          });
+                try {
+                    // Запрос на изменение task's status
+                    const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
+                        title: task.title,
+                        startDate: task.startDate,
+                        priority: task.priority,
+                        description: task.description,
+                        deadline: task.deadline,
+                        status: status
+                    })
 
-          // Если успех
-          if (updateTaskData.resultCode === 0) {
-            // Dispatch после ответа от сервера и поменяли status
-            dispatch(changeTaskStatusAC({ toDoListID: todolistId, id: taskId, status }));
+                    // Если успех
+                    if (updateTaskData.resultCode === 0) {
+                        // Dispatch после ответа от сервера и поменяли status
+                        dispatch(changeTaskStatusAC({toDoListID: todolistId, id: taskId, status}))
 
-            // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC({ status: "updated" }));
-            // Включили после успеха
-            dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "idle" }));
-          } else {
-            // Обработка серверной ошибки
-            handleServerNetworkError(updateTaskData, dispatch);
-          }
-        } catch (error: any) {
-          // Обработка сетевой ошибки
-          handleServerNetworkError(error, dispatch);
+                        // Убираем Preloader после успешного ответа
+                        dispatch(setAppStatusAC({status: 'updated'}))
+                        // Включили после успеха
+                        dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'idle'}))
+                    } else {
+                        // Обработка серверной ошибки
+                        handleServerNetworkError(updateTaskData, dispatch)
+                    }
+                } catch (error: any) {
+                    // Обработка сетевой ошибки
+                    handleServerNetworkError(error, dispatch)
+                }
+            }
         }
-      }
-    };
 
 // ------------- Изменение tasks title -----------------------
 export const updateTaskTitleTC =
-  (todolistId: string, taskId: string, title: string) =>
-    async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
-      // Получили все tasks из state
-      const allTasksFromState = getState().tasks;
+    (todolistId: string, taskId: string, title: string) =>
+        async (dispatch: AppDispatch, getState: () => AppRootStateType) => {
+            // Получили все tasks из state
+            const allTasksFromState = getState().tasks
 
-      // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
-      const task = allTasksFromState[todolistId].find((t) => {
-        return t.id === taskId;
-      });
+            // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
+            const task = allTasksFromState[todolistId].find((t) => {
+                return t.id === taskId
+            })
 
-      // Проверка, т.к find может вернуть undefined
-      if (task) {
-        // Показываем Preloader во время запроса
-        dispatch(setAppStatusAC({ status: "loading" }));
-        // Отключаем кнопку во время запроса
-        dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "loading" }));
+            // Проверка, т.к find может вернуть undefined
+            if (task) {
+                // Показываем Preloader во время запроса
+                dispatch(setAppStatusAC({status: 'loading'}))
+                // Отключаем кнопку во время запроса
+                dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'loading'}))
 
-        try {
-          // Запрос на изменение task's title
-          const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
-            title: title,
-            startDate: task.startDate,
-            priority: task.priority,
-            description: task.description,
-            deadline: task.deadline,
-            status: task.status
-          });
+                try {
+                    // Запрос на изменение task's title
+                    const updateTaskData = await tasksAPI.updateTask(todolistId, taskId, {
+                        title: title,
+                        startDate: task.startDate,
+                        priority: task.priority,
+                        description: task.description,
+                        deadline: task.deadline,
+                        status: task.status
+                    })
 
-          // Если успех
-          if (updateTaskData.resultCode === 0) {
-            // Dispatch после ответа от сервера и поменяли title
-            dispatch(changeTaskTitleAC({ toDoListID: todolistId, id: taskId, title }));
+                    // Если успех
+                    if (updateTaskData.resultCode === 0) {
+                        // Dispatch после ответа от сервера и поменяли title
+                        dispatch(changeTaskTitleAC({toDoListID: todolistId, id: taskId, title}))
 
-            // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC({ status: "updated" }));
-            // Включили после успеха
-            dispatch(changeTaskEntityStatusAC({ toDoListID: todolistId, id: taskId, entityTaskStatus: "idle" }));
-          } else {
-            // Обработка серверной ошибки
-            handleServerNetworkError(updateTaskData, dispatch);
-          }
-        } catch (error: any) {
-          // Обработка сетевой ошибки
-          handleServerNetworkError(error, dispatch);
+                        // Убираем Preloader после успешного ответа
+                        dispatch(setAppStatusAC({status: 'updated'}))
+                        // Включили после успеха
+                        dispatch(changeTaskEntityStatusAC({toDoListID: todolistId, taskId, entityTaskStatus: 'idle'}))
+                    } else {
+                        // Обработка серверной ошибки
+                        handleServerNetworkError(updateTaskData, dispatch)
+                    }
+                } catch (error: any) {
+                    // Обработка сетевой ошибки
+                    handleServerNetworkError(error, dispatch)
+                }
+            }
         }
-      }
-    };
