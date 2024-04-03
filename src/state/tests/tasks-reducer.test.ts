@@ -1,11 +1,10 @@
 import {
-  addTaskAC,
   changeTaskEntityStatusAC,
   changeTaskStatusAC,
   changeTaskTitleAC,
   removeTaskAC,
   tasksReducer,
-  TasksInitialStateType, getTasksTC
+  TasksInitialStateType, getTasksTC, addTaskTC
 } from "../reducers/tasks-reducer";
 import { addTodolistAC, removeTodolistAC, setToDoListsAC } from "../reducers/todolists-reducer";
 import { TasksPriorities, TasksStatuses } from "api/tasks-api";
@@ -99,6 +98,7 @@ beforeEach(() => {
   };
 });
 
+
 test("correct task should be deleted from correct array", () => {
   const endState = tasksReducer(startState, removeTaskAC({ toDoListID: "todolistId2", id: "2" }));
 
@@ -176,10 +176,11 @@ test("correct task should be deleted from correct array", () => {
   expect(endState["todolistId2"].every((el) => el.id !== "2")).toBeTruthy();
 });
 
+
 test("correct task should be added to correct array", () => {
   const endState = tasksReducer(
     startState,
-    addTaskAC({
+    addTaskTC.fulfilled({
       task: {
         id: "5",
         title: "juce",
@@ -193,7 +194,7 @@ test("correct task should be added to correct array", () => {
         todoListId: "todolistId2",
         entityTaskStatus: "idle"
       }
-    })
+    }, "requestId", { toDoListID: "todolistId2", title: "juce" })
   );
 
   expect(endState["todolistId1"].length).toBe(startState["todolistId1"].length);
@@ -202,22 +203,28 @@ test("correct task should be added to correct array", () => {
   expect(endState["todolistId2"][0].status).toBe(TasksStatuses.New);
 });
 
+
 test("status of specified task should be changed", () => {
-  const endState = tasksReducer(startState, changeTaskStatusAC({ toDoListID: "todolistId2", id: "2", status: TasksStatuses.New }));
+  const endState = tasksReducer(startState,
+    changeTaskStatusAC({ toDoListID: "todolistId2", id: "2", status: TasksStatuses.New }));
 
   expect(endState["todolistId2"][1].status).toBe(TasksStatuses.New);
   expect(endState["todolistId1"][1].status).toBe(TasksStatuses.Completed);
 });
 
+
 test("title of specified task should be changed", () => {
-  const endState = tasksReducer(startState, changeTaskTitleAC({ toDoListID: "todolistId1", id: "3", title: "NodeJs" }));
+  const endState = tasksReducer(startState,
+    changeTaskTitleAC({ toDoListID: "todolistId1", id: "3", title: "NodeJs" }));
 
   expect(endState["todolistId2"][2].title).toBe("tea");
   expect(endState["todolistId1"][2].title).toBe("NodeJs");
 });
 
+
 test("new array should be added when new todolist is added", () => {
-  const endState = tasksReducer(startState, addTodolistAC({ title: "new todolist", toDoListID: "todolistId" }));
+  const endState = tasksReducer(startState,
+    addTodolistAC({ title: "new todolist", toDoListID: "todolistId" }));
 
   const keys = Object.keys(endState);
   const newKey = keys.find((k) => k != "todolistId1" && k != "todolistId2");
@@ -229,14 +236,17 @@ test("new array should be added when new todolist is added", () => {
   expect(endState[newKey]).toEqual([]);
 });
 
+
 test("property with todolistId should be deleted", () => {
-  const endState = tasksReducer(startState, removeTodolistAC({ toDoListID: "todolistId2" }));
+  const endState = tasksReducer(startState,
+    removeTodolistAC({ toDoListID: "todolistId2" }));
 
   const keys = Object.keys(endState);
 
   expect(keys.length).toBe(1);
   expect(endState["todolistId2"]).not.toBeDefined();
 });
+
 
 test("new array should be added when new todolist is set", () => {
   const startState = {
@@ -274,6 +284,7 @@ test("new array should be added when new todolist is set", () => {
   expect(endState[newKey]).toEqual([]);
 });
 
+
 test("tasks should be set from API ", () => {
   const endState = tasksReducer(
     startState,
@@ -309,6 +320,7 @@ test("tasks should be set from API ", () => {
 
   expect(endState["todolistId1"].length).toBe(2);
 });
+
 
 test("tasks entity status should be changed", () => {
   const endState = tasksReducer(startState,

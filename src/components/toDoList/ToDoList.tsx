@@ -52,7 +52,7 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
   // -------------- Добавление task ----------------
   const addTask = useCallback(
     (title: string) => {
-      dispatch(addTaskTC(props.id, title));
+      dispatch(addTaskTC({toDoListID:props.id, title}));
     },
     [props.id],
   );

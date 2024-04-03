@@ -22,7 +22,7 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
   state: AppRootStateType
   dispatch: AppDispatch
   rejectValue: null
-}>()
+}>();
 
 // *********** Thunk - необходимые для общения с DAL ****************
 // ------------- Получение tasks с сервера -----------------------
@@ -58,6 +58,51 @@ export const getTasksTC = createAppAsyncThunk<{
     }
   });
 
+// ------------- Добавление task -----------------------
+export const addTaskTC = createAppAsyncThunk<{
+  task: TaskWithEntityType
+}, { toDoListID: string, title: string }>(
+  // 1 - prefix
+  "tasks/addTask",
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, title }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    // Показываем Preloader во время запроса
+    dispatch(setAppStatusAC({ status: "loading" }));
+    // Отключаем кнопку во время запроса
+    dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "loading" }));
+
+    try {
+      // Запрос на добавление task
+      const addTaskData = await tasksAPI.createTask(toDoListID, title);
+
+      // Если успех
+      if (addTaskData.resultCode === 0) {
+
+        // Убираем Preloader после успешного ответа
+        dispatch(setAppStatusAC({ status: "updated" }));
+        // Включаем кнопку после успешного ответа
+        dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "idle" }));
+
+        // Return ответ от сервера и прибавили entityTaskStatus
+        return { task: { ...addTaskData.data.item, entityTaskStatus: "idle" } };
+      } else {
+        // Обработка серверной ошибки
+        handleServerNetworkError(addTaskData, dispatch);
+        // Здесь будет упакована ошибка
+        return rejectWithValue(null);
+      }
+    } catch (error: any) {
+      // Обработка сетевой ошибки
+      handleServerNetworkError(error, dispatch);
+      // Здесь будет упакована ошибка
+      return rejectWithValue(null);
+    }
+  }
+);
+
 
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -74,11 +119,11 @@ const slice = createSlice({
         tasks.splice(index, 1);
       }
     },
-    addTaskAC: (state,
-                action: PayloadAction<{ task: TaskWithEntityType }>) => {
-      const tasks = state[action.payload.task.todoListId];
-      tasks.unshift(action.payload.task);
-    },
+    // addTaskAC: (state,
+    //             action: PayloadAction<{ task: TaskWithEntityType }>) => {
+    //   const tasks = state[action.payload.task.todoListId];
+    //   tasks.unshift(action.payload.task);
+    // },
     changeTaskStatusAC: (state,
                          action: PayloadAction<{ toDoListID: string, id: string, status: TasksStatuses }>) => {
       const tasks = state[action.payload.toDoListID];
@@ -144,6 +189,13 @@ const slice = createSlice({
               return { ...el, entityTaskStatus: "idle" };
             });
           }
+        })
+      .addCase(addTaskTC.fulfilled,
+        (state, action) => {
+          if (action.payload) {
+            const tasks = state[action.payload.task.todoListId];
+            tasks.unshift(action.payload.task);
+          }
         });
   }
 });
@@ -154,7 +206,7 @@ export const tasksReducer = slice.reducer;
 // Action creators достаем с помощью slice и деструктуризации
 export const {
   removeTaskAC,
-  addTaskAC,
+  // addTaskAC,
   changeTaskStatusAC,
   changeTaskTitleAC,
   // setTasksAC,
@@ -337,7 +389,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) => async (dispa
     handleServerNetworkError(error, dispatch);
   }
 };
-
+/*
 // ------------- Добавление task -----------------------
 export const addTaskTC = (todolistId: string, title: string) => async (dispatch: AppDispatch) => {
   // Показываем Preloader во время запроса
@@ -367,6 +419,8 @@ export const addTaskTC = (todolistId: string, title: string) => async (dispatch:
     handleServerNetworkError(error, dispatch);
   }
 };
+
+ */
 
 // ------------- Изменение task's status -----------------------
 export const updateTaskStatusTC =
