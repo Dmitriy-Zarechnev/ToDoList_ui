@@ -12,7 +12,7 @@ import {addTaskTC, deleteTaskTC, getTasksTC, updateTaskStatusTC, updateTaskTitle
 import {tasksSelector} from 'state/selectors/tasks-selector'
 import {useAppDispatch} from 'state/store'
 import {RequestStatusType} from 'state/reducers/app-reducer'
-import {TasksStatuses} from '../../api/enums'
+import {TasksStatuses} from "api/enums"
 
 type TodoListPropsType = {
     id: string;
@@ -52,6 +52,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
         [props.id]
     )
 
+
     // -------------- Фильтрация task ----------------
     const onClickBtnHandler = useCallback(
         (value: FilterValuesType) => {
@@ -59,6 +60,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
         },
         [props.id]
     )
+
 
     // -------------- Удаление task ----------------
     const onClickRemoveHandler = useCallback(
