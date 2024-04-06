@@ -1,10 +1,10 @@
 import {AppDispatch, AppRootStateType} from '../store'
-import {todolistAPI, TodolistType} from 'api/todolist-api'
+import {todolistAPI, TodolistType, ResponseType} from 'api/todolist-api'
 import {RequestStatusType, setAppStatusAC} from './app-reducer'
 import {handleServerNetworkError} from 'utils/handle-server-network-error'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {ResultCode} from '../../api/enums'
-import {handleServerAppError} from '../../utils/handle-server-app-error'
+import {ResultCode} from "api/enums"
+import {handleServerAppError} from "utils/handle-server-app-error"
 
 
 // Типизация Filters
@@ -20,7 +20,7 @@ export type ToDoListDomainType = TodolistType & {
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     state: AppRootStateType
     dispatch: AppDispatch
-    rejectValue: null
+    rejectValue: null |ResponseType
 }>()
 
 

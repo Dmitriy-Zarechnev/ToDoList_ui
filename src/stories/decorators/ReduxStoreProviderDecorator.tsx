@@ -1,10 +1,9 @@
 import React from "react";
 import { Provider } from "react-redux";
-import {  combineReducers } from "redux";
 import { tasksReducer } from "state/reducers/tasks-reducer";
 import { toDoListsReducer } from "state/reducers/todolists-reducer";
 import { v1 } from "uuid";
-import { AppRootStateType, RootReducerType } from "state/store";
+import { AppRootStateType } from "state/store";
 import { TasksPriorities, TasksStatuses } from "api/enums";
 import { appReducer } from "state/reducers/app-reducer";
 import { thunk } from "redux-thunk";
@@ -12,12 +11,6 @@ import { authReducer } from "state/reducers/auth-reducer";
 import { HashRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 
-const rootReducer: RootReducerType = combineReducers({
-  tasks: tasksReducer,
-  toDoLists: toDoListsReducer,
-  app: appReducer,
-  auth: authReducer,
-});
 
 const initialGlobalState: AppRootStateType = {
   tasks: {
@@ -33,7 +26,7 @@ const initialGlobalState: AppRootStateType = {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: v1(),
@@ -46,8 +39,8 @@ const initialGlobalState: AppRootStateType = {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
+        entityTaskStatus: "idle"
+      }
     ],
     ["todolistId2"]: [
       {
@@ -61,7 +54,7 @@ const initialGlobalState: AppRootStateType = {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
+        entityTaskStatus: "idle"
       },
       {
         id: v1(),
@@ -74,9 +67,9 @@ const initialGlobalState: AppRootStateType = {
         description: "Hello",
         addedDate: "",
         todoListId: "TodolistId",
-        entityTaskStatus: "idle",
-      },
-    ],
+        entityTaskStatus: "idle"
+      }
+    ]
   },
   toDoLists: [
     {
@@ -85,7 +78,7 @@ const initialGlobalState: AppRootStateType = {
       filter: "all",
       addedDate: "",
       order: 0,
-      entityStatus: "idle",
+      entityStatus: "idle"
     },
     {
       id: "todolistId2",
@@ -93,22 +86,27 @@ const initialGlobalState: AppRootStateType = {
       filter: "all",
       addedDate: "",
       order: 0,
-      entityStatus: "idle",
-    },
+      entityStatus: "idle"
+    }
   ],
   app: {
     status: "idle",
     error: null,
-    isInitialized: true,
+    isInitialized: true
   },
   auth: {
-    isLoggedIn: true,
-  },
+    isLoggedIn: true
+  }
 };
 
 export const storyBookStore = configureStore({
-  reducer: rootReducer,
-  preloadedState:initialGlobalState,
+  reducer: {
+    tasks: tasksReducer,
+    toDoLists: toDoListsReducer,
+    app: appReducer,
+    auth: authReducer
+  },
+  preloadedState: initialGlobalState,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)
 });
 
