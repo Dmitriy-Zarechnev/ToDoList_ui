@@ -201,7 +201,8 @@ export const authReducer = slice.reducer;
 // Типизация AuthInitialStateType для тестов
 export type AuthInitialStateType = ReturnType<typeof slice.getInitialState>
 
-
+// Thunks упаковываем в объект
+export const authThunks = {logOutTC,logInTC, initializeMeTC}
 /*
 // Типизация Actions всего authReducer
 export type AuthActionsTypes = ReturnType<typeof setIsLoggedInAC>;

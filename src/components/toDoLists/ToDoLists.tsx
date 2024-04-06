@@ -3,12 +3,12 @@ import Grid from "@mui/material/Grid";
 import { AddItemForm } from "../addItemForm/AddItemForm";
 import Paper from "@mui/material/Paper";
 import { ToDoList } from "../toDoList/ToDoList";
-import { addTodoListsTC, getTodoListsTC } from "state/reducers/todolists-reducer";
-import { useAppDispatch } from "state/store";
+import {  toDoListsThunks } from "state/reducers/todolists-reducer";
 import { useSelector } from "react-redux";
 import { toDoListsSelector } from "state/selectors/todolists-selector";
 import { Navigate } from "react-router-dom";
 import { isLoggedInSelector } from "state/selectors/auth-selector";
+import { useActions } from "utils/useActions";
 
 export const ToDoLists = memo(({ demo = false }: { demo: boolean }) => {
   // Получили toDoLists из state используя хук - useSelector и selector - toDoListsSelector
@@ -18,8 +18,9 @@ export const ToDoLists = memo(({ demo = false }: { demo: boolean }) => {
   const isLoggedIn = useSelector(isLoggedInSelector);
 
   // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-  const dispatch = useAppDispatch();
+  //const dispatch = useAppDispatch();
 
+  const { getTodoListsTC, addTodoListsTC} = useActions(toDoListsThunks);
   // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
   useEffect(() => {
     // Проверка, чтоб лишний раз не грузить todolists
@@ -28,13 +29,13 @@ export const ToDoLists = memo(({ demo = false }: { demo: boolean }) => {
     }
 
     if (!demo) {
-      dispatch(getTodoListsTC());
+      getTodoListsTC();
     }
   }, []);
 
   // -------------- Добавить ToDoList ----------------
   const addToDoList = useCallback((title: string) => {
-    dispatch(addTodoListsTC(title));
+    addTodoListsTC(title)
   }, []);
 
   // Redirect в случае отсутствия логинизации

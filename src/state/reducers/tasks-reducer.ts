@@ -2,9 +2,9 @@ import { addTodoListsTC, changeTodolistEntityStatusAC, clearToDoDataAC, createAp
 import { tasksAPI, TasksType } from "api/tasks-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { handleServerNetworkError } from "../../utils/handle-server-network-error";
-import { ResultCode, TasksStatuses } from "../../api/enums";
-import { handleServerAppError } from "../../utils/handle-server-app-error";
+import { handleServerNetworkError } from "utils/handle-server-network-error";
+import { ResultCode, TasksStatuses } from "api/enums";
+import { handleServerAppError } from "utils/handle-server-app-error";
 import { thunkTryCatch } from "utils/thunk-try-catch";
 
 
@@ -382,8 +382,9 @@ export const tasksReducer = slice.reducer;
 // Action creators достаем с помощью slice
 export const { changeTaskEntityStatusAC } = slice.actions;
 // Thunks упаковываем в объект
-//export const tasksThunks = {getTasksTC}
-
+export const tasksThunks = {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC}
+// Actions
+export const tasksActions = slice.actions;
 
 /*
 // *********** Первоначальный state для tasksReducer ****************

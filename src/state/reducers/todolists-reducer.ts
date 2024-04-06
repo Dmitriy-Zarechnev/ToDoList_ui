@@ -273,6 +273,11 @@ export const {
     clearToDoDataAC
 } = slice.actions
 
+// Action creator достаем с помощью slice
+export const toDoListsActions = slice.actions
+
+// Thunks упаковываем в объект
+export const toDoListsThunks = {deleteTodoListsTC, addTodoListsTC, updateTodoListsTC, getTodoListsTC }
 
 /*
 // Типизация Actions всего todolistsReducer

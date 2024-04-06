@@ -14,10 +14,10 @@ import { ErrorSnackbar } from "components/errorSnackBar/ErrorSnackbar";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { LogIn } from "components/logIn/LogIn";
 import { ToDoLists } from "components/toDoLists/ToDoLists";
-import { initializeMeTC, logOutTC } from "state/reducers/auth-reducer";
-import { useAppDispatch } from "state/store";
+import { authThunks } from "state/reducers/auth-reducer";
 import CircularProgress from "@mui/material/CircularProgress";
 import { isLoggedInSelector } from "state/selectors/auth-selector";
+import { useActions } from "utils/useActions";
 
 type AppPropsType = {
   demo?: boolean;
@@ -32,11 +32,15 @@ function App({ demo = false }: AppPropsType) {
   const isLoggedIn = useSelector(isLoggedInSelector);
 
   // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-  const dispatch = useAppDispatch();
+  //const dispatch = useAppDispatch();
+
+  // useActions - это кастомный хук, который уже протипизирован и лежит в useActions
+  const { initializeMeTC, logOutTC } = useActions(authThunks);
 
   useEffect(() => {
     if (!demo) {
-      dispatch(initializeMeTC());
+      initializeMeTC();
+      // dispatch(initializeMeTC());
     }
   }, []);
 
@@ -51,7 +55,7 @@ function App({ demo = false }: AppPropsType) {
 
   // Функция для вылогинизации
   const onClickHandler = () => {
-    isLoggedIn ? dispatch(logOutTC()) : <Navigate to={"/login"} />;
+    isLoggedIn ? logOutTC() : <Navigate to={"/login"} />;
   };
 
   return (
