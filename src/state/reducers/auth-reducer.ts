@@ -5,6 +5,7 @@ import { clearToDoDataAC, createAppAsyncThunk } from "./todolists-reducer";
 import { createSlice } from "@reduxjs/toolkit";
 import { ResultCode } from "api/enums";
 import { handleServerAppError } from "utils/handle-server-app-error";
+import { thunkTryCatch } from "utils/thunk-try-catch";
 
 
 // *********** Thunk - необходимы для общения с DAL ****************
@@ -63,7 +64,8 @@ export const initializeMeTC = createAppAsyncThunk<{
   async (_, thunkAPI) => {
     // 3 - деструктурируем параметры
     const { dispatch, rejectWithValue } = thunkAPI;
-    try {
+
+    return thunkTryCatch(thunkAPI, async () => {
       // Запрос на проверку
       const meData = await authAPI.me();
 
@@ -80,18 +82,40 @@ export const initializeMeTC = createAppAsyncThunk<{
         // Здесь будет упакована ошибка
         return rejectWithValue(null);
       }
-
-    } catch (error) {
-
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    } finally {
-
+    }).finally(() => {
       // Инициализировали приложение после ответа
       dispatch(setAppInitializedAC({ isInitialized: true }));
-    }
+    });
+
+    // try {
+    //   // Запрос на проверку
+    //   const meData = await authAPI.me();
+    //
+    //   // Если успех
+    //   if (meData.resultCode === ResultCode.success) {
+    //     // Убираем Preloader после успешного ответа
+    //     dispatch(setAppStatusAC({ status: "idle" }));
+    //
+    //     // Return после ответа от сервера true
+    //     return { isLoggedIn: true };
+    //   } else {
+    //     // Обработка серверной ошибки
+    //     handleServerAppError(meData, dispatch);
+    //     // Здесь будет упакована ошибка
+    //     return rejectWithValue(null);
+    //   }
+    //
+    // } catch (error) {
+    //
+    //   // Обработка сетевой ошибки
+    //   handleServerNetworkError(error, dispatch);
+    //   // Здесь будет упакована ошибка
+    //   return rejectWithValue(null);
+    // } finally {
+    //
+    //   // Инициализировали приложение после ответа
+    //   dispatch(setAppInitializedAC({ isInitialized: true }));
+    // }
   }
 );
 
