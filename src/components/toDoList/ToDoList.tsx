@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import { Task } from "../task/Task";
 import { useSelector } from "react-redux";
-import {  FilterValuesType, toDoListsActions, toDoListsThunks} from "state/reducers/todolists-reducer";
+import { FilterValuesType, toDoListsActions, toDoListsThunks } from "state/reducers/todolists-reducer";
 import { tasksThunks } from "state/reducers/tasks-reducer";
 import { tasksSelector } from "state/selectors/tasks-selector";
 import { RequestStatusType } from "state/reducers/app-reducer";
@@ -31,21 +31,21 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
   //const dispatch = useAppDispatch();
 
   const { changeTodolistFilterAC } = useActions(toDoListsActions);
-  const { updateTodoListsTC , deleteTodoListsTC} = useActions(toDoListsThunks);
+  const { updateTodoListsTC, deleteTodoListsTC } = useActions(toDoListsThunks);
 
-const {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC}= useActions(tasksThunks)
+  const { getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC } = useActions(tasksThunks);
 
   // -------------- Получили Tasks с сервера после загрузки страницы ----------------
   useEffect(() => {
     if (!demo) {
-      getTasksTC(props.id)
+      getTasksTC(props.id);
     }
   }, []);
 
   // -------------- Меняем название todolist ----------------
   const changeToDoListTitle = useCallback(
     (newTitle: string) => {
-      updateTodoListsTC({ toDoListID: props.id, title: newTitle })
+      updateTodoListsTC({ toDoListID: props.id, title: newTitle });
     },
     [props.id]
   );
@@ -53,7 +53,7 @@ const {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleT
   // -------------- Добавление task ----------------
   const addTask = useCallback(
     (title: string) => {
-      addTaskTC({ toDoListID: props.id, title })
+      addTaskTC({ toDoListID: props.id, title });
     },
     [props.id]
   );
@@ -71,7 +71,7 @@ const {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleT
   // -------------- Удаление task ----------------
   const onClickRemoveHandler = useCallback(
     (id: string) => {
-      deleteTaskTC({ toDoListID: props.id, taskId: id })
+      deleteTaskTC({ toDoListID: props.id, taskId: id });
     },
     [props.id]
   );
@@ -79,20 +79,20 @@ const {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleT
   // -------------- Меняем checkbox ----------------
   const onChangeStatusHandler = useCallback(
     (taskId: string, status: TasksStatuses) => {
-      updateTaskStatusTC({ toDoListID: props.id, taskId, status })
+      updateTaskStatusTC({ toDoListID: props.id, taskId, status });
     },
     [props.id]
   );
 
   // -------------- Удалить ToDoList ----------------
   const onClickDeleteListHandler = useCallback(() => {
-    deleteTodoListsTC(props.id)
+    deleteTodoListsTC(props.id);
   }, [props.id]);
 
   // -------------- Меняем Task's title ----------------
   const changeTaskTitle = useCallback(
     (id: string, newTitle: string) => {
-      updateTaskTitleTC({ toDoListID: props.id, taskId: id, title: newTitle })
+      updateTaskTitleTC({ toDoListID: props.id, taskId: id, title: newTitle });
     },
     [props.id]
   );
@@ -140,6 +140,14 @@ const {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleT
             />
           );
         })}
+        {tasksForToDoList.length === 0 && (
+          <span className={S.no_tasks}>
+            {props.filter === "active" ? "No active tasks"
+              : props.filter === "completed" ? "No completed tasks"
+                : "No tasks"}
+          </span>
+        )}
+
       </div>
       <div className={S.to_Do_List__btn_lists}>
         <Button

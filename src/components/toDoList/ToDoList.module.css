@@ -34,3 +34,10 @@
   justify-content: center;
   gap: 20px;
 }
+
+.no_tasks{
+  font-size: 18px;
+  text-align: center;
+  text-transform: capitalize;
+  color:darkgreen;
+}

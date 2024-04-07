@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback } from "react";
+import React, { ChangeEvent, memo, useCallback } from "react";
 import S from "./Task.module.css";
 import Checkbox from "@mui/material/Checkbox";
 import { EditableSpan } from "../editableSpan/EditableSpan";
@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {  TasksType } from "api/tasks-api";
 import { RequestStatusType } from "state/reducers/app-reducer";
-import {TasksStatuses} from '../../api/enums'
+import {TasksStatuses} from "api/enums"
 
 type TaskPropsType = {
   task: TasksType;
@@ -16,7 +16,7 @@ type TaskPropsType = {
   entityStatus: RequestStatusType;
 };
 
-export const Task: React.FC<TaskPropsType> = React.memo(
+export const Task: React.FC<TaskPropsType> = memo(
   ({ task, onChangeStatusHandler, changeTaskTitle, onClickRemoveHandler, entityStatus }) => {
     // -------------- Работа с изменением status ----------------
     const onChangeHandler = useCallback(
