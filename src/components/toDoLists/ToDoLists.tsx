@@ -49,7 +49,7 @@ export const ToDoLists = memo(({ demo = false }: { demo: boolean }) => {
         <AddItemForm addItem={addToDoList} itemType={"Todolist"} />
       </Grid>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {toDoLists.map((el) => {
           return (
             <Grid item key={el.id}>

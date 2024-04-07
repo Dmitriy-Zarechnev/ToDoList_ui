@@ -15,7 +15,6 @@ import { TasksStatuses } from "api/enums";
 import { useActions } from "utils/useActions";
 
 
-
 type TodoListPropsType = {
   id: string;
   title: string;
@@ -28,12 +27,9 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
   // Получили tasks из state используя хук - useSelector и selector - tasksSelector
   const tasks = useSelector(tasksSelector);
 
-  // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-  //const dispatch = useAppDispatch();
-
+  // Используя useAction получили callbacks в которые уже входит dispatch
   const { changeTodolistFilterAC } = useActions(toDoListsActions);
   const { updateTodoListsTC, deleteTodoListsTC } = useActions(toDoListsThunks);
-
   const { getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC } = useActions(tasksThunks);
 
   // -------------- Получили Tasks с сервера после загрузки страницы ----------------

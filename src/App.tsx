@@ -31,8 +31,6 @@ function App({ demo = false }: AppPropsType) {
   // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
   const isLoggedIn = useSelector(isLoggedInSelector);
 
-  // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-  //const dispatch = useAppDispatch();
 
   // useActions - это кастомный хук, который уже протипизирован и лежит в useActions
   const { initializeMeTC, logOutTC } = useActions(authThunks);

@@ -28,7 +28,9 @@ export const Task: React.FC<TaskPropsType> = memo(
 
     return (
       <div
-        className={task.status === TasksStatuses.Completed ? `${S.to_Do_List__list} ${S.is_done}` : S.to_Do_List__list}
+        className={task.status === TasksStatuses.Completed
+          ? `${S.to_Do_List__list} ${S.is_done}`
+          : S.to_Do_List__list}
       >
         <div className={S.to_Do_List__list_box}>
           <Checkbox
@@ -38,7 +40,8 @@ export const Task: React.FC<TaskPropsType> = memo(
             disabled={entityStatus === "loading"}
           />
 
-          <EditableSpan value={task.title} onChange={(newTitle) => changeTaskTitle(newTitle)} disabled={entityStatus} />
+          <EditableSpan value={task.title} onChange={(newTitle) => changeTaskTitle(newTitle)}
+                        disabled={entityStatus} />
         </div>
 
         <IconButton
