@@ -474,7 +474,7 @@ export const { changeTaskEntityStatusAC } = slice.actions;
 // Thunks упаковываем в объект
 export const tasksThunks = { getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC };
 // Actions
-export const tasksActions = slice.actions;
+//export const tasksActions = slice.actions;
 
 /*
 // *********** Первоначальный state для tasksReducer ****************

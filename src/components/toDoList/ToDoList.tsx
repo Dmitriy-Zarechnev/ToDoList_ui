@@ -15,6 +15,7 @@ import { TasksStatuses } from "api/enums";
 import { useActions } from "utils/useActions";
 
 
+
 type TodoListPropsType = {
   id: string;
   title: string;
@@ -43,46 +44,31 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
   }, []);
 
   // -------------- Меняем название todolist ----------------
-  const changeToDoListTitle = useCallback(
-    (newTitle: string) => {
-      updateTodoListsTC({ toDoListID: props.id, title: newTitle });
-    },
-    [props.id]
-  );
+  const changeToDoListTitle = useCallback((newTitle: string) => {
+    updateTodoListsTC({ toDoListID: props.id, title: newTitle });
+  }, [props.id]);
 
   // -------------- Добавление task ----------------
-  const addTask = useCallback(
-    (title: string) => {
-      addTaskTC({ toDoListID: props.id, title });
-    },
-    [props.id]
-  );
+  const addTask = useCallback((title: string) => {
+    addTaskTC({ toDoListID: props.id, title });
+  }, [props.id]);
 
 
   // -------------- Фильтрация task ----------------
-  const onClickBtnHandler = useCallback(
-    (value: FilterValuesType) => {
-      changeTodolistFilterAC({ toDoListID: props.id, filter: value });
-    },
-    [props.id]
-  );
+  const onClickBtnHandler = useCallback((value: FilterValuesType) => {
+    changeTodolistFilterAC({ toDoListID: props.id, filter: value });
+  }, [props.id]);
 
 
   // -------------- Удаление task ----------------
-  const onClickRemoveHandler = useCallback(
-    (id: string) => {
-      deleteTaskTC({ toDoListID: props.id, taskId: id });
-    },
-    [props.id]
-  );
+  const onClickRemoveHandler = useCallback((id: string) => {
+    deleteTaskTC({ toDoListID: props.id, taskId: id });
+  }, [props.id]);
 
   // -------------- Меняем checkbox ----------------
-  const onChangeStatusHandler = useCallback(
-    (taskId: string, status: TasksStatuses) => {
-      updateTaskStatusTC({ toDoListID: props.id, taskId, status });
-    },
-    [props.id]
-  );
+  const onChangeStatusHandler = useCallback((taskId: string, status: TasksStatuses) => {
+    updateTaskStatusTC({ toDoListID: props.id, taskId, status });
+  }, [props.id]);
 
   // -------------- Удалить ToDoList ----------------
   const onClickDeleteListHandler = useCallback(() => {
@@ -93,20 +79,33 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
   const changeTaskTitle = useCallback(
     (id: string, newTitle: string) => {
       updateTaskTitleTC({ toDoListID: props.id, taskId: id, title: newTitle });
-    },
-    [props.id]
-  );
+    }, [props.id]);
 
   // -------------- Фильтрация Tasks ----------------
-  let tasksForToDoList = tasks[props.id];
+  let tasksForToDoList = tasks[props.id].filter(task => {
+    switch (props.filter) {
+      case "active":
+        return task.status === TasksStatuses.New;
+      case "completed":
+        return task.status === TasksStatuses.Completed;
+      default:
+        return true; // Если фильтр не указан, вернуть все tasks
+    }
+  });
 
-  if (props.filter === "active") {
-    tasksForToDoList = tasksForToDoList.filter((task) => task.status === TasksStatuses.New);
-  }
+  // -------------- Button для filter ----------------
+  const universalButton = (filter: FilterValuesType, color: "secondary" | "success" | "primary", text: string) => {
+    return <Button
+      variant={props.filter === filter ? "outlined" : "contained"}
+      onClick={() => onClickBtnHandler(filter)}
+      color={color}
+    >{text}</Button>;
+  };
 
-  if (props.filter === "completed") {
-    tasksForToDoList = tasksForToDoList.filter((task) => task.status === TasksStatuses.Completed);
-  }
+  // -------------- Text для span, когда нет tasks ----------------
+  const noTasksText = props.filter === "active" ? "No active tasks"
+    : props.filter === "completed" ? "No completed tasks" : "No tasks";
+
 
   return (
     <div className={S.to_Do_List}>
@@ -141,46 +140,14 @@ export const ToDoList = memo(({ demo = false, ...props }: TodoListPropsType) => 
           );
         })}
         {tasksForToDoList.length === 0 && (
-          <span className={S.no_tasks}>
-            {props.filter === "active" ? "No active tasks"
-              : props.filter === "completed" ? "No completed tasks"
-                : "No tasks"}
-          </span>
+          <span className={S.no_tasks}>{noTasksText}</span>
         )}
 
       </div>
       <div className={S.to_Do_List__btn_lists}>
-        <Button
-          variant={props.filter === "all" ? "outlined" : "text"}
-          onClick={() => {
-            onClickBtnHandler("all");
-          }}
-          color={"secondary"}
-        >
-          {" "}
-          All
-        </Button>
-
-        <Button
-          variant={props.filter === "active" ? "outlined" : "text"}
-          onClick={useCallback(() => {
-            onClickBtnHandler("active");
-          }, [])}
-        >
-          {" "}
-          Active
-        </Button>
-
-        <Button
-          variant={props.filter === "completed" ? "outlined" : "text"}
-          onClick={useCallback(() => {
-            onClickBtnHandler("completed");
-          }, [])}
-          color={"success"}
-        >
-          {" "}
-          Completed
-        </Button>
+        {universalButton("all", "secondary", "All")}
+        {universalButton("active", "primary", "Active")}
+        {universalButton("completed", "success", "Completed")}
       </div>
     </div>
   );

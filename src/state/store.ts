@@ -18,9 +18,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)
 });
 
-// // Типизация rootReducer
-// export type RootReducerType = typeof rootReducer;
-
 
 // Типизация всего STATE
 export type AppRootStateType = ReturnType<typeof store.getState>;

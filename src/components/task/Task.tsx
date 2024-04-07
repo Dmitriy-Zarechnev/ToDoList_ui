@@ -4,9 +4,9 @@ import Checkbox from "@mui/material/Checkbox";
 import { EditableSpan } from "../editableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {  TasksType } from "api/tasks-api";
+import { TasksType } from "api/tasks-api";
 import { RequestStatusType } from "state/reducers/app-reducer";
-import {TasksStatuses} from "api/enums"
+import { TasksStatuses } from "api/enums";
 
 type TaskPropsType = {
   task: TasksType;
@@ -24,9 +24,7 @@ export const Task: React.FC<TaskPropsType> = memo(
         let isDone = e.currentTarget.checked ? TasksStatuses.Completed : TasksStatuses.New;
 
         onChangeStatusHandler(task.id, isDone);
-      },
-      [task.id],
-    );
+      }, [task.id]);
 
     return (
       <div
@@ -53,5 +51,5 @@ export const Task: React.FC<TaskPropsType> = memo(
         </IconButton>
       </div>
     );
-  },
+  }
 );
