@@ -1,5 +1,4 @@
 import { setAppInitializedAC, setAppStatusAC } from "./app-reducer";
-import { handleServerNetworkError } from "utils/handle-server-network-error";
 import { authAPI, LoginParamsType } from "api/auth-api";
 import { clearToDoDataAC, createAppAsyncThunk } from "./todolists-reducer";
 import { createSlice } from "@reduxjs/toolkit";
@@ -19,10 +18,9 @@ export const logInTC = createAppAsyncThunk<{
   async (data, thunkAPI) => {
     // 3 - деструктурируем параметры
     const { dispatch, rejectWithValue } = thunkAPI;
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
 
-    try {
+
+    return thunkTryCatch(thunkAPI, async () => {
       // Запрос на logIn
       const logInData = await authAPI.logIn(data);
 
@@ -44,13 +42,39 @@ export const logInTC = createAppAsyncThunk<{
         // Здесь будет упакована ошибка
         return rejectWithValue(logInData);
       }
+    });
 
-    } catch (error) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    }
+
+    //
+    // try {
+    //   // Запрос на logIn
+    //   const logInData = await authAPI.logIn(data);
+    //
+    //   // Если успех
+    //   if (logInData.resultCode === ResultCode.success) {
+    //     // Убираем Preloader после успешного ответа
+    //     dispatch(setAppStatusAC({ status: "idle" }));
+    //
+    //     // Return после ответа от сервера true
+    //     return { isLoggedIn: true };
+    //   } else {
+    //     // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
+    //     // в конкретном поле в компоненте
+    //     // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
+    //     const isShowAppError = !logInData.fieldsErrors.length;
+    //
+    //     // Обработка серверной ошибки
+    //     handleServerAppError(logInData, dispatch, isShowAppError);
+    //     // Здесь будет упакована ошибка
+    //     return rejectWithValue(logInData);
+    //   }
+    //
+    // } catch (error) {
+    //   // Обработка сетевой ошибки
+    //   handleServerNetworkError(error, dispatch);
+    //   // Здесь будет упакована ошибка
+    //   return rejectWithValue(null);
+    // }
   }
 );
 
@@ -129,10 +153,8 @@ export const logOutTC = createAppAsyncThunk<{
   async (_, thunkAPI) => {
     // 3 - деструктурируем параметры
     const { dispatch, rejectWithValue } = thunkAPI;
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
 
-    try {
+    return thunkTryCatch(thunkAPI, async () => {
       // Запрос на LogOut
       const logOutData = await authAPI.logOut();
 
@@ -151,13 +173,36 @@ export const logOutTC = createAppAsyncThunk<{
         // Здесь будет упакована ошибка
         return rejectWithValue(null);
       }
+    });
 
-    } catch (error) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    }
+
+    //
+    // try {
+    //   // Запрос на LogOut
+    //   const logOutData = await authAPI.logOut();
+    //
+    //   // Если успех
+    //   if (logOutData.resultCode === ResultCode.success) {
+    //     // Удалили все данные из store после вылогинизации
+    //     dispatch(clearToDoDataAC());
+    //     // Убираем Preloader после успешного ответа
+    //     dispatch(setAppStatusAC({ status: "idle" }));
+    //
+    //     // Return после ответа от сервера false
+    //     return { isLoggedIn: false };
+    //   } else {
+    //     // Обработка серверной ошибки
+    //     handleServerAppError(logOutData, dispatch);
+    //     // Здесь будет упакована ошибка
+    //     return rejectWithValue(null);
+    //   }
+    //
+    // } catch (error) {
+    //   // Обработка сетевой ошибки
+    //   handleServerNetworkError(error, dispatch);
+    //   // Здесь будет упакована ошибка
+    //   return rejectWithValue(null);
+    // }
   }
 );
 
@@ -202,7 +247,7 @@ export const authReducer = slice.reducer;
 export type AuthInitialStateType = ReturnType<typeof slice.getInitialState>
 
 // Thunks упаковываем в объект
-export const authThunks = {logOutTC,logInTC, initializeMeTC}
+export const authThunks = { logOutTC, logInTC, initializeMeTC };
 /*
 // Типизация Actions всего authReducer
 export type AuthActionsTypes = ReturnType<typeof setIsLoggedInAC>;

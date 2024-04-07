@@ -2,7 +2,6 @@ import { addTodoListsTC, changeTodolistEntityStatusAC, clearToDoDataAC, createAp
 import { tasksAPI, TasksType } from "api/tasks-api";
 import { RequestStatusType, setAppStatusAC } from "./app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { handleServerNetworkError } from "utils/handle-server-network-error";
 import { ResultCode, TasksStatuses } from "api/enums";
 import { handleServerAppError } from "utils/handle-server-app-error";
 import { thunkTryCatch } from "utils/thunk-try-catch";
@@ -27,11 +26,9 @@ export const getTasksTC = createAppAsyncThunk<{
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (toDoListID, thunkAPI) => {
     // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
-    const { dispatch, rejectWithValue } = thunkAPI;
+    const { dispatch } = thunkAPI;
 
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
-    try {
+    return thunkTryCatch(thunkAPI, async () => {
       // Запрос на получение tasks с сервера
       const getTasksData = await tasksAPI.getTasks(toDoListID);
 
@@ -40,12 +37,26 @@ export const getTasksTC = createAppAsyncThunk<{
 
       // return ответ от сервера
       return { toDoListID, tasks: getTasksData.items };
-    } catch (error) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    }
+    });
+
+    //
+    // // Показываем Preloader во время запроса
+    // dispatch(setAppStatusAC({ status: "loading" }));
+    // try {
+    //   // Запрос на получение tasks с сервера
+    //   const getTasksData = await tasksAPI.getTasks(toDoListID);
+    //
+    //   // Убираем Preloader после успешного ответа
+    //   dispatch(setAppStatusAC({ status: "succeeded" }));
+    //
+    //   // return ответ от сервера
+    //   return { toDoListID, tasks: getTasksData.items };
+    // } catch (error) {
+    //   // Обработка сетевой ошибки
+    //   handleServerNetworkError(error, dispatch);
+    //   // Здесь будет упакована ошибка
+    //   return rejectWithValue(null);
+    // }
   });
 
 
@@ -62,6 +73,7 @@ export const addTaskTC = createAppAsyncThunk<{
 
     // Отключаем кнопку во время запроса
     dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "loading" }));
+
 
     return thunkTryCatch(thunkAPI, async () => {
       // Запрос на добавление task
@@ -126,12 +138,10 @@ export const deleteTaskTC = createAppAsyncThunk<{
     // 3 - деструктурируем параметры
     const { dispatch, rejectWithValue } = thunkAPI;
 
-    // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({ status: "loading" }));
     // Отключаем кнопку во время запроса
     dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "loading" }));
 
-    try {
+    return thunkTryCatch(thunkAPI, async () => {
       // Запрос на удаление task
       const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId);
 
@@ -151,12 +161,35 @@ export const deleteTaskTC = createAppAsyncThunk<{
         // Здесь будет упакована ошибка
         return rejectWithValue(null);
       }
-    } catch (error) {
-      // Обработка сетевой ошибки
-      handleServerNetworkError(error, dispatch);
-      // Здесь будет упакована ошибка
-      return rejectWithValue(null);
-    }
+    });
+
+
+    // try {
+    //   // Запрос на удаление task
+    //   const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId);
+    //
+    //   // Если успех
+    //   if (deleteTaskData.resultCode === ResultCode.success) {
+    //
+    //     // Убираем Preloader после успешного ответа
+    //     dispatch(setAppStatusAC({ status: "updated" }));
+    //     // Включили после успеха
+    //     dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
+    //
+    //     // Return после ответа от сервера и удалили task
+    //     return { toDoListID, taskId };
+    //   } else {
+    //     // Обработка серверной ошибки
+    //     handleServerAppError(deleteTaskData, dispatch);
+    //     // Здесь будет упакована ошибка
+    //     return rejectWithValue(null);
+    //   }
+    // } catch (error) {
+    //   // Обработка сетевой ошибки
+    //   handleServerNetworkError(error, dispatch);
+    //   // Здесь будет упакована ошибка
+    //   return rejectWithValue(null);
+    // }
   });
 
 
@@ -181,12 +214,11 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
 
     // Проверка, т.к find может вернуть undefined
     if (task) {
-      // Показываем Preloader во время запроса
-      dispatch(setAppStatusAC({ status: "loading" }));
       // Отключаем кнопку во время запроса
       dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "loading" }));
 
-      try {
+
+      return thunkTryCatch(thunkAPI, async () => {
         // Запрос на изменение task's status
         const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
           title: task.title,
@@ -213,12 +245,41 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
           // Здесь будет упакована ошибка
           return rejectWithValue(null);
         }
-      } catch (error) {
-        // Обработка сетевой ошибки
-        handleServerNetworkError(error, dispatch);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(null);
-      }
+      });
+      //
+      // try {
+      //   // Запрос на изменение task's status
+      //   const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
+      //     title: task.title,
+      //     startDate: task.startDate,
+      //     priority: task.priority,
+      //     description: task.description,
+      //     deadline: task.deadline,
+      //     status: status
+      //   });
+      //
+      //   // Если успех
+      //   if (updateTaskData.resultCode === ResultCode.success) {
+      //
+      //     // Убираем Preloader после успешного ответа
+      //     dispatch(setAppStatusAC({ status: "updated" }));
+      //     // Включили после успеха
+      //     dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
+      //
+      //     // Dispatch после ответа от сервера и поменяли status
+      //     return { toDoListID, taskId, status };
+      //   } else {
+      //     // Обработка серверной ошибки
+      //     handleServerAppError(updateTaskData, dispatch);
+      //     // Здесь будет упакована ошибка
+      //     return rejectWithValue(null);
+      //   }
+      // } catch (error) {
+      //   // Обработка сетевой ошибки
+      //   handleServerNetworkError(error, dispatch);
+      //   // Здесь будет упакована ошибка
+      //   return rejectWithValue(null);
+      // }
     }
     // Здесь будет упакована ошибка
     return rejectWithValue(null);
@@ -246,12 +307,11 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
 
     // Проверка, т.к find может вернуть undefined
     if (task) {
-      // Показываем Preloader во время запроса
-      dispatch(setAppStatusAC({ status: "loading" }));
+
       // Отключаем кнопку во время запроса
       dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "loading" }));
 
-      try {
+      return thunkTryCatch(thunkAPI, async () => {
         // Запрос на изменение task's title
         const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
           title: title,
@@ -278,12 +338,42 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
           // Здесь будет упакована ошибка
           return rejectWithValue(null);
         }
-      } catch (error) {
-        // Обработка сетевой ошибки
-        handleServerNetworkError(error, dispatch);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(null);
-      }
+      });
+
+
+      // try {
+      //   // Запрос на изменение task's title
+      //   const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
+      //     title: title,
+      //     startDate: task.startDate,
+      //     priority: task.priority,
+      //     description: task.description,
+      //     deadline: task.deadline,
+      //     status: task.status
+      //   });
+      //
+      //   // Если успех
+      //   if (updateTaskData.resultCode === ResultCode.success) {
+      //
+      //     // Убираем Preloader после успешного ответа
+      //     dispatch(setAppStatusAC({ status: "updated" }));
+      //     // Включили после успеха
+      //     dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
+      //
+      //     // Dispatch после ответа от сервера и поменяли title
+      //     return { toDoListID, taskId, title };
+      //   } else {
+      //     // Обработка серверной ошибки
+      //     handleServerAppError(updateTaskData, dispatch);
+      //     // Здесь будет упакована ошибка
+      //     return rejectWithValue(null);
+      //   }
+      // } catch (error) {
+      //   // Обработка сетевой ошибки
+      //   handleServerNetworkError(error, dispatch);
+      //   // Здесь будет упакована ошибка
+      //   return rejectWithValue(null);
+      // }
     }
     // Здесь будет упакована ошибка
     return rejectWithValue(null);
@@ -382,7 +472,7 @@ export const tasksReducer = slice.reducer;
 // Action creators достаем с помощью slice
 export const { changeTaskEntityStatusAC } = slice.actions;
 // Thunks упаковываем в объект
-export const tasksThunks = {getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC}
+export const tasksThunks = { getTasksTC, addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC };
 // Actions
 export const tasksActions = slice.actions;
 

@@ -16,6 +16,7 @@ export const thunkTryCatch = async <T>(
   logic: () => Promise<T>
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
   const { dispatch, rejectWithValue } = thunkAPI;
+  // Показываем Preloader во время запроса
   dispatch(setAppStatusAC({ status: "loading" }));
 
   try {
