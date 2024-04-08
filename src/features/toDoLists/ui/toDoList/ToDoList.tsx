@@ -4,15 +4,15 @@ import {AddItemForm} from '../../../../components/addItemForm/AddItemForm'
 import {EditableSpan} from '../../../../components/editableSpan/EditableSpan'
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-import Button from '@mui/material/Button'
 import {Task} from '../task/Task'
 import {useSelector} from 'react-redux'
-import {FilterValuesType, toDoListsActions, toDoListsThunks} from 'features/toDoLists/model/toDoLists/todolists-reducer'
+import {FilterValuesType, toDoListsThunks} from 'features/toDoLists/model/toDoLists/todolists-reducer'
 import {tasksThunks} from 'features/toDoLists/model/tasks/tasks-reducer'
 import {tasksSelector} from 'features/toDoLists/model/tasks/tasks-selector'
 import {RequestStatusType} from 'app/model/app-reducer'
 import {TasksStatuses} from 'utils/api/enums'
 import {useActions} from 'utils/hooks/useActions'
+import {FilterTasksButtons} from '../../../../components/filterTasksButtons/FilterTasksButtons'
 
 
 type TodoListPropsType = {
@@ -28,7 +28,6 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     const tasks = useSelector(tasksSelector)
 
     // Используя useAction получили callbacks в которые уже входит dispatch
-    const {changeTodolistFilterAC} = useActions(toDoListsActions)
     const {updateTodoListsTC, deleteTodoListsTC} = useActions(toDoListsThunks)
     const {getTasksTC, addTaskTC} = useActions(tasksThunks)
 
@@ -46,12 +45,6 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // -------------- Добавление task ----------------
     const addTask = useCallback((title: string) => {
         addTaskTC({toDoListID: props.id, title})
-    }, [props.id])
-
-
-    // -------------- Фильтрация task ----------------
-    const onClickBtnHandler = useCallback((value: FilterValuesType) => {
-        changeTodolistFilterAC({toDoListID: props.id, filter: value})
     }, [props.id])
 
 
@@ -73,14 +66,6 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
         }
     })
 
-    // -------------- Button для filter ----------------
-    const universalButton = (filter: FilterValuesType, color: 'secondary' | 'success' | 'primary', text: string) => {
-        return <Button
-            variant={props.filter === filter ? 'outlined' : 'contained'}
-            onClick={() => onClickBtnHandler(filter)}
-            color={color}
-        >{text}</Button>
-    }
 
     // -------------- Text для span, когда нет tasks ----------------
     const noTasksText = props.filter === 'active' ? 'No active tasks'
@@ -122,11 +107,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
                 )}
 
             </div>
-            <div className={S.to_Do_List__btn_lists}>
-                {universalButton('all', 'secondary', 'All')}
-                {universalButton('active', 'primary', 'Active')}
-                {universalButton('completed', 'success', 'Completed')}
-            </div>
+            <FilterTasksButtons filter={props.filter} toDoListID={props.id}/>
         </div>
     )
 })
