@@ -1,8 +1,8 @@
 import React, {memo} from 'react'
-import S from '../../features/toDoLists/ui/toDoList/ToDoList.module.css'
-import {FilterValuesType, toDoListsActions} from '../../features/toDoLists/model/toDoLists/todolists-reducer'
+import S from '../ToDoList.module.css'
+import {FilterValuesType, toDoListsActions} from '../../../model/toDoLists/todolists-reducer'
 import Button from '@mui/material/Button'
-import {useActions} from '../../utils/hooks/useActions'
+import {useActions} from '../../../../../utils/hooks/useActions'
 
 type FilterTasksButtons = {
     filter: FilterValuesType
