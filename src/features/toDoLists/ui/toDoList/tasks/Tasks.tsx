@@ -1,6 +1,6 @@
 import React, {memo} from 'react'
 import S from '../ToDoList.module.css'
-import {Task} from '../../task/Task'
+import {Task} from './task/Task'
 import {FilterValuesType} from '../../../model/toDoLists/todolists-reducer'
 import {TasksStatuses} from '../../../../../utils/api/enums'
 import {tasksSelector} from '../../../model/tasks/tasks-selector'
@@ -32,6 +32,7 @@ export const Tasks = memo((props: TasksPropsType) => {
     // -------------- Text для span, когда нет tasks ----------------
     const noTasksText = props.filter === 'active' ? 'No active tasks'
         : props.filter === 'completed' ? 'No completed tasks' : 'No tasks'
+
 
     return (
         <div className={S.to_Do_List__lists}>
