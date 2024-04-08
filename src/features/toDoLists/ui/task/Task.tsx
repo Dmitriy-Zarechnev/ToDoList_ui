@@ -1,4 +1,4 @@
-import React, {ChangeEvent, memo} from 'react'
+import React, {ChangeEvent, FC, memo} from 'react'
 import S from './Task.module.css'
 import Checkbox from '@mui/material/Checkbox'
 import {EditableSpan} from '../../../../components/editableSpan/EditableSpan'
@@ -11,12 +11,12 @@ import {useActions} from '../../../../utils/hooks/useActions'
 import {tasksThunks} from '../../model/tasks/tasks-reducer'
 
 type TaskPropsType = {
-    task: TasksType;
-    entityStatus: RequestStatusType;
+    task: TasksType
+    entityStatus: RequestStatusType
     toDoListID: string
 };
 
-export const Task: React.FC<TaskPropsType> = memo(
+export const Task: FC<TaskPropsType> = memo(
     ({task, entityStatus, toDoListID}) => {
 
         // Используя useAction получили callbacks в которые уже входит dispatch
@@ -45,18 +45,15 @@ export const Task: React.FC<TaskPropsType> = memo(
 
 
         return (
-            <div
-                className={task.status === TasksStatuses.Completed
-                    ? `${S.to_Do_List__list} ${S.is_done}`
-                    : S.to_Do_List__list}
-            >
+            <div className={task.status === TasksStatuses.Completed
+                ? `${S.to_Do_List__list} ${S.is_done}`
+                : S.to_Do_List__list}>
                 <div className={S.to_Do_List__list_box}>
                     <Checkbox
                         color={'success'}
                         checked={task.status === TasksStatuses.Completed}
                         onChange={changeTaskStatusHandler}
-                        disabled={entityStatus === 'loading'}
-                    />
+                        disabled={entityStatus === 'loading'}/>
 
                     <EditableSpan value={task.title}
                                   onChange={(newTitle) => changeTaskTitleHandler(newTitle)}
@@ -67,8 +64,7 @@ export const Task: React.FC<TaskPropsType> = memo(
                     aria-label="delete"
                     size="small"
                     onClick={removeTaskHandler}
-                    disabled={entityStatus === 'loading'}
-                >
+                    disabled={entityStatus === 'loading'}>
                     <DeleteIcon fontSize="small"/>
                 </IconButton>
             </div>

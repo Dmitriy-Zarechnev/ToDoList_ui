@@ -30,13 +30,12 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
     // Используя useAction получили callbacks в которые уже входит dispatch
     const {changeTodolistFilterAC} = useActions(toDoListsActions)
     const {updateTodoListsTC, deleteTodoListsTC} = useActions(toDoListsThunks)
-    const {getTasksTC, addTaskTC, } = useActions(tasksThunks)
+    const {getTasksTC, addTaskTC} = useActions(tasksThunks)
 
     // -------------- Получили Tasks с сервера после загрузки страницы ----------------
     useEffect(() => {
-        if (!demo) {
-            getTasksTC(props.id)
-        }
+        // Получаем tasks
+        if (!demo) getTasksTC(props.id)
     }, [])
 
     // -------------- Меняем название todolist ----------------
