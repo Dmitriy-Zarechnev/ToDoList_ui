@@ -31,7 +31,7 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {
-        addTodoListsTC(title)
+        return addTodoListsTC(title).unwrap()
     }, [])
 
     // Redirect в случае isLoggedIn !== true

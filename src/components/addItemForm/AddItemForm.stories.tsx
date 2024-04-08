@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { AddItemForm } from "./AddItemForm";
-import { action } from "@storybook/addon-actions";
+
 
 const meta: Meta<typeof AddItemForm> = {
   title: "TODOLISTS/AddItemForm",
@@ -22,13 +22,13 @@ type Story = StoryObj<typeof AddItemForm>;
 
 export const AddItemFormBase: Story = {
   args: {
-    addItem: action("Button clicked inside form"),
+
   },
 };
 
 export const AddItemFormStoryDisabled: Story = {
   args: {
     disabled: "loading",
-    addItem: action("Button clicked inside form"),
+
   },
 };

@@ -33,7 +33,7 @@ export const ToDoList = memo(({demo = false, ...props}: TodoListPropsType) => {
 
     // -------------- Добавление task ----------------
     const addTask = useCallback((title: string) => {
-        addTaskTC({toDoListID: props.id, title})
+        return addTaskTC({toDoListID: props.id, title}).unwrap()
     }, [props.id])
 
 

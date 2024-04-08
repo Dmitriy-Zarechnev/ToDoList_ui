@@ -1,59 +1,66 @@
-import React, { ChangeEvent, KeyboardEvent, useCallback, useState } from "react";
-import S from "./AddItemForm.module.css";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import { RequestStatusType } from "app/model/app-reducer";
+import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
+import S from './AddItemForm.module.css'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import {RequestStatusType} from 'app/model/app-reducer'
 
 type AddItemFormPropsType = {
-  itemType: string;
-  addItem: (title: string) => void;
-  disabled?: RequestStatusType;
+    itemType: string;
+    addItem: (title: string) => Promise<any>;
+    disabled?: RequestStatusType;
 };
 
 export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
-  // Локальный стэйт для изменения newTaskTitle
-  const [newTaskTitle, setNewTaskTitle] = useState("");
-  // Локальный стэйт для изменения error
-  const [error, setError] = useState<string | null>(null);
+    // Локальный state для изменения newTaskTitle
+    const [newTaskTitle, setNewTaskTitle] = useState('')
+    // Локальный state для изменения error
+    const [error, setError] = useState<string | null>(null)
 
-  // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
-  const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.currentTarget.value);
-  };
-
-  // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
-  const addTaskBtnFn = () => {
-    if (newTaskTitle.trim() !== "") {
-      props.addItem(newTaskTitle.trim());
-      setNewTaskTitle("");
-    } else {
-      setError(`${props.itemType}'s title is required😡!`);
+    // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
+    const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTaskTitle(e.currentTarget.value)
     }
-  };
 
-  // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
-  const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-    error !== null && setError(null);
+    // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
+    const addTaskBtnFn = () => {
+        if (newTaskTitle.trim() !== '') {
 
-    e.key === "Enter" && addTaskBtnFn();
-  }, []);
+            props.addItem(newTaskTitle.trim())
+                .then(() => {
+                    setNewTaskTitle('')
+                    setError(null)
+                }).catch((error) => {
+                setError(error)
+            })
 
-  return (
-    <>
-      <div className={S.input_box}>
-        <TextField
-          variant={"standard"}
-          value={newTaskTitle}
-          onChange={onChangeInputHandler}
-          onKeyDown={onKeyDownInputHandler}
-          error={!!error}
-          label={error ? error : `Add new ${props.itemType}`}
-          margin="normal"
-        />
-        <IconButton color="primary" onClick={addTaskBtnFn} disabled={props.disabled === "loading"}>
-          📌
-        </IconButton>
-      </div>
-    </>
-  );
-});
+        } else {
+            setError(`${props.itemType}'s title is required😡!`)
+        }
+    }
+
+    // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
+    const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+
+        error !== null && setError(null)
+        e.key === 'Enter' && addTaskBtnFn()
+    }, [])
+
+    return (
+        <>
+            <div className={S.input_box}>
+                <TextField
+                    variant={'standard'}
+                    value={newTaskTitle}
+                    onChange={onChangeInputHandler}
+                    onKeyDown={onKeyDownInputHandler}
+                    error={!!error}
+                    label={error ? error : `Add new ${props.itemType}`}
+                    margin="normal"
+                />
+                <IconButton color="primary" onClick={addTaskBtnFn} disabled={props.disabled === 'loading'}>
+                    📌
+                </IconButton>
+            </div>
+        </>
+    )
+})
