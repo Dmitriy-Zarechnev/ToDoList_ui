@@ -1,0 +1,57 @@
+import {FormikHelpers, useFormik} from 'formik'
+import {LoginParamsType} from '../../features/auth/api/auth-api'
+import {logInTC} from '../../features/auth/model/auth-reducer'
+import {ResponseType} from '../../features/toDoLists/api/todolist-api'
+import {useAppDispatch} from '../../app/model/store'
+
+// Типы для валидации ошибок
+type FormikErrorType = Partial<Omit<LoginParamsType, 'captcha'>>;
+
+
+export const useLogIn = () => {
+
+    // useAppDispatch - это кастомный хук, который уже типизирован и лежит в store
+    const dispatch = useAppDispatch()
+
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+            rememberMe: false
+        },
+        validate: (values) => {
+            const errors: FormikErrorType = {}
+            if (!values.email) {
+                errors.email = 'Email Required'
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                errors.email = 'Invalid email address'
+            }
+            if (!values.password) {
+                errors.password = 'Password Required'
+            } else if (values.password.length < 6) {
+                errors.password = 'Must be 6 characters or more'
+            }
+            return errors
+        },
+        onSubmit: (values: LoginParamsType, formikHelpers: FormikHelpers<LoginParamsType>) => {
+            // Ловим ошибки, которые будут в случае неудачи
+            dispatch(logInTC(values))
+                // Необходимо, чтоб попасть в catch
+                .unwrap()
+                .then(() => {
+                })
+                .catch((data: ResponseType) => {
+                    const {fieldsErrors} = data
+
+                    fieldsErrors?.forEach(el => {
+                        formikHelpers.setFieldError(el.field, el.error)
+                    })
+                })
+            // Проверка для очистки формы
+            // values.rememberMe ? dispatch(logInTC(values)) : dispatch(logInTC(values)).then(() => formik.resetForm())
+        }
+    })
+
+    // Возвращение результата
+    return {formik}
+}

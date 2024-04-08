@@ -2,9 +2,9 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
-import { appErrorSelector, appStatusSelector } from "state/selectors/app-selector";
-import { useAppDispatch } from "state/store";
-import { setAppErrorAC, setAppStatusAC } from "state/reducers/app-reducer";
+import { appErrorSelector, appStatusSelector } from "app/model/app-selector";
+import { useAppDispatch } from "app/model/store";
+import { setAppErrorAC, setAppStatusAC } from "app/model/app-reducer";
 
 export function ErrorSnackbar() {
   // Получили error из state используя хук - useSelector и selector - appErrorSelector

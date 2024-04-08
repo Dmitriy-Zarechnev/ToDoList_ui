@@ -2,7 +2,7 @@ import React, { ChangeEvent, KeyboardEvent, useCallback, useState } from "react"
 import S from "./AddItemForm.module.css";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import { RequestStatusType } from "state/reducers/app-reducer";
+import { RequestStatusType } from "app/model/app-reducer";
 
 type AddItemFormPropsType = {
   itemType: string;

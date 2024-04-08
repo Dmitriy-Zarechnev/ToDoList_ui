@@ -1,8 +1,8 @@
 import { BaseThunkAPI } from "@reduxjs/toolkit/dist/createAsyncThunk";
-import { AppDispatch, AppRootStateType } from "state/store";
-import { ResponseType } from "api/todolist-api";
-import { setAppStatusAC } from "state/reducers/app-reducer";
-import { handleServerNetworkError } from "utils/handle-server-network-error";
+import { AppDispatch, AppRootStateType } from "app/model/store";
+import { ResponseType } from "features/toDoLists/api/todolist-api";
+import { setAppStatusAC } from "app/model/app-reducer";
+import { handleServerNetworkError } from "utils/errors/handle-server-network-error";
 
 /*
 Функция thunkTryCatch возвращает результат выполнения logic.

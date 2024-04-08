@@ -1,4 +1,4 @@
-@import "./ColorVar.module.css";
+@import "utils/ColorVar.module.css";
 
 *,
 *::before,

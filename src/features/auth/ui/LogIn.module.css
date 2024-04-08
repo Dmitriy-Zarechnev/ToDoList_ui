@@ -1,0 +1,28 @@
+@import "../../../utils/ColorVar.module.css";
+
+.form {
+  margin-top: 10px;
+}
+
+.link {
+  margin-left: 3px;
+  color: var(--button-bg-color);
+  font-size: 18px;
+}
+
+.text {
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.span {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.error {
+  color: var(--error-color);
+  font-size: 18px;
+  font-weight: 600;
+}

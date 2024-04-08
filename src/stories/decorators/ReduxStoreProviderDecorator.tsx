@@ -1,13 +1,13 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { tasksReducer } from "state/reducers/tasks-reducer";
-import { toDoListsReducer } from "state/reducers/todolists-reducer";
+import { tasksReducer } from "features/toDoLists/model/tasks/tasks-reducer";
+import { toDoListsReducer } from "features/toDoLists/model/toDoLists/todolists-reducer";
 import { v1 } from "uuid";
-import { AppRootStateType } from "state/store";
-import { TasksPriorities, TasksStatuses } from "api/enums";
-import { appReducer } from "state/reducers/app-reducer";
+import { AppRootStateType } from "app/model/store";
+import { TasksPriorities, TasksStatuses } from "utils/api/enums";
+import { appReducer } from "app/model/app-reducer";
 import { thunk } from "redux-thunk";
-import { authReducer } from "state/reducers/auth-reducer";
+import { authReducer } from "features/auth/model/auth-reducer";
 import { HashRouter } from "react-router-dom";
 import { configureStore } from "@reduxjs/toolkit";
 
