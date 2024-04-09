@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useCallback, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, memo, useCallback, useState} from 'react'
 import S from './AddItemForm.module.css'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
@@ -8,14 +8,14 @@ type AddItemFormPropsType = {
     itemType: string;
     addItem: (title: string) => Promise<any>;
     disabled?: RequestStatusType;
-
 };
 
-export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+export const AddItemForm = memo((props: AddItemFormPropsType) => {
         // Локальный state для изменения newTaskTitle
         const [newTaskTitle, setNewTaskTitle] = useState('')
         // Локальный state для изменения error
         const [error, setError] = useState<string | null>(null)
+
 
         // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
         const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,11 +24,12 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
         }
 
         // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
-        const addTaskBtnFn = () => {
+        const addTaskBtnFn = useCallback(() => {
             if (newTaskTitle.trim() !== '') {
 
                 props.addItem(newTaskTitle.trim())
                     .then(() => {
+                        // В случае успеха занулили всё
                         setNewTaskTitle('')
                         setError(null)
                     })
@@ -43,32 +44,29 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             } else {
                 setError(`${props.itemType}'s title is required😡!`)
             }
-        }
-
-        // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
-        const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-
-            error !== null && setError(null)
-            e.key === 'Enter' && addTaskBtnFn()
         }, [])
 
+        // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
+        const onKeyDownInputHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+            error !== null && setError(null)
+            e.key === 'Enter' && addTaskBtnFn()
+        }
+
         return (
-            <>
-                <div className={S.input_box}>
-                    <TextField
-                        variant={'standard'}
-                        value={newTaskTitle}
-                        onChange={onChangeInputHandler}
-                        onKeyDown={onKeyDownInputHandler}
-                        error={!!error}
-                        label={error ? error : `Add new ${props.itemType}`}
-                        margin="normal"
-                    />
-                    <IconButton color="primary" onClick={addTaskBtnFn} disabled={props.disabled === 'loading'}>
-                        📌
-                    </IconButton>
-                </div>
-            </>
+            <div className={S.input_box}>
+                <TextField
+                    variant={'standard'}
+                    value={newTaskTitle}
+                    onChange={onChangeInputHandler}
+                    onKeyDown={onKeyDownInputHandler}
+                    error={!!error}
+                    label={error ? error : `Add new ${props.itemType}`}
+                    margin="normal"/>
+                <IconButton color="primary" onClick={addTaskBtnFn}
+                            disabled={props.disabled === 'loading'}>
+                    📌
+                </IconButton>
+            </div>
         )
     }
 )

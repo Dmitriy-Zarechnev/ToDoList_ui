@@ -17,10 +17,10 @@ export const EditableSpan = memo((props: EditableSpan) => {
     const [editedTitle, setEditedTitle] = useState<string>('')
 
     // -------------- Включаем editMode и устанавливаем editedTitle = props.value ----------------
-    const activateEditMode = useCallback(() => {
+    const activateEditMode = () => {
         setEditMode(true)
         setEditedTitle(props.value)
-    }, [props.value])
+    }
 
     // -------------- Отключаем editMode и отправляем editedTitle в BLL ----------------
     const activateViewMode = useCallback(() => {
@@ -29,12 +29,12 @@ export const EditableSpan = memo((props: EditableSpan) => {
     }, [editedTitle, props.onChange])
 
     // -------------- Меняем editedTitle и отправляем в локальный стейт ----------------
-    const onChangeInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setEditedTitle(e.currentTarget.value)
-    }, [])
+    }
 
-    return props.disabled !== 'loading' && editMode ?
-        <TextField
+    return props.disabled !== 'loading' && editMode
+        ? <TextField
             onBlur={activateViewMode}
             onChange={onChangeInputHandler}
             value={editedTitle}

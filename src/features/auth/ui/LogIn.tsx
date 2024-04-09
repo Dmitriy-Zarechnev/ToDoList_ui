@@ -82,7 +82,7 @@ export const LogIn = () => {
                             />
 
                             <Button type={'submit'} variant={'contained'} color={'success'}>
-                                Login
+                                LogIn
                             </Button>
                         </FormGroup>
                     </FormControl>
