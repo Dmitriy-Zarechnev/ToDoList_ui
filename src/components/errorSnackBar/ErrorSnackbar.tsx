@@ -3,8 +3,9 @@ import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import {useSelector} from 'react-redux'
 import {appErrorSelector, appStatusSelector} from 'app/model/app-selector'
-import {useAppDispatch} from 'app/model/store'
-import {setAppErrorAC, setAppStatusAC} from 'app/model/app-reducer'
+import {useActions} from '../../utils/hooks/useActions'
+import {appActions} from '../../app/model/app-reducer'
+
 
 export function ErrorSnackbar() {
     // Получили error из state используя хук - useSelector и selector - appErrorSelector
@@ -13,13 +14,16 @@ export function ErrorSnackbar() {
     // Получили status из state используя хук - useSelector и selector - appStatusSelector
     const status = useSelector(appStatusSelector)
 
+    // Используя useAction получили callbacks в которые уже входит dispatch
+    const {setAppStatus, setAppError} = useActions(appActions)
+
     // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-    const dispatch = useAppDispatch()
+    //const dispatch = useAppDispatch()
 
     // Закрытие Snackbar при кликах
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-        dispatch(setAppStatusAC({status: 'idle'}))
-        dispatch(setAppErrorAC({error: null}))
+        setAppStatus({status: 'idle'})
+        setAppError({error: null})
     }
 
     return (

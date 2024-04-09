@@ -1,10 +1,8 @@
-import {setAppInitializedAC} from '../../../app/model/app-reducer'
 import {authAPI, LoginParamsType} from 'features/auth/api/auth-api'
 import {clearToDoDataAC, createAppAsyncThunk} from '../../toDoLists/model/toDoLists/todolists-reducer'
 import {createSlice, isFulfilled, PayloadAction} from '@reduxjs/toolkit'
 import {ResultCode} from 'utils/api/enums'
-import {handleServerAppError} from 'utils/errors/handle-server-app-error'
-import {thunkTryCatch} from 'utils/thunk-try-catch'
+import {appActions} from '../../../app/model/app-reducer'
 
 
 // *********** Thunk - необходимы для общения с DAL ****************
@@ -15,66 +13,19 @@ export const logInTC = createAppAsyncThunk<{
     // 1 - prefix
     'auth/logIn',
     // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-    async (data, thunkAPI) => {
-        // 3 - деструктурируем параметры
-        const {dispatch, rejectWithValue} = thunkAPI
+    async (data, {rejectWithValue}) => {
+        // Запрос на logIn
+        const logInData = await authAPI.logIn(data)
 
+        // Если успех
+        if (logInData.resultCode === ResultCode.success) {
+            // Return после ответа от сервера true
+            return {isLoggedIn: true}
+        } else {
 
-        return thunkTryCatch(thunkAPI, async () => {
-            // Запрос на logIn
-            const logInData = await authAPI.logIn(data)
-
-            // Если успех
-            if (logInData.resultCode === ResultCode.success) {
-                // Убираем Preloader после успешного ответа
-                //dispatch(setAppStatusAC({status: 'succeeded'}))
-
-                // Return после ответа от сервера true
-                return {isLoggedIn: true}
-            } else {
-                // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-                // в конкретном поле в компоненте
-                // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
-                const isShowAppError = !logInData.fieldsErrors.length
-
-                // Обработка серверной ошибки
-                handleServerAppError(logInData, dispatch, isShowAppError)
-                // Здесь будет упакована ошибка
-                return rejectWithValue(logInData)
-            }
-        })
-
-
-        //
-        // try {
-        //   // Запрос на logIn
-        //   const logInData = await authAPI.logIn(data);
-        //
-        //   // Если успех
-        //   if (logInData.resultCode === ResultCode.success) {
-        //     // Убираем Preloader после успешного ответа
-        //     dispatch(setAppStatusAC({ status: "idle" }));
-        //
-        //     // Return после ответа от сервера true
-        //     return { isLoggedIn: true };
-        //   } else {
-        //     // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-        //     // в конкретном поле в компоненте
-        //     // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
-        //     const isShowAppError = !logInData.fieldsErrors.length;
-        //
-        //     // Обработка серверной ошибки
-        //     handleServerAppError(logInData, dispatch, isShowAppError);
-        //     // Здесь будет упакована ошибка
-        //     return rejectWithValue(logInData);
-        //   }
-        //
-        // } catch (error) {
-        //   // Обработка сетевой ошибки
-        //   handleServerNetworkError(error, dispatch);
-        //   // Здесь будет упакована ошибка
-        //   return rejectWithValue(null);
-        // }
+            // Здесь будет упакована ошибка
+            return rejectWithValue(logInData)
+        }
     }
 )
 
@@ -93,7 +44,7 @@ export const initializeMeTC = createAppAsyncThunk<{
         // Запрос на проверку
         const meData = await authAPI.me()
         // Инициализировали приложение после ответа
-        dispatch(setAppInitializedAC({isInitialized: true}))
+        dispatch(appActions.setAppInitialized({isInitialized: true}))
         // Если успех
         if (meData.resultCode === ResultCode.success) {
             // Убираем Preloader после успешного ответа

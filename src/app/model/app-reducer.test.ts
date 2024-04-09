@@ -1,4 +1,4 @@
-import {AppInitialStateType, appReducer, setAppErrorAC, setAppInitializedAC, setAppStatusAC} from './app-reducer'
+import {appActions, AppInitialStateType, appReducer} from './app-reducer'
 
 let startState: AppInitialStateType
 
@@ -12,21 +12,21 @@ beforeEach(() => {
 
 
 test('status should be changed', () => {
-    const endState = appReducer(startState, setAppStatusAC({status: 'succeeded'}))
+    const endState = appReducer(startState, appActions.setAppStatus({status: 'succeeded'}))
 
     expect(endState.status).toEqual('succeeded')
 })
 
 
 test('error should be changed', () => {
-    const endState = appReducer(startState, setAppErrorAC({error: 'Hello Error'}))
+    const endState = appReducer(startState, appActions.setAppError({error: 'Hello Error'}))
 
     expect(endState.error).toEqual('Hello Error')
 })
 
 
 test('isInitialized should be changed', () => {
-    const endState = appReducer(startState, setAppInitializedAC({isInitialized: true}))
+    const endState = appReducer(startState, appActions.setAppInitialized({isInitialized: true}))
 
     expect(endState.isInitialized).toEqual(true)
 })

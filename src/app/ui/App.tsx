@@ -33,15 +33,11 @@ function App({demo = false}: AppPropsType) {
     // Получили isLoggedIn из state используя хук - useSelector и selector - isLoggedInSelector
     const isLoggedIn = useSelector(isLoggedInSelector)
 
-
     // useActions - это кастомный хук, который уже протипизирован и лежит в useActions
     const {initializeMeTC, logOutTC} = useActions(authThunks)
 
     useEffect(() => {
-        if (!demo) {
-            initializeMeTC()
-            // dispatch(initializeMeTC());
-        }
+        if (!demo) initializeMeTC()
     }, [])
 
     // Крутилка во время инициализации
@@ -53,7 +49,7 @@ function App({demo = false}: AppPropsType) {
         )
     }
 
-    // Функция для вылогинизации
+    // Функция для logout
     const onClickHandler = () => {
         isLoggedIn ? logOutTC() : <Navigate to={'/login'}/>
     }
@@ -69,14 +65,15 @@ function App({demo = false}: AppPropsType) {
                     <IconButton edge="start" color="inherit" aria-label="menu" sx={{mr: 2}}>
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         <NavLink to={'/'} className={S.link_to_app}>ToDoList ☢</NavLink>
                     </Typography>
                     <Button color={'warning'}
                             onClick={onClickHandler}
                             size="medium"
                             variant={'contained'}>
-                        {isLoggedIn ? 'Log Out 📛' : <NavLink to={'/login'} className={S.link_to_login}>Log In</NavLink>}
+                        {isLoggedIn ? 'Log Out 📛'
+                            : <NavLink to={'/login'} className={S.link_to_login}>Log In</NavLink>}
                     </Button>
                 </Toolbar>
 
