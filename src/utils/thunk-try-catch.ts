@@ -19,12 +19,12 @@ export const thunkTryCatch = async <T>(
     // Показываем Preloader во время запроса
     //dispatch(setAppStatusAC({status: 'loading'}))
 
-    try {
+   // try {
         return await logic()
-    } catch (e) {
-        handleServerNetworkError(e, dispatch)
-        return rejectWithValue(null)
-    } finally {
+   // } catch (e) {
+       // handleServerNetworkError(e, dispatch)
+       // return rejectWithValue(null)
+    //} finally {
         //dispatch(setAppStatusAC({status: 'idle'}))
-    }
+   // }
 }

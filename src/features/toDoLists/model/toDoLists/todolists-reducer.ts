@@ -82,7 +82,7 @@ export const updateTodoListsTC = createAppAsyncThunk<{
             // Показываем Preloader во время запроса
             //dispatch(setAppStatusAC({status: 'loading'}))
 
-            try {
+           // try {
                 // Запрос на изменение toDoList's title
                 const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title)
 
@@ -95,16 +95,16 @@ export const updateTodoListsTC = createAppAsyncThunk<{
                     return {toDoListID, title}
                 } else {
                     // Обработка серверной ошибки
-                    handleServerAppError(updateTodolistData, dispatch)
+                    //handleServerAppError(updateTodolistData, dispatch)
                     // Здесь будет упакована ошибка
-                    return rejectWithValue(null)
+                    return rejectWithValue(updateTodolistData)
                 }
-            } catch (error) {
+           // } catch (error) {
                 // Обработка сетевой ошибки
-                handleServerNetworkError(error, dispatch)
+               // handleServerNetworkError(error, dispatch)
                 // Здесь будет упакована ошибка
-                return rejectWithValue(null)
-            }
+               // return rejectWithValue(null)
+            //}
         }
         // Здесь будет упакована ошибка
         return rejectWithValue(null)
@@ -126,7 +126,7 @@ export const addTodoListsTC = createAppAsyncThunk<{
         // Показываем Preloader во время запроса
         //dispatch(setAppStatusAC({status: 'loading'}))
 
-        try {
+        //try {
             // Запрос на добавление todolist
             const addTodoListsData = await todolistAPI.createTodolist(title)
 
@@ -139,16 +139,16 @@ export const addTodoListsTC = createAppAsyncThunk<{
                 return {title, toDoListID: addTodoListsData.data.item.id}
             } else {
                 // Обработка серверной ошибки
-                handleServerAppError(addTodoListsData, dispatch)
+               // handleServerAppError(addTodoListsData, dispatch)
                 // Здесь будет упакована ошибка
-                return rejectWithValue(null)
+                return rejectWithValue(addTodoListsData)
             }
-        } catch (error) {
+       // } catch (error) {
             // Обработка сетевой ошибки
-            handleServerNetworkError(error, dispatch)
+           // handleServerNetworkError(error, dispatch)
             // Здесь будет упакована ошибка
-            return rejectWithValue(null)
-        }
+         //   return rejectWithValue(null)
+       // }
     }
 )
 

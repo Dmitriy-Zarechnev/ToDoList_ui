@@ -1,5 +1,4 @@
-import { AnyAction, createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
-
+import {AnyAction, createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
 
 
 // Типы статусов для работы в приложении
@@ -45,9 +44,16 @@ const slice = createSlice({
             )
             .addMatcher(
                 isRejected,
-                (state, action:AnyAction) => {
+                (state, action: any) => {
                     state.status = 'failed'
-                    state.error = action.error.message
+                    if (action.payload) {
+                        state.error = action.payload.messages[0]
+                    } else {
+                        state.error = action.error.message
+                            ? action.error.message
+                            : 'Some error occurred'
+                    }
+
                 }
             )
         // --------------   -----------------------  ------------
