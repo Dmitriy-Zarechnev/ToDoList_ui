@@ -50,3 +50,32 @@ input:-webkit-autofill:active {
 /*button:active {*/
 /*    transform: scale(0.96);*/
 /*}*/
+
+/* Стили для скролла Chrome */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track:horizontal {
+  background-color: var(--main-bg-color);
+}
+
+
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb:horizontal {
+  background-color: var(--second-bg-color);
+  border: 3px solid var(--main-bg-color);
+  border-radius: 5px;
+}
+
+
+*::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:horizontal:hover {
+  background-color: var(--accent-color);
+}
+
+*::-webkit-scrollbar-corner{
+  background-color: var(--main-bg-color);
+}

@@ -1,49 +1,46 @@
-import React, { ChangeEvent, useCallback, useState } from "react";
-import S from "../../features/toDoLists/ui/toDoList/ToDoList.module.css";
-import TextField from "@mui/material/TextField";
-import { RequestStatusType } from "app/model/app-reducer";
+import React, {ChangeEvent, memo, useCallback, useState} from 'react'
+import S from '../../features/toDoLists/ui/toDoList/ToDoList.module.css'
+import TextField from '@mui/material/TextField'
+import {RequestStatusType} from 'app/model/app-reducer'
 
 type EditableSpan = {
-  value: string;
-  newClass?: string;
-  onChange: (newTitle: string) => void;
-  disabled?: RequestStatusType;
+    value: string;
+    newClass?: string;
+    onChange: (newTitle: string) => void;
+    disabled?: RequestStatusType;
 };
 
-export const EditableSpan = React.memo((props: EditableSpan) => {
-  // Локальный стэйт для изменения editMode
-  const [editMode, setEditMode] = useState<boolean>(false);
-  // Локальный стэйт для изменения editedTitle
-  const [editedTitle, setEditedTitle] = useState<string>("");
+export const EditableSpan = memo((props: EditableSpan) => {
+    // Локальный state для изменения editMode
+    const [editMode, setEditMode] = useState<boolean>(false)
+    // Локальный state для изменения editedTitle
+    const [editedTitle, setEditedTitle] = useState<string>('')
 
-  // -------------- Включаем editMode и устанавливаем editedTitle = props.value ----------------
-  const activateEditMode = useCallback(() => {
-    setEditMode(true);
-    setEditedTitle(props.value);
-  }, [props.value]);
+    // -------------- Включаем editMode и устанавливаем editedTitle = props.value ----------------
+    const activateEditMode = useCallback(() => {
+        setEditMode(true)
+        setEditedTitle(props.value)
+    }, [props.value])
 
-  // -------------- Отключаем editMode и отправляем editedTitle в BLL ----------------
-  const activateViewMode = useCallback(() => {
-    setEditMode(false);
-    props.onChange(editedTitle);
-  }, [editedTitle, props.onChange]);
+    // -------------- Отключаем editMode и отправляем editedTitle в BLL ----------------
+    const activateViewMode = useCallback(() => {
+        setEditMode(false)
+        props.onChange(editedTitle)
+    }, [editedTitle, props.onChange])
 
-  // -------------- Меняем editedTitle и отправляем в локальный стейт ----------------
-  const onChangeInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setEditedTitle(e.currentTarget.value);
-  }, []);
+    // -------------- Меняем editedTitle и отправляем в локальный стейт ----------------
+    const onChangeInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        setEditedTitle(e.currentTarget.value)
+    }, [])
 
-  return props.disabled !== "loading" && editMode ? (
-    <TextField
-      onBlur={activateViewMode}
-      onChange={onChangeInputHandler}
-      value={editedTitle}
-      autoFocus
-      variant="standard"
-    />
-  ) : (
-    <span onDoubleClick={activateEditMode} className={`${S.span} ${props.newClass}`}>
-      {props.value}
-    </span>
-  );
-});
+    return props.disabled !== 'loading' && editMode ?
+        <TextField
+            onBlur={activateViewMode}
+            onChange={onChangeInputHandler}
+            value={editedTitle}
+            autoFocus
+            variant="standard"/>
+        : <span onDoubleClick={activateEditMode}
+                className={`${S.span} ${props.newClass}`}>
+                {props.value}</span>
+})

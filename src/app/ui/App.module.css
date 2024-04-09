@@ -1,0 +1,13 @@
+@import "../../utils/ColorVar.module.css";
+
+.link_to_app {
+    text-decoration: none;
+    color: var(--main-bg-color);
+    font-size: 25px;
+}
+
+.link_to_login {
+    text-transform: capitalize;
+    text-decoration: none;
+    color: var(--main-bg-color);
+}
