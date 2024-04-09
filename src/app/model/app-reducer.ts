@@ -1,4 +1,5 @@
-import {AnyAction, createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
+import {toDoListsThunks} from '../../features/toDoLists/model/toDoLists/todolists-reducer'
 
 
 // Типы статусов для работы в приложении
@@ -15,10 +16,10 @@ const slice = createSlice({
     },
     // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
     reducers: {
-        // setAppStatusAC: (state,
-        //                  action: PayloadAction<{ status: RequestStatusType }>) => {
-        //     state.status = action.payload.status
-        // },
+        setAppStatusAC: (state,
+                         action: PayloadAction<{ status: RequestStatusType }>) => {
+            state.status = action.payload.status
+        },
         setAppErrorAC: (state,
                         action: PayloadAction<{ error: string | null }>) => {
             state.error = action.payload.error
@@ -30,30 +31,28 @@ const slice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addMatcher(
-                isPending,
-                (state) => {
+            .addMatcher(isPending, (state) => {
                     state.status = 'loading'
                 }
             )
-            .addMatcher(
-                isFulfilled,
-                (state) => {
+            .addMatcher(isFulfilled, (state) => {
                     state.status = 'updated'
                 }
             )
-            .addMatcher(
-                isRejected,
-                (state, action: any) => {
+            .addMatcher(isRejected, (state, action: any) => {
                     state.status = 'failed'
                     if (action.payload) {
+                        // Не показываем ошибку глобально, а только локально в AddItemForm 40 строка
+                        if (action.type === toDoListsThunks.addTodoListsTC.rejected.type) return
+
+                        // Показываем ошибку глобально сервера
                         state.error = action.payload.messages[0]
                     } else {
+                        // Показываем ошибку сети
                         state.error = action.error.message
                             ? action.error.message
                             : 'Some error occurred'
                     }
-
                 }
             )
         // --------------   -----------------------  ------------
@@ -77,10 +76,11 @@ const slice = createSlice({
 // Создаем appReducer с помощью slice
 export const appReducer = slice.reducer
 
+export const appActions = slice.actions
 
 // Action creators достаем с помощью slice
 export const {
-    //setAppStatusAC,
+    setAppStatusAC,
     setAppErrorAC,
     setAppInitializedAC
 } = slice.actions

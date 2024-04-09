@@ -8,59 +8,73 @@ type AddItemFormPropsType = {
     itemType: string;
     addItem: (title: string) => Promise<any>;
     disabled?: RequestStatusType;
+
 };
 
 export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
-    // Локальный state для изменения newTaskTitle
-    const [newTaskTitle, setNewTaskTitle] = useState('')
-    // Локальный state для изменения error
-    const [error, setError] = useState<string | null>(null)
+        // Локальный state для изменения newTaskTitle
+        const [newTaskTitle, setNewTaskTitle] = useState('')
+        // Локальный state для изменения error
+        const [error, setError] = useState<string | null>(null)
 
-    // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
-    const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTaskTitle(e.currentTarget.value)
-    }
-
-    // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
-    const addTaskBtnFn = () => {
-        if (newTaskTitle.trim() !== '') {
-
-            props.addItem(newTaskTitle.trim())
-                .then(() => {
-                    setNewTaskTitle('')
-                    setError(null)
-                }).catch((error) => {
-                setError(error)
-            })
-
-        } else {
-            setError(`${props.itemType}'s title is required😡!`)
+        // -------------- Меняем newTaskTitle и отправляем в локальный стейт ----------------
+        const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
+            if (error && error.length > 0) return setError(null)
+            setNewTaskTitle(e.currentTarget.value)
         }
+
+        // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
+        const addTaskBtnFn = () => {
+            if (newTaskTitle.trim() !== '') {
+
+                props.addItem(newTaskTitle.trim())
+                    .then(() => {
+
+                        setNewTaskTitle('')
+                        setError(null)
+                    })
+                    .catch((error) => {
+                         debugger
+                        //     props.setAppStatusAC({status: 'idle'})
+                              if (error?.resultCode) {
+                                 setError(error.messages[0])
+                              } else {
+                                 setError(error.message)
+                              }
+
+                        // setError(error.message)
+                        }
+                    )
+
+            } else {
+                setError(`${props.itemType}'s title is required😡!`)
+            }
+        }
+
+        // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
+        const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
+
+            error !== null && setError(null)
+            e.key === 'Enter' && addTaskBtnFn()
+        }, [])
+
+        return (
+            <>
+                <div className={S.input_box}>
+                    <TextField
+                        variant={'standard'}
+                        value={newTaskTitle}
+                        onChange={onChangeInputHandler}
+                        onKeyDown={onKeyDownInputHandler}
+                        error={!!error}
+                        label={error ? error : `Add new ${props.itemType}`}
+                        margin="normal"
+                    />
+                    <IconButton color="primary" onClick={addTaskBtnFn} disabled={props.disabled === 'loading'}>
+                        📌
+                    </IconButton>
+                </div>
+            </>
+        )
     }
-
-    // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
-    const onKeyDownInputHandler = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
-
-        error !== null && setError(null)
-        e.key === 'Enter' && addTaskBtnFn()
-    }, [])
-
-    return (
-        <>
-            <div className={S.input_box}>
-                <TextField
-                    variant={'standard'}
-                    value={newTaskTitle}
-                    onChange={onChangeInputHandler}
-                    onKeyDown={onKeyDownInputHandler}
-                    error={!!error}
-                    label={error ? error : `Add new ${props.itemType}`}
-                    margin="normal"
-                />
-                <IconButton color="primary" onClick={addTaskBtnFn} disabled={props.disabled === 'loading'}>
-                    📌
-                </IconButton>
-            </div>
-        </>
-    )
-})
+)

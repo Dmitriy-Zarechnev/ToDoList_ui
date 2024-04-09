@@ -89,27 +89,34 @@ export const initializeMeTC = createAppAsyncThunk<{
         // 3 - деструктурируем параметры
         const {dispatch, rejectWithValue} = thunkAPI
 
-        return thunkTryCatch(thunkAPI, async () => {
-            // Запрос на проверку
-            const meData = await authAPI.me()
+        // return thunkTryCatch(thunkAPI, async () => {
+        // Запрос на проверку
+        const meData = await authAPI.me()
 
-            // Если успех
-            if (meData.resultCode === ResultCode.success) {
-                // Убираем Preloader после успешного ответа
-               //dispatch(setAppStatusAC({status: 'succeeded'}))
+        // Если успех
+        if (meData.resultCode === ResultCode.success) {
+            // Убираем Preloader после успешного ответа
+            //dispatch(setAppStatusAC({status: 'succeeded'}))
 
-                // Return после ответа от сервера true
-                return {isLoggedIn: true}
-            } else {
-                // Обработка серверной ошибки
-                handleServerAppError(meData, dispatch)
-                // Здесь будет упакована ошибка
-                return rejectWithValue(null)
-            }
-        }).finally(() => {
             // Инициализировали приложение после ответа
             dispatch(setAppInitializedAC({isInitialized: true}))
-        })
+            // Return после ответа от сервера true
+            return {isLoggedIn: true}
+        } else {
+            // Обработка серверной ошибки
+            //handleServerAppError(meData, dispatch)
+            // Инициализировали приложение после ответа
+            dispatch(setAppInitializedAC({isInitialized: true}))
+            // Здесь будет упакована ошибка
+            return rejectWithValue(meData)
+
+        }
+
+
+        //}).finally(() => {
+        // Инициализировали приложение после ответа
+        //dispatch(setAppInitializedAC({isInitialized: true}))
+        //})
 
         // try {
         //   // Запрос на проверку
@@ -154,7 +161,7 @@ export const logOutTC = createAppAsyncThunk<{
         // 3 - деструктурируем параметры
         const {dispatch, rejectWithValue} = thunkAPI
 
-        return thunkTryCatch(thunkAPI, async () => {
+        //return thunkTryCatch(thunkAPI, async () => {
             // Запрос на LogOut
             const logOutData = await authAPI.logOut()
 
@@ -169,11 +176,11 @@ export const logOutTC = createAppAsyncThunk<{
                 return {isLoggedIn: false}
             } else {
                 // Обработка серверной ошибки
-                handleServerAppError(logOutData, dispatch)
+                //handleServerAppError(logOutData, dispatch)
                 // Здесь будет упакована ошибка
-                return rejectWithValue(null)
+                return rejectWithValue(logOutData)
             }
-        })
+        //})
 
 
         //

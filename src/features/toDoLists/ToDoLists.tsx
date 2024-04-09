@@ -9,6 +9,7 @@ import {toDoListsSelector} from 'features/toDoLists/model/toDoLists/todolists-se
 import {Navigate} from 'react-router-dom'
 import {isLoggedInSelector} from 'features/auth/model/auth-selector'
 import {useActions} from 'utils/hooks/useActions'
+import {appActions} from '../../app/model/app-reducer'
 
 export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
     // Получили toDoLists из state используя хук - useSelector и selector - toDoListsSelector
@@ -19,6 +20,7 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
 
     // Используя useAction получили callbacks в которые уже входит dispatch
     const {getTodoListsTC, addTodoListsTC} = useActions(toDoListsThunks)
+
 
     // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
     useEffect(() => {
@@ -41,7 +43,7 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
     return (
         <div>
             <Grid container>
-                <AddItemForm addItem={addToDoList} itemType={'Todolist'}/>
+                <AddItemForm addItem={addToDoList} itemType={'Todolist'} />
             </Grid>
 
             <Grid container spacing={1}>

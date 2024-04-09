@@ -1,10 +1,8 @@
 import {AppDispatch, AppRootStateType} from '../../../../app/model/store'
-import {todolistAPI, TodolistType, ResponseType} from 'features/toDoLists/api/todolist-api'
+import {ResponseType, todolistAPI, TodolistType} from 'features/toDoLists/api/todolist-api'
 import {RequestStatusType} from '../../../../app/model/app-reducer'
-import {handleServerNetworkError} from 'utils/errors/handle-server-network-error'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {ResultCode} from "utils/api/enums"
-import {handleServerAppError} from "utils/errors/handle-server-app-error"
+import {ResultCode} from 'utils/api/enums'
 
 
 // Типизация Filters
@@ -20,7 +18,7 @@ export type ToDoListDomainType = TodolistType & {
 export const createAppAsyncThunk = createAsyncThunk.withTypes<{
     state: AppRootStateType
     dispatch: AppDispatch
-    rejectValue: null |ResponseType
+    rejectValue: null | ResponseType
 }>()
 
 
@@ -40,20 +38,20 @@ export const getTodoListsTC = createAppAsyncThunk<{
         //dispatch(setAppStatusAC({status: 'loading'}))
 
         //try {
-            // Запрос на получение todolist с сервера
-            const getTodoListsData = await todolistAPI.getTodolists()
+        // Запрос на получение todolist с сервера
+        const getTodoListsData = await todolistAPI.getTodolists()
 
-            // Убираем Preloader после успешного ответа
-           // dispatch(setAppStatusAC({status: 'succeeded'}))
+        // Убираем Preloader после успешного ответа
+        // dispatch(setAppStatusAC({status: 'succeeded'}))
 
-            // Return ответ от сервера
-            return {toDoLists: getTodoListsData}
+        // Return ответ от сервера
+        return {toDoLists: getTodoListsData}
         //} catch (error) {
-            // Обработка сетевой ошибки
-           // handleServerNetworkError(error, dispatch)
-            // Здесь будет упакована ошибка
-           // return rejectWithValue(null)
-       // }
+        // Обработка сетевой ошибки
+        // handleServerNetworkError(error, dispatch)
+        // Здесь будет упакована ошибка
+        // return rejectWithValue(null)
+        // }
     }
 )
 
@@ -82,28 +80,28 @@ export const updateTodoListsTC = createAppAsyncThunk<{
             // Показываем Preloader во время запроса
             //dispatch(setAppStatusAC({status: 'loading'}))
 
-           // try {
-                // Запрос на изменение toDoList's title
-                const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title)
+            // try {
+            // Запрос на изменение toDoList's title
+            const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title)
 
-                // Если успех
-                if (updateTodolistData.resultCode === ResultCode.success) {
-                    // Убираем Preloader после успешного ответа
-                    //dispatch(setAppStatusAC({status: 'updated'}))
+            // Если успех
+            if (updateTodolistData.resultCode === ResultCode.success) {
+                // Убираем Preloader после успешного ответа
+                //dispatch(setAppStatusAC({status: 'updated'}))
 
-                    // return после ответа от сервера и поменяли title
-                    return {toDoListID, title}
-                } else {
-                    // Обработка серверной ошибки
-                    //handleServerAppError(updateTodolistData, dispatch)
-                    // Здесь будет упакована ошибка
-                    return rejectWithValue(updateTodolistData)
-                }
-           // } catch (error) {
-                // Обработка сетевой ошибки
-               // handleServerNetworkError(error, dispatch)
+                // return после ответа от сервера и поменяли title
+                return {toDoListID, title}
+            } else {
+                // Обработка серверной ошибки
+                //handleServerAppError(updateTodolistData, dispatch)
                 // Здесь будет упакована ошибка
-               // return rejectWithValue(null)
+                return rejectWithValue(updateTodolistData)
+            }
+            // } catch (error) {
+            // Обработка сетевой ошибки
+            // handleServerNetworkError(error, dispatch)
+            // Здесь будет упакована ошибка
+            // return rejectWithValue(null)
             //}
         }
         // Здесь будет упакована ошибка
@@ -127,28 +125,31 @@ export const addTodoListsTC = createAppAsyncThunk<{
         //dispatch(setAppStatusAC({status: 'loading'}))
 
         //try {
-            // Запрос на добавление todolist
-            const addTodoListsData = await todolistAPI.createTodolist(title)
+        // Запрос на добавление todolist
+        const addTodoListsData = await todolistAPI.createTodolist(title)
 
-            // Если успех
-            if (addTodoListsData.resultCode === ResultCode.success) {
-                // Убираем Preloader после успешного ответа
-               // dispatch(setAppStatusAC({status: 'updated'}))
+        // Если успех
+        if (addTodoListsData.resultCode === ResultCode.success) {
+            // Убираем Preloader после успешного ответа
+            // dispatch(setAppStatusAC({status: 'updated'}))
 
-                // return ответ от сервера
-                return {title, toDoListID: addTodoListsData.data.item.id}
-            } else {
-                // Обработка серверной ошибки
-               // handleServerAppError(addTodoListsData, dispatch)
-                // Здесь будет упакована ошибка
-                return rejectWithValue(addTodoListsData)
-            }
-       // } catch (error) {
-            // Обработка сетевой ошибки
-           // handleServerNetworkError(error, dispatch)
+            // return ответ от сервера
+            return {title, toDoListID: addTodoListsData.data.item.id}
+        } else {
+
+            // Обработка серверной ошибки
+            // handleServerAppError(addTodoListsData, dispatch)
             // Здесь будет упакована ошибка
-         //   return rejectWithValue(null)
-       // }
+            debugger
+            return rejectWithValue(addTodoListsData)
+
+        }
+        // } catch (error) {
+        // Обработка сетевой ошибки
+        // handleServerNetworkError(error, dispatch)
+        // Здесь будет упакована ошибка
+        //   return rejectWithValue(null)
+        // }
     }
 )
 
@@ -164,33 +165,36 @@ export const deleteTodoListsTC = createAppAsyncThunk<{
         // 3 - деструктурируем параметры
         const {dispatch, rejectWithValue} = thunkAPI
         // Показываем Preloader во время запроса
-       // dispatch(setAppStatusAC({status: 'loading'}))
+        // dispatch(setAppStatusAC({status: 'loading'}))
+
         // Отключаем кнопку во время запроса
         dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'loading'}))
 
-        try {
-            // Запрос на удаление todolist
-            const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID)
+        // try {
+        // Запрос на удаление todolist
+        const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID)
 
-            // Если успех
-            if (deleteTodolistData.resultCode === ResultCode.success) {
-                // Убираем Preloader после успешного ответа
-                //dispatch(setAppStatusAC({status: 'updated'}))
+        // Если успех
+        if (deleteTodolistData.resultCode === ResultCode.success) {
+            // Включаем кнопку после успешного ответа
+            dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'idle'}))
+            // Убираем Preloader после успешного ответа
+            //dispatch(setAppStatusAC({status: 'updated'}))
 
-                // return после ответа от сервера и удалили todolist
-                return {toDoListID}
-            } else {
-                // Обработка серверной ошибки
-                handleServerAppError(deleteTodolistData, dispatch)
-                // Здесь будет упакована ошибка
-                return rejectWithValue(null)
-            }
-        } catch (error) {
-            // Обработка сетевой ошибки
-            handleServerNetworkError(error, dispatch)
+            // return после ответа от сервера и удалили todolist
+            return {toDoListID}
+        } else {
+            // Обработка серверной ошибки
+            //  handleServerAppError(deleteTodolistData, dispatch)
             // Здесь будет упакована ошибка
-            return rejectWithValue(null)
+            return rejectWithValue(deleteTodolistData)
         }
+        //} catch (error) {
+        // Обработка сетевой ошибки
+        //  handleServerNetworkError(error, dispatch)
+        // Здесь будет упакована ошибка
+        //  return rejectWithValue(null)
+        //}
     }
 )
 
@@ -277,7 +281,7 @@ export const {
 export const toDoListsActions = slice.actions
 
 // Thunks упаковываем в объект
-export const toDoListsThunks = {deleteTodoListsTC, addTodoListsTC, updateTodoListsTC, getTodoListsTC }
+export const toDoListsThunks = {deleteTodoListsTC, addTodoListsTC, updateTodoListsTC, getTodoListsTC}
 
 /*
 // Типизация Actions всего todolistsReducer
