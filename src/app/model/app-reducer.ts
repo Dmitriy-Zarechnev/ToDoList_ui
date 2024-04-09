@@ -1,4 +1,6 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import { AnyAction, createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
+
+
 
 // Типы статусов для работы в приложении
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated';
@@ -14,10 +16,10 @@ const slice = createSlice({
     },
     // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
     reducers: {
-        setAppStatusAC: (state,
-                         action: PayloadAction<{ status: RequestStatusType }>) => {
-            state.status = action.payload.status
-        },
+        // setAppStatusAC: (state,
+        //                  action: PayloadAction<{ status: RequestStatusType }>) => {
+        //     state.status = action.payload.status
+        // },
         setAppErrorAC: (state,
                         action: PayloadAction<{ error: string | null }>) => {
             state.error = action.payload.error
@@ -28,14 +30,41 @@ const slice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addMatcher((action) => {
-                console.log('addMatcher matcher', action.type)
-                return action.type.endsWith('/pending')
-            }, (state, action) => {
-                state.status = 'loading'
-                console.log('✅ addMatcher reducer')
-            }
-        )
+        builder
+            .addMatcher(
+                isPending,
+                (state) => {
+                    state.status = 'loading'
+                }
+            )
+            .addMatcher(
+                isFulfilled,
+                (state) => {
+                    state.status = 'updated'
+                }
+            )
+            .addMatcher(
+                isRejected,
+                (state, action:AnyAction) => {
+                    state.status = 'failed'
+                    state.error = action.error.message
+                }
+            )
+        // --------------   -----------------------  ------------
+        // .addMatcher(isPending(toDoListsThunks.getTodoListsTC),
+        //     (state) => {
+        //         state.status = 'loading'
+        //     }
+        // )
+        // ------------   -------------------  --------------
+        //     .addMatcher((action) => {
+        //         console.log('addMatcher matcher', action.type)
+        //         return action.type.endsWith('/pending')
+        //     }, (state, action) => {
+        //         state.status = 'loading'
+        //         console.log('✅ addMatcher reducer')
+        //     }
+        // )
     }
 })
 
@@ -45,7 +74,7 @@ export const appReducer = slice.reducer
 
 // Action creators достаем с помощью slice
 export const {
-    setAppStatusAC,
+    //setAppStatusAC,
     setAppErrorAC,
     setAppInitializedAC
 } = slice.actions

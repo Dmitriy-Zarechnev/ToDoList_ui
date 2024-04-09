@@ -1,6 +1,6 @@
 import {AppDispatch} from '../../app/model/store'
 import axios from 'axios'
-import {setAppErrorAC, setAppStatusAC} from '../../app/model/app-reducer'
+import {setAppErrorAC} from '../../app/model/app-reducer'
 
 export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {
     let errorMessage = "Some error occurred";
@@ -20,5 +20,5 @@ export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): v
     // Dispatch ошибку
     dispatch(setAppErrorAC({ error: errorMessage }));
     // Изменили статус
-    dispatch(setAppStatusAC({ status: "failed" }));
+    //dispatch(setAppStatusAC({ status: "failed" }));
 };

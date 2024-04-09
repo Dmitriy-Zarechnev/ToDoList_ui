@@ -1,6 +1,6 @@
 import {AppDispatch, AppRootStateType} from '../../../../app/model/store'
 import {todolistAPI, TodolistType, ResponseType} from 'features/toDoLists/api/todolist-api'
-import {RequestStatusType, setAppStatusAC} from '../../../../app/model/app-reducer'
+import {RequestStatusType} from '../../../../app/model/app-reducer'
 import {handleServerNetworkError} from 'utils/errors/handle-server-network-error'
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {ResultCode} from "utils/api/enums"
@@ -32,28 +32,28 @@ export const getTodoListsTC = createAppAsyncThunk<{
     // 1 - prefix
     'toDoLists/getTodoLists',
     // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-    async (_, thunkAPI) => {
+    async () => {
         // 3 - деструктурируем параметры
-        const {dispatch, rejectWithValue} = thunkAPI
+        //const {dispatch, rejectWithValue} = thunkAPI
 
         // Показываем Preloader во время запроса
-        dispatch(setAppStatusAC({status: 'loading'}))
+        //dispatch(setAppStatusAC({status: 'loading'}))
 
-        try {
+        //try {
             // Запрос на получение todolist с сервера
             const getTodoListsData = await todolistAPI.getTodolists()
 
             // Убираем Preloader после успешного ответа
-            dispatch(setAppStatusAC({status: 'succeeded'}))
+           // dispatch(setAppStatusAC({status: 'succeeded'}))
 
             // Return ответ от сервера
             return {toDoLists: getTodoListsData}
-        } catch (error) {
+        //} catch (error) {
             // Обработка сетевой ошибки
-            handleServerNetworkError(error, dispatch)
+           // handleServerNetworkError(error, dispatch)
             // Здесь будет упакована ошибка
-            return rejectWithValue(null)
-        }
+           // return rejectWithValue(null)
+       // }
     }
 )
 
@@ -80,7 +80,7 @@ export const updateTodoListsTC = createAppAsyncThunk<{
         // Проверка, т.к find может вернуть undefined
         if (toDoList) {
             // Показываем Preloader во время запроса
-            dispatch(setAppStatusAC({status: 'loading'}))
+            //dispatch(setAppStatusAC({status: 'loading'}))
 
             try {
                 // Запрос на изменение toDoList's title
@@ -89,7 +89,7 @@ export const updateTodoListsTC = createAppAsyncThunk<{
                 // Если успех
                 if (updateTodolistData.resultCode === ResultCode.success) {
                     // Убираем Preloader после успешного ответа
-                    dispatch(setAppStatusAC({status: 'updated'}))
+                    //dispatch(setAppStatusAC({status: 'updated'}))
 
                     // return после ответа от сервера и поменяли title
                     return {toDoListID, title}
@@ -124,7 +124,7 @@ export const addTodoListsTC = createAppAsyncThunk<{
         const {dispatch, rejectWithValue} = thunkAPI
 
         // Показываем Preloader во время запроса
-        dispatch(setAppStatusAC({status: 'loading'}))
+        //dispatch(setAppStatusAC({status: 'loading'}))
 
         try {
             // Запрос на добавление todolist
@@ -133,7 +133,7 @@ export const addTodoListsTC = createAppAsyncThunk<{
             // Если успех
             if (addTodoListsData.resultCode === ResultCode.success) {
                 // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC({status: 'updated'}))
+               // dispatch(setAppStatusAC({status: 'updated'}))
 
                 // return ответ от сервера
                 return {title, toDoListID: addTodoListsData.data.item.id}
@@ -164,7 +164,7 @@ export const deleteTodoListsTC = createAppAsyncThunk<{
         // 3 - деструктурируем параметры
         const {dispatch, rejectWithValue} = thunkAPI
         // Показываем Preloader во время запроса
-        dispatch(setAppStatusAC({status: 'loading'}))
+       // dispatch(setAppStatusAC({status: 'loading'}))
         // Отключаем кнопку во время запроса
         dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'loading'}))
 
@@ -175,7 +175,7 @@ export const deleteTodoListsTC = createAppAsyncThunk<{
             // Если успех
             if (deleteTodolistData.resultCode === ResultCode.success) {
                 // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC({status: 'updated'}))
+                //dispatch(setAppStatusAC({status: 'updated'}))
 
                 // return после ответа от сервера и удалили todolist
                 return {toDoListID}

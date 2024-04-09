@@ -1,6 +1,6 @@
 import { addTodoListsTC, changeTodolistEntityStatusAC, clearToDoDataAC, createAppAsyncThunk, deleteTodoListsTC, getTodoListsTC } from "../toDoLists/todolists-reducer";
 import { tasksAPI, TasksType } from "features/toDoLists/api/tasks-api";
-import { RequestStatusType, setAppStatusAC } from "../../../../app/model/app-reducer";
+import { RequestStatusType } from "../../../../app/model/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ResultCode, TasksStatuses } from "utils/api/enums";
 import { handleServerAppError } from "utils/errors/handle-server-app-error";
@@ -26,14 +26,14 @@ export const getTasksTC = createAppAsyncThunk<{
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (toDoListID, thunkAPI) => {
     // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
-    const { dispatch } = thunkAPI;
+    //const { dispatch } = thunkAPI;
 
     return thunkTryCatch(thunkAPI, async () => {
       // Запрос на получение tasks с сервера
       const getTasksData = await tasksAPI.getTasks(toDoListID);
 
       // Убираем Preloader после успешного ответа
-      dispatch(setAppStatusAC({ status: "succeeded" }));
+      //dispatch(setAppStatusAC({ status: "succeeded" }));
 
       // return ответ от сервера
       return { toDoListID, tasks: getTasksData.items };
@@ -83,7 +83,7 @@ export const addTaskTC = createAppAsyncThunk<{
       if (addTaskData.resultCode === ResultCode.success) {
 
         // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "updated" }));
+        //dispatch(setAppStatusAC({ status: "updated" }));
         // Включаем кнопку после успешного ответа
         dispatch(changeTodolistEntityStatusAC({ toDoListID, entityStatus: "idle" }));
 
@@ -149,7 +149,7 @@ export const deleteTaskTC = createAppAsyncThunk<{
       if (deleteTaskData.resultCode === ResultCode.success) {
 
         // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "updated" }));
+        //dispatch(setAppStatusAC({ status: "updated" }));
         // Включили после успеха
         dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
 
@@ -233,7 +233,7 @@ export const updateTaskStatusTC = createAppAsyncThunk<{
         if (updateTaskData.resultCode === ResultCode.success) {
 
           // Убираем Preloader после успешного ответа
-          dispatch(setAppStatusAC({ status: "updated" }));
+          //dispatch(setAppStatusAC({ status: "updated" }));
           // Включили после успеха
           dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
 
@@ -326,7 +326,7 @@ export const updateTaskTitleTC = createAppAsyncThunk<{
         if (updateTaskData.resultCode === ResultCode.success) {
 
           // Убираем Preloader после успешного ответа
-          dispatch(setAppStatusAC({ status: "updated" }));
+          //dispatch(setAppStatusAC({ status: "updated" }));
           // Включили после успеха
           dispatch(changeTaskEntityStatusAC({ toDoListID, taskId, entityTaskStatus: "idle" }));
 

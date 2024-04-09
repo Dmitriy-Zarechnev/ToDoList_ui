@@ -1,7 +1,7 @@
-import {setAppInitializedAC, setAppStatusAC} from '../../../app/model/app-reducer'
+import {setAppInitializedAC} from '../../../app/model/app-reducer'
 import {authAPI, LoginParamsType} from 'features/auth/api/auth-api'
 import {clearToDoDataAC, createAppAsyncThunk} from '../../toDoLists/model/toDoLists/todolists-reducer'
-import { createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {createSlice, isFulfilled, PayloadAction} from '@reduxjs/toolkit'
 import {ResultCode} from 'utils/api/enums'
 import {handleServerAppError} from 'utils/errors/handle-server-app-error'
 import {thunkTryCatch} from 'utils/thunk-try-catch'
@@ -27,7 +27,7 @@ export const logInTC = createAppAsyncThunk<{
             // Если успех
             if (logInData.resultCode === ResultCode.success) {
                 // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC({status: 'succeeded'}))
+                //dispatch(setAppStatusAC({status: 'succeeded'}))
 
                 // Return после ответа от сервера true
                 return {isLoggedIn: true}
@@ -96,7 +96,7 @@ export const initializeMeTC = createAppAsyncThunk<{
             // Если успех
             if (meData.resultCode === ResultCode.success) {
                 // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC({status: 'succeeded'}))
+               //dispatch(setAppStatusAC({status: 'succeeded'}))
 
                 // Return после ответа от сервера true
                 return {isLoggedIn: true}
@@ -163,7 +163,7 @@ export const logOutTC = createAppAsyncThunk<{
                 // Удалили все данные из store после вылогинизации
                 dispatch(clearToDoDataAC())
                 // Убираем Preloader после успешного ответа
-                dispatch(setAppStatusAC({status: 'succeeded'}))
+                //dispatch(setAppStatusAC({status: 'succeeded'}))
 
                 // Return после ответа от сервера false
                 return {isLoggedIn: false}
@@ -235,14 +235,25 @@ const slice = createSlice({
             //     (state, action) => {
             //       state.isLoggedIn = action.payload.isLoggedIn;
             //     });
-            .addMatcher((action) => {
-                return action.type === 'auth/logIn/fulfilled' ||
-                    action.type === 'auth/logOut/fulfilled' ||
-                    action.type === 'auth/initializeMe/fulfilled';
-            }, (state, action:PayloadAction<{isLoggedIn: boolean}>) => {
-                state.isLoggedIn = action.payload.isLoggedIn
-            })
+            // ------------------  -----------------------------
+            // .addMatcher((action) => {
+            //     return action.type === 'auth/logIn/fulfilled' ||
+            //         action.type === 'auth/logOut/fulfilled' ||
+            //         action.type === 'auth/initializeMe/fulfilled';
+            // }, (state, action:PayloadAction<{isLoggedIn: boolean}>) => {
+            //     state.isLoggedIn = action.payload.isLoggedIn
+            // })
+
+            .addMatcher(
+                // 1 variant
+                //isAnyOf(authThunks.login.fulfilled, authThunks.logout.fulfilled, authThunks.initializeApp.fulfilled),
+                // 2 variant
+                isFulfilled(authThunks.logInTC, authThunks.logOutTC, authThunks.initializeMeTC),
+                (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+                    state.isLoggedIn = action.payload.isLoggedIn
+                })
     }
+
 })
 
 // Создаем authReducer с помощью slice

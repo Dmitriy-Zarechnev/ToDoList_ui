@@ -1,7 +1,7 @@
 import {BaseThunkAPI} from '@reduxjs/toolkit/dist/createAsyncThunk'
 import {AppDispatch, AppRootStateType} from 'app/model/store'
 import {ResponseType} from 'features/toDoLists/api/todolist-api'
-import {setAppStatusAC} from 'app/model/app-reducer'
+//import {setAppStatusAC} from 'app/model/app-reducer'
 import {handleServerNetworkError} from 'utils/errors/handle-server-network-error'
 
 /*
@@ -17,7 +17,7 @@ export const thunkTryCatch = async <T>(
 ): Promise<T | ReturnType<typeof thunkAPI.rejectWithValue>> => {
     const {dispatch, rejectWithValue} = thunkAPI
     // Показываем Preloader во время запроса
-    dispatch(setAppStatusAC({status: 'loading'}))
+    //dispatch(setAppStatusAC({status: 'loading'}))
 
     try {
         return await logic()
@@ -25,6 +25,6 @@ export const thunkTryCatch = async <T>(
         handleServerNetworkError(e, dispatch)
         return rejectWithValue(null)
     } finally {
-        dispatch(setAppStatusAC({status: 'idle'}))
+        //dispatch(setAppStatusAC({status: 'idle'}))
     }
 }

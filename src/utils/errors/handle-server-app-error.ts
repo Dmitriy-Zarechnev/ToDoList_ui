@@ -1,4 +1,4 @@
-import { setAppErrorAC, setAppStatusAC } from "app/model/app-reducer";
+import { setAppErrorAC } from "app/model/app-reducer";
 import { Dispatch } from "redux";
 import { ResponseType } from "features/toDoLists/api/todolist-api";
 
@@ -21,6 +21,6 @@ export const handleServerAppError = <T>(data: ResponseType<T>, dispatch: Dispatc
       dispatch(setAppErrorAC({ error: "Some error occurred🤬" }));
   }
   // Изменили статус
-  dispatch(setAppStatusAC({ status: "failed" }));
+  //dispatch(setAppStatusAC({ status: "failed" }));
 };
 
