@@ -1,5 +1,5 @@
 import {createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
-import {toDoListsThunks} from '../../features/toDoLists/model/toDoLists/todolists-reducer'
+import {authThunks} from '../../features/auth/model/auth-reducer'
 
 
 // Типы статусов для работы в приложении
@@ -35,20 +35,26 @@ const slice = createSlice({
                     state.status = 'loading'
                 }
             )
-            .addMatcher(isFulfilled, (state) => {
-                    state.status = 'updated'
+            .addMatcher(isFulfilled, (state, action) => {
+                    if (action.type === authThunks.logOutTC.fulfilled.type) {
+                        // Убрал оповещение при выходе из приложения
+                        state.status = 'idle'
+                    } else {
+                        state.status = 'updated'
+                    }
                 }
             )
             .addMatcher(isRejected, (state, action: any) => {
                     state.status = 'failed'
                     if (action.payload) {
                         // Не показываем ошибку глобально, а только локально в AddItemForm 40 строка
-                        if (action.type === toDoListsThunks.addTodoListsTC.rejected.type) return
+                        //if (action.type === toDoListsThunks.addTodoListsTC.rejected.type) return
+                        //if (action.type === tasksThunks.addTaskTC.rejected.type) return
 
-                        // Показываем ошибку глобально сервера
+                        // Показываем ошибку сервера глобально
                         state.error = action.payload.messages[0]
                     } else {
-                        // Показываем ошибку сети
+                        // Показываем ошибку сети глобально
                         state.error = action.error.message
                             ? action.error.message
                             : 'Some error occurred'

@@ -29,20 +29,14 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
 
                 props.addItem(newTaskTitle.trim())
                     .then(() => {
-
                         setNewTaskTitle('')
                         setError(null)
                     })
                     .catch((error) => {
-                         debugger
-                        //     props.setAppStatusAC({status: 'idle'})
-                              if (error?.resultCode) {
-                                 setError(error.messages[0])
-                              } else {
-                                 setError(error.message)
-                              }
-
-                        // setError(error.message)
+                            if (error?.resultCode) {
+                                // Вывели ошибку локально
+                                setError(error.messages[0])
+                            }
                         }
                     )
 

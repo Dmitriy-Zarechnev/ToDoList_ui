@@ -92,21 +92,19 @@ export const initializeMeTC = createAppAsyncThunk<{
         // return thunkTryCatch(thunkAPI, async () => {
         // Запрос на проверку
         const meData = await authAPI.me()
-
+        // Инициализировали приложение после ответа
+        dispatch(setAppInitializedAC({isInitialized: true}))
         // Если успех
         if (meData.resultCode === ResultCode.success) {
             // Убираем Preloader после успешного ответа
             //dispatch(setAppStatusAC({status: 'succeeded'}))
 
-            // Инициализировали приложение после ответа
-            dispatch(setAppInitializedAC({isInitialized: true}))
             // Return после ответа от сервера true
             return {isLoggedIn: true}
         } else {
             // Обработка серверной ошибки
             //handleServerAppError(meData, dispatch)
-            // Инициализировали приложение после ответа
-            dispatch(setAppInitializedAC({isInitialized: true}))
+
             // Здесь будет упакована ошибка
             return rejectWithValue(meData)
 
@@ -162,24 +160,24 @@ export const logOutTC = createAppAsyncThunk<{
         const {dispatch, rejectWithValue} = thunkAPI
 
         //return thunkTryCatch(thunkAPI, async () => {
-            // Запрос на LogOut
-            const logOutData = await authAPI.logOut()
+        // Запрос на LogOut
+        const logOutData = await authAPI.logOut()
 
-            // Если успех
-            if (logOutData.resultCode === ResultCode.success) {
-                // Удалили все данные из store после вылогинизации
-                dispatch(clearToDoDataAC())
-                // Убираем Preloader после успешного ответа
-                //dispatch(setAppStatusAC({status: 'succeeded'}))
+        // Если успех
+        if (logOutData.resultCode === ResultCode.success) {
+            // Удалили все данные из store после вылогинизации
+            dispatch(clearToDoDataAC())
+            // Убираем Preloader после успешного ответа
+            //dispatch(setAppStatusAC({status: 'idle'}))
 
-                // Return после ответа от сервера false
-                return {isLoggedIn: false}
-            } else {
-                // Обработка серверной ошибки
-                //handleServerAppError(logOutData, dispatch)
-                // Здесь будет упакована ошибка
-                return rejectWithValue(logOutData)
-            }
+            // Return после ответа от сервера false
+            return {isLoggedIn: false}
+        } else {
+            // Обработка серверной ошибки
+            //handleServerAppError(logOutData, dispatch)
+            // Здесь будет упакована ошибка
+            return rejectWithValue(logOutData)
+        }
         //})
 
 
