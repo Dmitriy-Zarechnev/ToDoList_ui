@@ -1,245 +1,252 @@
-import { setAppInitializedAC, setAppStatusAC } from "../../../app/model/app-reducer";
-import { authAPI, LoginParamsType } from "features/auth/api/auth-api";
-import { clearToDoDataAC, createAppAsyncThunk } from "../../toDoLists/model/toDoLists/todolists-reducer";
-import { createSlice } from "@reduxjs/toolkit";
-import { ResultCode } from "utils/api/enums";
-import { handleServerAppError } from "utils/errors/handle-server-app-error";
-import { thunkTryCatch } from "utils/thunk-try-catch";
+import {setAppInitializedAC, setAppStatusAC} from '../../../app/model/app-reducer'
+import {authAPI, LoginParamsType} from 'features/auth/api/auth-api'
+import {clearToDoDataAC, createAppAsyncThunk} from '../../toDoLists/model/toDoLists/todolists-reducer'
+import { createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {ResultCode} from 'utils/api/enums'
+import {handleServerAppError} from 'utils/errors/handle-server-app-error'
+import {thunkTryCatch} from 'utils/thunk-try-catch'
 
 
 // *********** Thunk - необходимы для общения с DAL ****************
 // ------------- LogIn на сервере -----------------------
 export const logInTC = createAppAsyncThunk<{
-  isLoggedIn: boolean
+    isLoggedIn: boolean
 }, LoginParamsType>(
-  // 1 - prefix
-  "auth/logIn",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (data, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
+    // 1 - prefix
+    'auth/logIn',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async (data, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
 
 
-    return thunkTryCatch(thunkAPI, async () => {
-      // Запрос на logIn
-      const logInData = await authAPI.logIn(data);
+        return thunkTryCatch(thunkAPI, async () => {
+            // Запрос на logIn
+            const logInData = await authAPI.logIn(data)
 
-      // Если успех
-      if (logInData.resultCode === ResultCode.success) {
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "idle" }));
+            // Если успех
+            if (logInData.resultCode === ResultCode.success) {
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'succeeded'}))
 
-        // Return после ответа от сервера true
-        return { isLoggedIn: true };
-      } else {
-        // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-        // в конкретном поле в компоненте
-        // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
-        const isShowAppError = !logInData.fieldsErrors.length;
+                // Return после ответа от сервера true
+                return {isLoggedIn: true}
+            } else {
+                // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
+                // в конкретном поле в компоненте
+                // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
+                const isShowAppError = !logInData.fieldsErrors.length
 
-        // Обработка серверной ошибки
-        handleServerAppError(logInData, dispatch, isShowAppError);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(logInData);
-      }
-    });
+                // Обработка серверной ошибки
+                handleServerAppError(logInData, dispatch, isShowAppError)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(logInData)
+            }
+        })
 
 
-    //
-    // try {
-    //   // Запрос на logIn
-    //   const logInData = await authAPI.logIn(data);
-    //
-    //   // Если успех
-    //   if (logInData.resultCode === ResultCode.success) {
-    //     // Убираем Preloader после успешного ответа
-    //     dispatch(setAppStatusAC({ status: "idle" }));
-    //
-    //     // Return после ответа от сервера true
-    //     return { isLoggedIn: true };
-    //   } else {
-    //     // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
-    //     // в конкретном поле в компоненте
-    //     // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
-    //     const isShowAppError = !logInData.fieldsErrors.length;
-    //
-    //     // Обработка серверной ошибки
-    //     handleServerAppError(logInData, dispatch, isShowAppError);
-    //     // Здесь будет упакована ошибка
-    //     return rejectWithValue(logInData);
-    //   }
-    //
-    // } catch (error) {
-    //   // Обработка сетевой ошибки
-    //   handleServerNetworkError(error, dispatch);
-    //   // Здесь будет упакована ошибка
-    //   return rejectWithValue(null);
-    // }
-  }
-);
+        //
+        // try {
+        //   // Запрос на logIn
+        //   const logInData = await authAPI.logIn(data);
+        //
+        //   // Если успех
+        //   if (logInData.resultCode === ResultCode.success) {
+        //     // Убираем Preloader после успешного ответа
+        //     dispatch(setAppStatusAC({ status: "idle" }));
+        //
+        //     // Return после ответа от сервера true
+        //     return { isLoggedIn: true };
+        //   } else {
+        //     // ❗ Если у нас fieldsErrors есть значит мы будем отображать эти ошибки
+        //     // в конкретном поле в компоненте
+        //     // ❗ Если у нас fieldsErrors нет значит отобразим ошибку глобально
+        //     const isShowAppError = !logInData.fieldsErrors.length;
+        //
+        //     // Обработка серверной ошибки
+        //     handleServerAppError(logInData, dispatch, isShowAppError);
+        //     // Здесь будет упакована ошибка
+        //     return rejectWithValue(logInData);
+        //   }
+        //
+        // } catch (error) {
+        //   // Обработка сетевой ошибки
+        //   handleServerNetworkError(error, dispatch);
+        //   // Здесь будет упакована ошибка
+        //   return rejectWithValue(null);
+        // }
+    }
+)
 
 // ------------- Проверка при первом входе -----------------------
 export const initializeMeTC = createAppAsyncThunk<{
-  isLoggedIn: boolean
+    isLoggedIn: boolean
 }>(
-  // 1 - prefix
-  "auth/initializeMe",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (_, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
+    // 1 - prefix
+    'auth/initializeMe',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async (_, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
 
-    return thunkTryCatch(thunkAPI, async () => {
-      // Запрос на проверку
-      const meData = await authAPI.me();
+        return thunkTryCatch(thunkAPI, async () => {
+            // Запрос на проверку
+            const meData = await authAPI.me()
 
-      // Если успех
-      if (meData.resultCode === ResultCode.success) {
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "idle" }));
+            // Если успех
+            if (meData.resultCode === ResultCode.success) {
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'succeeded'}))
 
-        // Return после ответа от сервера true
-        return { isLoggedIn: true };
-      } else {
-        // Обработка серверной ошибки
-        handleServerAppError(meData, dispatch);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(null);
-      }
-    }).finally(() => {
-      // Инициализировали приложение после ответа
-      dispatch(setAppInitializedAC({ isInitialized: true }));
-    });
+                // Return после ответа от сервера true
+                return {isLoggedIn: true}
+            } else {
+                // Обработка серверной ошибки
+                handleServerAppError(meData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        }).finally(() => {
+            // Инициализировали приложение после ответа
+            dispatch(setAppInitializedAC({isInitialized: true}))
+        })
 
-    // try {
-    //   // Запрос на проверку
-    //   const meData = await authAPI.me();
-    //
-    //   // Если успех
-    //   if (meData.resultCode === ResultCode.success) {
-    //     // Убираем Preloader после успешного ответа
-    //     dispatch(setAppStatusAC({ status: "idle" }));
-    //
-    //     // Return после ответа от сервера true
-    //     return { isLoggedIn: true };
-    //   } else {
-    //     // Обработка серверной ошибки
-    //     handleServerAppError(meData, dispatch);
-    //     // Здесь будет упакована ошибка
-    //     return rejectWithValue(null);
-    //   }
-    //
-    // } catch (error) {
-    //
-    //   // Обработка сетевой ошибки
-    //   handleServerNetworkError(error, dispatch);
-    //   // Здесь будет упакована ошибка
-    //   return rejectWithValue(null);
-    // } finally {
-    //
-    //   // Инициализировали приложение после ответа
-    //   dispatch(setAppInitializedAC({ isInitialized: true }));
-    // }
-  }
-);
+        // try {
+        //   // Запрос на проверку
+        //   const meData = await authAPI.me();
+        //
+        //   // Если успех
+        //   if (meData.resultCode === ResultCode.success) {
+        //     // Убираем Preloader после успешного ответа
+        //     dispatch(setAppStatusAC({ status: "idle" }));
+        //
+        //     // Return после ответа от сервера true
+        //     return { isLoggedIn: true };
+        //   } else {
+        //     // Обработка серверной ошибки
+        //     handleServerAppError(meData, dispatch);
+        //     // Здесь будет упакована ошибка
+        //     return rejectWithValue(null);
+        //   }
+        //
+        // } catch (error) {
+        //
+        //   // Обработка сетевой ошибки
+        //   handleServerNetworkError(error, dispatch);
+        //   // Здесь будет упакована ошибка
+        //   return rejectWithValue(null);
+        // } finally {
+        //
+        //   // Инициализировали приложение после ответа
+        //   dispatch(setAppInitializedAC({ isInitialized: true }));
+        // }
+    }
+)
 
 // ------------- LogOut с сервера -----------------------
 export const logOutTC = createAppAsyncThunk<{
-  isLoggedIn: boolean
+    isLoggedIn: boolean
 }>(
-  // 1 - prefix
-  "auth/logOut",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (_, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
+    // 1 - prefix
+    'auth/logOut',
+    // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+    async (_, thunkAPI) => {
+        // 3 - деструктурируем параметры
+        const {dispatch, rejectWithValue} = thunkAPI
 
-    return thunkTryCatch(thunkAPI, async () => {
-      // Запрос на LogOut
-      const logOutData = await authAPI.logOut();
+        return thunkTryCatch(thunkAPI, async () => {
+            // Запрос на LogOut
+            const logOutData = await authAPI.logOut()
 
-      // Если успех
-      if (logOutData.resultCode === ResultCode.success) {
-        // Удалили все данные из store после вылогинизации
-        dispatch(clearToDoDataAC());
-        // Убираем Preloader после успешного ответа
-        dispatch(setAppStatusAC({ status: "idle" }));
+            // Если успех
+            if (logOutData.resultCode === ResultCode.success) {
+                // Удалили все данные из store после вылогинизации
+                dispatch(clearToDoDataAC())
+                // Убираем Preloader после успешного ответа
+                dispatch(setAppStatusAC({status: 'succeeded'}))
 
-        // Return после ответа от сервера false
-        return { isLoggedIn: false };
-      } else {
-        // Обработка серверной ошибки
-        handleServerAppError(logOutData, dispatch);
-        // Здесь будет упакована ошибка
-        return rejectWithValue(null);
-      }
-    });
+                // Return после ответа от сервера false
+                return {isLoggedIn: false}
+            } else {
+                // Обработка серверной ошибки
+                handleServerAppError(logOutData, dispatch)
+                // Здесь будет упакована ошибка
+                return rejectWithValue(null)
+            }
+        })
 
 
-    //
-    // try {
-    //   // Запрос на LogOut
-    //   const logOutData = await authAPI.logOut();
-    //
-    //   // Если успех
-    //   if (logOutData.resultCode === ResultCode.success) {
-    //     // Удалили все данные из store после вылогинизации
-    //     dispatch(clearToDoDataAC());
-    //     // Убираем Preloader после успешного ответа
-    //     dispatch(setAppStatusAC({ status: "idle" }));
-    //
-    //     // Return после ответа от сервера false
-    //     return { isLoggedIn: false };
-    //   } else {
-    //     // Обработка серверной ошибки
-    //     handleServerAppError(logOutData, dispatch);
-    //     // Здесь будет упакована ошибка
-    //     return rejectWithValue(null);
-    //   }
-    //
-    // } catch (error) {
-    //   // Обработка сетевой ошибки
-    //   handleServerNetworkError(error, dispatch);
-    //   // Здесь будет упакована ошибка
-    //   return rejectWithValue(null);
-    // }
-  }
-);
+        //
+        // try {
+        //   // Запрос на LogOut
+        //   const logOutData = await authAPI.logOut();
+        //
+        //   // Если успех
+        //   if (logOutData.resultCode === ResultCode.success) {
+        //     // Удалили все данные из store после вылогинизации
+        //     dispatch(clearToDoDataAC());
+        //     // Убираем Preloader после успешного ответа
+        //     dispatch(setAppStatusAC({ status: "idle" }));
+        //
+        //     // Return после ответа от сервера false
+        //     return { isLoggedIn: false };
+        //   } else {
+        //     // Обработка серверной ошибки
+        //     handleServerAppError(logOutData, dispatch);
+        //     // Здесь будет упакована ошибка
+        //     return rejectWithValue(null);
+        //   }
+        //
+        // } catch (error) {
+        //   // Обработка сетевой ошибки
+        //   handleServerNetworkError(error, dispatch);
+        //   // Здесь будет упакована ошибка
+        //   return rejectWithValue(null);
+        // }
+    }
+)
 
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
-  name: "auth",
-  initialState: {
-    isLoggedIn: false as boolean
-  },
-  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
-  reducers: {
-    // setIsLoggedInAC: (state,
-    //                   action: PayloadAction<{ isLoggedIn: boolean }>) => {
-    //     state.isLoggedIn = action.payload.isLoggedIn
-    // }
-  },
-  extraReducers: builder => {
-    builder
-      .addCase(logInTC.fulfilled,
-        (state, action) => {
-          state.isLoggedIn = action.payload.isLoggedIn;
-        })
-      .addCase(initializeMeTC.fulfilled,
-        (state, action) => {
-          state.isLoggedIn = action.payload.isLoggedIn;
-        })
-      .addCase(logOutTC.fulfilled,
-        (state, action) => {
-          state.isLoggedIn = action.payload.isLoggedIn;
-        });
-  }
-});
+    // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+    name: 'auth',
+    initialState: {
+        isLoggedIn: false as boolean
+    },
+    // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+    reducers: {
+        // setIsLoggedInAC: (state,
+        //                   action: PayloadAction<{ isLoggedIn: boolean }>) => {
+        //     state.isLoggedIn = action.payload.isLoggedIn
+        // }
+    },
+    extraReducers: builder => {
+        builder
+            //   .addCase(logInTC.fulfilled,
+            //     (state, action) => {
+            //       state.isLoggedIn = action.payload.isLoggedIn;
+            //     })
+            //   .addCase(initializeMeTC.fulfilled,
+            //     (state, action) => {
+            //       state.isLoggedIn = action.payload.isLoggedIn;
+            //     })
+            //   .addCase(logOutTC.fulfilled,
+            //     (state, action) => {
+            //       state.isLoggedIn = action.payload.isLoggedIn;
+            //     });
+            .addMatcher((action) => {
+                return action.type === 'auth/logIn/fulfilled' ||
+                    action.type === 'auth/logOut/fulfilled' ||
+                    action.type === 'auth/initializeMe/fulfilled';
+            }, (state, action:PayloadAction<{isLoggedIn: boolean}>) => {
+                state.isLoggedIn = action.payload.isLoggedIn
+            })
+    }
+})
 
 // Создаем authReducer с помощью slice
-export const authReducer = slice.reducer;
+export const authReducer = slice.reducer
 
 // Action creator достаем с помощью slice
 //export const {setIsLoggedInAC} = slice.actions
@@ -247,7 +254,7 @@ export const authReducer = slice.reducer;
 export type AuthInitialStateType = ReturnType<typeof slice.getInitialState>
 
 // Thunks упаковываем в объект
-export const authThunks = { logOutTC, logInTC, initializeMeTC };
+export const authThunks = {logOutTC, logInTC, initializeMeTC}
 /*
 // Типизация Actions всего authReducer
 export type AuthActionsTypes = ReturnType<typeof setIsLoggedInAC>;

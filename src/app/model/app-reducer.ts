@@ -1,44 +1,54 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 // Типы статусов для работы в приложении
-export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed" | "updated";
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated';
 
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
-  name: "app",
-  initialState: {
-    status: "idle" as RequestStatusType,
-    error: null as string | null,
-    isInitialized: false as boolean
-  },
-  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
-  reducers: {
-    setAppStatusAC: (state,
-                     action: PayloadAction<{ status: RequestStatusType }>) => {
-      state.status = action.payload.status;
+    // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+    name: 'app',
+    initialState: {
+        status: 'idle' as RequestStatusType,
+        error: null as string | null,
+        isInitialized: false as boolean
     },
-    setAppErrorAC: (state,
-                    action: PayloadAction<{ error: string | null }>) => {
-      state.error = action.payload.error;
+    // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+    reducers: {
+        setAppStatusAC: (state,
+                         action: PayloadAction<{ status: RequestStatusType }>) => {
+            state.status = action.payload.status
+        },
+        setAppErrorAC: (state,
+                        action: PayloadAction<{ error: string | null }>) => {
+            state.error = action.payload.error
+        },
+        setAppInitializedAC: (state,
+                              action: PayloadAction<{ isInitialized: boolean }>) => {
+            state.isInitialized = action.payload.isInitialized
+        }
     },
-    setAppInitializedAC: (state,
-                          action: PayloadAction<{ isInitialized: boolean }>) => {
-      state.isInitialized = action.payload.isInitialized;
+    extraReducers: builder => {
+        builder.addMatcher((action) => {
+                console.log('addMatcher matcher', action.type)
+                return action.type.endsWith('/pending')
+            }, (state, action) => {
+                state.status = 'loading'
+                console.log('✅ addMatcher reducer')
+            }
+        )
     }
-  }
-});
+})
 
 // Создаем appReducer с помощью slice
-export const appReducer = slice.reducer;
+export const appReducer = slice.reducer
 
 
 // Action creators достаем с помощью slice
 export const {
-  setAppStatusAC,
-  setAppErrorAC,
-  setAppInitializedAC
-} = slice.actions;
+    setAppStatusAC,
+    setAppErrorAC,
+    setAppInitializedAC
+} = slice.actions
 // Типизация AppInitialStateType для тестов
 export type AppInitialStateType = ReturnType<typeof slice.getInitialState>
 
