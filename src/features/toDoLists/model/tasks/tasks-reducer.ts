@@ -1,4 +1,4 @@
-import {addTodoListsTC, changeTodolistEntityStatusAC, clearToDoDataAC, createAppAsyncThunk, deleteTodoListsTC, getTodoListsTC} from '../toDoLists/todolists-reducer'
+import {addTodoLists, createAppAsyncThunk, deleteTodoLists, getTodoLists, toDoListsActions} from '../toDoLists/todolists-reducer'
 import {tasksAPI, TasksType} from 'features/toDoLists/api/tasks-api'
 import {RequestStatusType} from '../../../../app/model/app-reducer'
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
@@ -22,7 +22,7 @@ export const getTasksTC = createAppAsyncThunk<{
     // 1 - prefix
     'tasks/getTasks',
     // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-    async (toDoListID, thunkAPI) => {
+    async (toDoListID, _) => {
         // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
         //const { dispatch } = thunkAPI;
 
@@ -70,7 +70,7 @@ export const addTaskTC = createAppAsyncThunk<{
         const {dispatch, rejectWithValue} = thunkAPI
 
         // Отключаем кнопку во время запроса
-        dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'loading'}))
+        dispatch(toDoListsActions.changeTodolistEntityStatus({toDoListID, entityStatus: 'loading'}))
 
 
         //return thunkTryCatch(thunkAPI, async () => {
@@ -83,7 +83,7 @@ export const addTaskTC = createAppAsyncThunk<{
             // Убираем Preloader после успешного ответа
             //dispatch(setAppStatusAC({ status: "updated" }));
             // Включаем кнопку после успешного ответа
-            dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'idle'}))
+            dispatch(toDoListsActions.changeTodolistEntityStatus({toDoListID, entityStatus: 'idle'}))
 
             // Return ответ от сервера и прибавили entityTaskStatus
             return {task: {...addTaskData.data.item, entityTaskStatus: 'idle'}}
@@ -91,7 +91,7 @@ export const addTaskTC = createAppAsyncThunk<{
             // Обработка серверной ошибки
             // handleServerAppError(addTaskData, dispatch);
             // Включаем кнопку после провала
-            dispatch(changeTodolistEntityStatusAC({toDoListID, entityStatus: 'idle'}))
+            dispatch(toDoListsActions.changeTodolistEntityStatus({toDoListID, entityStatus: 'idle'}))
             // Здесь будет упакована ошибка
             return rejectWithValue(addTaskData)
         }
@@ -411,21 +411,21 @@ const slice = createSlice({
     // Общие reducers с другими
     extraReducers: builder => {
         builder
-            .addCase(addTodoListsTC.fulfilled,
+            .addCase(addTodoLists.fulfilled,
                 (state, action) => {
                     state[action.payload.toDoListID] = []
                 })
-            .addCase(deleteTodoListsTC.fulfilled,
+            .addCase(deleteTodoLists.fulfilled,
                 (state, action) => {
                     delete state[action.payload.toDoListID]
                 })
-            .addCase(getTodoListsTC.fulfilled,
+            .addCase(getTodoLists.fulfilled,
                 (state, action) => {
                     action.payload.toDoLists.forEach((tl) => {
                         state[tl.id] = []
                     })
                 })
-            .addCase(clearToDoDataAC,
+            .addCase(toDoListsActions.clearToDoData,
                 (state) => {
                     Object.keys(state).forEach(el => {
                         delete state[el]

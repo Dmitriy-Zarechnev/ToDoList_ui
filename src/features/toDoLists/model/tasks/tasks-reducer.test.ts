@@ -1,5 +1,5 @@
 import {addTaskTC, changeTaskEntityStatusAC, deleteTaskTC, getTasksTC, TasksInitialStateType, tasksReducer, updateTaskStatusTC, updateTaskTitleTC} from './tasks-reducer'
-import {addTodoListsTC, deleteTodoListsTC, getTodoListsTC} from '../toDoLists/todolists-reducer'
+import {addTodoLists, deleteTodoLists, getTodoLists} from '../toDoLists/todolists-reducer'
 import {TasksPriorities, TasksStatuses} from 'utils/api/enums'
 
 let startState: TasksInitialStateType
@@ -227,7 +227,7 @@ test('title of specified task should be changed', () => {
 
 test('new array should be added when new todolist is added', () => {
     const endState = tasksReducer(startState,
-        addTodoListsTC.fulfilled({title: 'new todolist', toDoListID: 'todolistId'},
+        addTodoLists.fulfilled({title: 'new todolist', toDoListID: 'todolistId'},
             'requestId',
             'new todolist'))
 
@@ -244,7 +244,7 @@ test('new array should be added when new todolist is added', () => {
 
 test('property with todolistId should be deleted', () => {
     const endState = tasksReducer(startState,
-        deleteTodoListsTC.fulfilled({toDoListID: 'todolistId2'}, 'requestId', 'todolistId2'))
+        deleteTodoLists.fulfilled({toDoListID: 'todolistId2'}, 'requestId', 'todolistId2'))
 
     const keys = Object.keys(endState)
 
@@ -261,7 +261,7 @@ test('new array should be added when new todolist is set', () => {
 
     const endState = tasksReducer(
         startState,
-        getTodoListsTC.fulfilled({
+        getTodoLists.fulfilled({
             toDoLists: [
                 {
                     id: '123',

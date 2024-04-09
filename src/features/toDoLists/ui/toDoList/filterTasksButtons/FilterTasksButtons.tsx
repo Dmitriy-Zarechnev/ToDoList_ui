@@ -11,12 +11,12 @@ type FilterTasksButtons = {
 
 export const FilterTasksButtons = memo((props: FilterTasksButtons) => {
     // Используя useAction получили callbacks в которые уже входит dispatch
-    const {changeTodolistFilterAC} = useActions(toDoListsActions)
+    const {changeTodolistFilter} = useActions(toDoListsActions)
 
 
     // -------------- Фильтрация task ----------------
     const onClickBtnHandler = (value: FilterValuesType) => {
-        changeTodolistFilterAC({toDoListID: props.toDoListID, filter: value})
+        changeTodolistFilter({toDoListID: props.toDoListID, filter: value})
     }
 
 

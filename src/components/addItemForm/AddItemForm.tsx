@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, memo, useCallback, useState} from 'react'
+import React, {ChangeEvent, KeyboardEvent, memo,  useState} from 'react'
 import S from './AddItemForm.module.css'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
@@ -24,7 +24,7 @@ export const AddItemForm = memo((props: AddItemFormPropsType) => {
         }
 
         // -------------- Отправляем newTaskTitle в BLL и обнуляем newTaskTitle ----------------
-        const addTaskBtnFn = useCallback(() => {
+        const addTaskBtnFn = () => {
             if (newTaskTitle.trim() !== '') {
 
                 props.addItem(newTaskTitle.trim())
@@ -44,7 +44,7 @@ export const AddItemForm = memo((props: AddItemFormPropsType) => {
             } else {
                 setError(`${props.itemType}'s title is required😡!`)
             }
-        }, [])
+        }
 
         // -------------- Вызов addTaskBtnFn при нажатии 'Enter' ----------------
         const onKeyDownInputHandler = (e: KeyboardEvent<HTMLInputElement>) => {

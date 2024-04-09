@@ -16,16 +16,16 @@ type ToDoListTitlePropsType = {
 export const ToDoListTitle = memo((props: ToDoListTitlePropsType) => {
 
     // Используя useAction получили callbacks в которые уже входит dispatch
-    const {updateTodoListsTC, deleteTodoListsTC} = useActions(toDoListsThunks)
+    const {updateTodoLists, deleteTodoLists} = useActions(toDoListsThunks)
 
     // -------------- Меняем название todolist ----------------
     const changeToDoListTitle = useCallback((newTitle: string) => {
-        updateTodoListsTC({toDoListID: props.toDoListID, title: newTitle})
+        updateTodoLists({toDoListID: props.toDoListID, title: newTitle})
     }, [props.toDoListID])
 
     // -------------- Удалить ToDoList ----------------
     const onClickDeleteListHandler = useCallback(() => {
-        deleteTodoListsTC(props.toDoListID)
+        deleteTodoLists(props.toDoListID)
     }, [props.toDoListID])
 
     return (

@@ -34,8 +34,6 @@ type UpdateTaskModelType = {
 };
 
 
-
-
 export const tasksAPI = {
     // ----- Запросили tasks с сервера ------
     getTasks(todolistId: string) {

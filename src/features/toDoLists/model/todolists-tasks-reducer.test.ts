@@ -1,5 +1,5 @@
 import {TasksInitialStateType, tasksReducer} from './tasks/tasks-reducer'
-import {addTodoListsTC, clearToDoDataAC, ToDoListDomainType, toDoListsReducer} from './toDoLists/todolists-reducer'
+import {addTodoLists, ToDoListDomainType, toDoListsActions, toDoListsReducer} from './toDoLists/todolists-reducer'
 import {v1} from 'uuid'
 import {TasksPriorities, TasksStatuses} from 'utils/api/enums'
 
@@ -8,7 +8,7 @@ test('ids should be equals', () => {
     const startTasksState: TasksInitialStateType = {}
     const startTodoListsState: Array<ToDoListDomainType> = []
 
-    const action = addTodoListsTC.fulfilled(
+    const action = addTodoLists.fulfilled(
         {title: 'new todolist', toDoListID: 'todolistId3'},
         'requestId',
         'new todolist')
@@ -103,8 +103,8 @@ test('tasks and toDoLists should be empty', () => {
         }
     ]
 
-    const endTasksState = tasksReducer(startTasksState, clearToDoDataAC())
-    const endToDoListsState = toDoListsReducer(startToDoListsState, clearToDoDataAC())
+    const endTasksState = tasksReducer(startTasksState, toDoListsActions.clearToDoData())
+    const endToDoListsState = toDoListsReducer(startToDoListsState, toDoListsActions.clearToDoData())
 
     expect(endTasksState).toEqual({})
     expect(endToDoListsState).toEqual([])

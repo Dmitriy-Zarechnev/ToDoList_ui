@@ -1,5 +1,5 @@
 import {authAPI, LoginParamsType} from 'features/auth/api/auth-api'
-import {clearToDoDataAC, createAppAsyncThunk} from '../../toDoLists/model/toDoLists/todolists-reducer'
+import {createAppAsyncThunk, toDoListsActions} from '../../toDoLists/model/toDoLists/todolists-reducer'
 import {createSlice, isFulfilled, PayloadAction} from '@reduxjs/toolkit'
 import {ResultCode} from 'utils/api/enums'
 import {appActions} from '../../../app/model/app-reducer'
@@ -75,7 +75,7 @@ export const logOut = createAppAsyncThunk<{
         if (logOutData.resultCode === ResultCode.success) {
 
             // Удалили все данные из store после вылогинизации
-            dispatch(clearToDoDataAC())
+            dispatch(toDoListsActions.clearToDoData())
 
             // Return после ответа от сервера false
             return {isLoggedIn: false}

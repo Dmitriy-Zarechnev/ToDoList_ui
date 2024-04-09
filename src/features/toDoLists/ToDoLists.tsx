@@ -19,7 +19,7 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
     const isLoggedIn = useSelector(isLoggedInSelector)
 
     // Используя useAction получили callbacks в которые уже входит dispatch
-    const {getTodoListsTC, addTodoListsTC} = useActions(toDoListsThunks)
+    const {getTodoLists, addTodoLists} = useActions(toDoListsThunks)
 
 
     // -------------- Получили ToDoLists с сервера после загрузки страницы ----------------
@@ -28,13 +28,13 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
         if (!isLoggedIn) return
 
         // Получаем toDoLists
-        if (!demo) getTodoListsTC()
+        if (!demo) getTodoLists()
     }, [])
 
 
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {
-        return addTodoListsTC(title).unwrap()
+        return addTodoLists(title).unwrap()
     }, [])
 
 
@@ -45,7 +45,7 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
     return (
         <div>
             <Grid container>
-                <AddItemForm addItem={addToDoList} itemType={'Todolist'} />
+                <AddItemForm addItem={addToDoList} itemType={'Todolist'}/>
             </Grid>
 
             <Grid container spacing={1}>
