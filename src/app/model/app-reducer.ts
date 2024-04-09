@@ -1,7 +1,6 @@
 import {createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
 import {authThunks} from '../../features/auth/model/auth-reducer'
 
-
 // Типы статусов для работы в приложении
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated';
 
@@ -37,7 +36,7 @@ const slice = createSlice({
                 }
             )
             .addMatcher(isFulfilled, (state, action) => {
-                    if (action.type === authThunks.logOutTC.fulfilled.type) {
+                    if (action.type === authThunks.logOut.fulfilled.type) {
                         // Убрал оповещение при выходе из приложения
                         state.status = 'idle'
                     } else {
@@ -68,14 +67,8 @@ const slice = createSlice({
 // Создаем appReducer с помощью slice
 export const appReducer = slice.reducer
 
+// Упаковали все actions в один объект
 export const appActions = slice.actions
-
-// Action creators достаем с помощью slice
-// export const {
-//     setAppStatus,
-//     setAppError,
-//     setAppInitialized
-// } = slice.actions
 
 // Типизация AppInitialStateType для тестов
 export type AppInitialStateType = ReturnType<typeof slice.getInitialState>

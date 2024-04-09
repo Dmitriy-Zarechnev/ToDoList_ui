@@ -34,10 +34,10 @@ function App({demo = false}: AppPropsType) {
     const isLoggedIn = useSelector(isLoggedInSelector)
 
     // useActions - это кастомный хук, который уже протипизирован и лежит в useActions
-    const {initializeMeTC, logOutTC} = useActions(authThunks)
+    const {initializeMe, logOut} = useActions(authThunks)
 
     useEffect(() => {
-        if (!demo) initializeMeTC()
+        if (!demo) initializeMe()
     }, [])
 
     // Крутилка во время инициализации
@@ -51,7 +51,7 @@ function App({demo = false}: AppPropsType) {
 
     // Функция для logout
     const onClickHandler = () => {
-        isLoggedIn ? logOutTC() : <Navigate to={'/login'}/>
+        isLoggedIn ? logOut() : <Navigate to={'/login'}/>
     }
 
     return (

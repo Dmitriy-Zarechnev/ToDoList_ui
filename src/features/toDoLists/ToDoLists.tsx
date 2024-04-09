@@ -9,7 +9,7 @@ import {toDoListsSelector} from 'features/toDoLists/model/toDoLists/todolists-se
 import {Navigate} from 'react-router-dom'
 import {isLoggedInSelector} from 'features/auth/model/auth-selector'
 import {useActions} from 'utils/hooks/useActions'
-import {appActions} from '../../app/model/app-reducer'
+
 
 export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
     // Получили toDoLists из state используя хук - useSelector и selector - toDoListsSelector
@@ -31,10 +31,12 @@ export const ToDoLists = memo(({demo = false}: { demo: boolean }) => {
         if (!demo) getTodoListsTC()
     }, [])
 
+
     // -------------- Добавить ToDoList ----------------
     const addToDoList = useCallback((title: string) => {
         return addTodoListsTC(title).unwrap()
     }, [])
+
 
     // Redirect в случае isLoggedIn !== true
     if (!isLoggedIn) return <Navigate to={'/login'}/>

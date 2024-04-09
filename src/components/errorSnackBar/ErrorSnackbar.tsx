@@ -7,7 +7,7 @@ import {useActions} from '../../utils/hooks/useActions'
 import {appActions} from '../../app/model/app-reducer'
 
 
-export function ErrorSnackbar() {
+export const ErrorSnackbar = () => {
     // Получили error из state используя хук - useSelector и selector - appErrorSelector
     const error = useSelector(appErrorSelector)
 
@@ -17,49 +17,36 @@ export function ErrorSnackbar() {
     // Используя useAction получили callbacks в которые уже входит dispatch
     const {setAppStatus, setAppError} = useActions(appActions)
 
-    // useAppDispatch - это кастомный хук, который уже протипизирован и лежит в store
-    //const dispatch = useAppDispatch()
 
     // Закрытие Snackbar при кликах
-    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    const handleClose = () => {
         setAppStatus({status: 'idle'})
         setAppError({error: null})
     }
 
-    return (
-        <>
-            <Snackbar
-                open={error !== null}
-                autoHideDuration={6000}
-                onClose={handleClose}
-                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-            >
-                <Alert onClose={handleClose} severity="error" sx={{width: '100%'}} variant={'filled'}>
-                    {error}
-                </Alert>
-            </Snackbar>
 
-            <Snackbar
-                open={status === 'succeeded'}
-                autoHideDuration={3000}
-                onClose={handleClose}
-                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-            >
-                <Alert onClose={handleClose} severity="success" sx={{width: '100%'}}>
-                    Success loading!😉
-                </Alert>
-            </Snackbar>
+    // Snackbar универсальный
+    const universalSnackBar = (open: boolean,
+                               severity: 'error' | 'success',
+                               text: string | null,
+                               variant: 'filled' | 'outlined' = 'outlined'
+    ) => {
+        return <Snackbar
+            open={open}
+            autoHideDuration={3000}
+            onClose={handleClose}
+            anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
+            <Alert onClose={handleClose} severity={severity}
+                   sx={{width: '100%'}} variant={variant}>
+                {text}
+            </Alert>
+        </Snackbar>
+    }
 
-            <Snackbar
-                open={status === 'updated'}
-                autoHideDuration={3000}
-                onClose={handleClose}
-                anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-            >
-                <Alert onClose={handleClose} severity="success" sx={{width: '100%'}} variant={'filled'}>
-                    Success update!😃
-                </Alert>
-            </Snackbar>
-        </>
-    )
+
+    return <>
+        {universalSnackBar(error !== null, 'error', error, 'filled')}
+        {universalSnackBar(status === 'succeeded', 'success', 'Success loading!😉')}
+        {universalSnackBar(status === 'updated', 'success', 'Success update!😃', 'filled')}
+    </>
 }
