@@ -34,9 +34,15 @@ export const getTasksTC = createAppAsyncThunk<{
         // Убираем Preloader после успешного ответа
         //dispatch(setAppStatusAC({ status: "succeeded" }));
 
+
+
+
         // return ответ от сервера
         return {toDoListID, tasks: getTasksData.items}
         //});
+
+
+
 
         //
         // // Показываем Preloader во время запроса
