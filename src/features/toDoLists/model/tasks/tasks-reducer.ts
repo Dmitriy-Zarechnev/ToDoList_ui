@@ -26,6 +26,7 @@ export const getTasksTC = createAppAsyncThunk<{
         // 3 - деструктурируем параметры именно так. В дальнейшем пригодится такая запись
         //const { dispatch } = thunkAPI;
 
+
         // return thunkTryCatch(thunkAPI, async () => {
         // Запрос на получение tasks с сервера
         const getTasksData = await tasksAPI.getTasks(toDoListID)
@@ -44,6 +45,8 @@ export const getTasksTC = createAppAsyncThunk<{
         //   // Запрос на получение tasks с сервера
         //   const getTasksData = await tasksAPI.getTasks(toDoListID);
         //
+
+
         //   // Убираем Preloader после успешного ответа
         //   dispatch(setAppStatusAC({ status: "succeeded" }));
         //
