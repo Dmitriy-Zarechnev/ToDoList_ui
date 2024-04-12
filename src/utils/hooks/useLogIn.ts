@@ -1,8 +1,8 @@
 import {FormikHelpers, useFormik} from 'formik'
 import {LoginParamsType} from "features/auth/api/auth-api"
-import {logIn} from "features/auth/model/auth-reducer"
 import {ResponseType} from "features/toDoLists/api/todolist-api"
 import {useAppDispatch} from "app/model/store"
+import { authThunks } from "features/auth/model/auth-reducer";
 
 // Типы для валидации ошибок
 type FormikErrorType = Partial<Omit<LoginParamsType, 'captcha'>>;
@@ -36,7 +36,7 @@ export const useLogIn = () => {
         },
         onSubmit: (values: LoginParamsType, formikHelpers: FormikHelpers<LoginParamsType>) => {
             // Ловим ошибки, которые будут в случае неудачи
-            dispatch(logIn(values))
+            dispatch(authThunks.logIn(values))
                 // Необходимо, чтоб попасть в catch
                 .unwrap()
                 .then(() => {

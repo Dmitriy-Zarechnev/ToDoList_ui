@@ -1,8 +1,7 @@
 import { v1 } from "uuid";
 import {
-  addTodoLists, deleteTodoLists,
-  FilterValuesType, getTodoLists, ToDoListDomainType,
-  toDoListsActions, toDoListsReducer, updateTodoLists
+  FilterValuesType, ToDoListDomainType,
+  toDoListsActions, toDoListsReducer, toDoListsThunks
 } from "./todolists-reducer";
 
 let toDoListID1: string;
@@ -36,7 +35,7 @@ beforeEach(() => {
 
 test("correct todolist should be removed", () => {
   const endState = toDoListsReducer(startState,
-    deleteTodoLists.fulfilled({ toDoListID: toDoListID1 },
+    toDoListsThunks.deleteTodoLists.fulfilled({ toDoListID: toDoListID1 },
       "requestId", toDoListID1));
 
   expect(endState.length).toBe(1);
@@ -49,7 +48,7 @@ test("correct todolist should be added", () => {
   const args = { title: newTodolistTitle, toDoListID: "todolistId" };
 
   const endState = toDoListsReducer(startState,
-    addTodoLists.fulfilled(args, "requestId", newTodolistTitle));
+    toDoListsThunks.addTodoLists.fulfilled(args, "requestId", newTodolistTitle));
 
   expect(endState.length).toBe(3);
   expect(endState[0].title).toBe(newTodolistTitle);
@@ -61,7 +60,7 @@ test("correct todolist should change its name", () => {
   const args = { toDoListID: toDoListID2, title: newTodolistTitle };
 
   const endState = toDoListsReducer(startState,
-    updateTodoLists.fulfilled(args, "requestId", args));
+    toDoListsThunks.updateTodoLists.fulfilled(args, "requestId", args));
 
   expect(endState[0].title).toBe("What to learn");
   expect(endState[1].title).toBe(newTodolistTitle);
@@ -108,7 +107,7 @@ test("todolist should be set from API", () => {
   ];
 
   const endState = toDoListsReducer(startState,
-    getTodoLists.fulfilled({ toDoLists: startState }, "requestId"));
+    toDoListsThunks.getTodoLists.fulfilled({ toDoLists: startState }, "requestId"));
 
   expect(endState.length).toBe(3);
 });

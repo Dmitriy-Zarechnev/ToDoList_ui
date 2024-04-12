@@ -20,7 +20,7 @@ export const Task: FC<TaskPropsType> = memo(
   ({ task, entityStatus, toDoListID }) => {
 
     // Используя useAction получили callbacks в которые уже входит dispatch
-    const { deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC } = useActions(tasksThunks);
+    const { deleteTask, updateTaskStatus, updateTaskTitle } = useActions(tasksThunks);
 
 
     // -------------- Изменяем Task status ----------------
@@ -28,19 +28,19 @@ export const Task: FC<TaskPropsType> = memo(
       const status =
         e.currentTarget.checked ? TasksStatuses.Completed : TasksStatuses.New;
 
-      updateTaskStatusTC({ toDoListID, taskId: task.id, status });
+      updateTaskStatus({ toDoListID, taskId: task.id, status });
     };
 
 
     // -------------- Удаление task ----------------
     const removeTaskHandler = () => {
-      deleteTaskTC({ toDoListID, taskId: task.id });
+      deleteTask({ toDoListID, taskId: task.id });
     };
 
 
     // -------------- Меняем Task's title ----------------
     const changeTaskTitleHandler = (newTitle: string) => {
-      updateTaskTitleTC({ toDoListID, taskId: task.id, title: newTitle });
+      updateTaskTitle({ toDoListID, taskId: task.id, title: newTitle });
     };
 
 

@@ -1,5 +1,5 @@
 import {TasksInitialStateType, tasksReducer} from './tasks/tasks-reducer'
-import {addTodoLists, ToDoListDomainType, toDoListsActions, toDoListsReducer} from './toDoLists/todolists-reducer'
+import { ToDoListDomainType, toDoListsActions, toDoListsReducer, toDoListsThunks } from "./toDoLists/todolists-reducer";
 import {v1} from 'uuid'
 import {TasksPriorities, TasksStatuses} from 'utils/api/enums'
 
@@ -8,7 +8,7 @@ test('ids should be equals', () => {
     const startTasksState: TasksInitialStateType = {}
     const startTodoListsState: Array<ToDoListDomainType> = []
 
-    const action = addTodoLists.fulfilled(
+    const action = toDoListsThunks.addTodoLists.fulfilled(
         {title: 'new todolist', toDoListID: 'todolistId3'},
         'requestId',
         'new todolist')

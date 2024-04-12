@@ -7,7 +7,7 @@ import { appActions } from "app/model/app-reducer";
 
 // *********** Thunk - необходимы для общения с DAL ****************
 // ------------- LogIn на сервере -----------------------
-export const logIn = createAppAsyncThunk<{
+const logIn = createAppAsyncThunk<{
   isLoggedIn: boolean
 }, LoginParamsType>(
   // 1 - prefix
@@ -30,7 +30,7 @@ export const logIn = createAppAsyncThunk<{
 );
 
 // ------------- Проверка при первом входе -----------------------
-export const initializeMe = createAppAsyncThunk<{
+const initializeMe = createAppAsyncThunk<{
   isLoggedIn: boolean
 }>(
   // 1 - prefix
@@ -58,7 +58,7 @@ export const initializeMe = createAppAsyncThunk<{
 );
 
 // ------------- LogOut с сервера -----------------------
-export const logOut = createAppAsyncThunk<{
+const logOut = createAppAsyncThunk<{
   isLoggedIn: boolean
 }>(
   // 1 - prefix
