@@ -18,7 +18,7 @@ import {authThunks} from 'features/auth/model/auth-reducer'
 import CircularProgress from '@mui/material/CircularProgress'
 import {isLoggedInSelector} from 'features/auth/model/auth-selector'
 import {useActions} from 'utils/hooks/useActions'
-import {ErrorPage} from '../../components/errorPage/ErrorPage'
+import {ErrorPage} from "components/errorPage/ErrorPage"
 
 
 type AppPropsType = {
@@ -49,7 +49,7 @@ function App({demo = false}: AppPropsType) {
         )
     }
 
-    // Функция для logout
+    // Функция для logOut
     const onClickHandler = () => {
         isLoggedIn ? logOut() : <Navigate to={'/login'}/>
     }

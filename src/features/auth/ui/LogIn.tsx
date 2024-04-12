@@ -11,7 +11,7 @@ import {useSelector} from 'react-redux'
 import {isLoggedInSelector} from 'features/auth/model/auth-selector'
 import {Navigate} from 'react-router-dom'
 import S from './LogIn.module.css'
-import {useLogIn} from '../../../utils/hooks/useLogIn'
+import {useLogIn} from "utils/hooks/useLogIn"
 
 
 export const LogIn = () => {

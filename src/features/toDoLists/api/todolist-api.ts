@@ -1,4 +1,4 @@
-import {instance} from '../../../utils/api/common.api'
+import {instance} from "utils/api/common.api"
 
 // ----- Типизация Get запроса ------
 export type TodolistType = {

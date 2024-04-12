@@ -1,9 +1,9 @@
-import { tasksReducer } from "../../features/toDoLists/model/tasks/tasks-reducer";
-import { toDoListsReducer } from "../../features/toDoLists/model/toDoLists/todolists-reducer";
+import { tasksReducer } from "features/toDoLists/model/tasks/tasks-reducer";
+import { toDoListsReducer } from "features/toDoLists/model/toDoLists/todolists-reducer";
 import { thunk } from "redux-thunk";
 import { useDispatch } from "react-redux";
 import { appReducer } from "./app-reducer";
-import { authReducer } from "../../features/auth/model/auth-reducer";
+import { authReducer } from "features/auth/model/auth-reducer";
 import { configureStore } from "@reduxjs/toolkit";
 
 

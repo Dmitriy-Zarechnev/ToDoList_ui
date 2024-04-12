@@ -1,5 +1,5 @@
 import {createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
-import {authThunks} from '../../features/auth/model/auth-reducer'
+import {authThunks} from "features/auth/model/auth-reducer"
 
 // Типы статусов для работы в приложении
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated';

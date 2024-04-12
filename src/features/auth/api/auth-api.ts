@@ -1,5 +1,5 @@
 import {ResponseType} from '../../toDoLists/api/todolist-api'
-import {instance} from '../../../utils/api/common.api'
+import {instance} from "utils/api/common.api"
 
 // ----- Типизация данных для сервера ------
 export type LoginParamsType = {

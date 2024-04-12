@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useEffect} from 'react'
 import Grid from '@mui/material/Grid'
-import {AddItemForm} from '../../components/addItemForm/AddItemForm'
+import {AddItemForm} from "components/addItemForm/AddItemForm"
 import Paper from '@mui/material/Paper'
 import {ToDoList} from './ui/toDoList/ToDoList'
 import {toDoListsThunks} from 'features/toDoLists/model/toDoLists/todolists-reducer'

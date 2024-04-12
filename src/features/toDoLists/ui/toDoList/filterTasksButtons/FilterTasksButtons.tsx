@@ -1,8 +1,8 @@
 import React, {memo} from 'react'
-import S from '../ToDoList.module.css'
+import S from './FilterTasksButtons.module.css'
 import {FilterValuesType, toDoListsActions} from '../../../model/toDoLists/todolists-reducer'
 import Button from '@mui/material/Button'
-import {useActions} from '../../../../../utils/hooks/useActions'
+import {useActions} from "utils/hooks/useActions"
 
 type FilterTasksButtons = {
     filter: FilterValuesType
@@ -30,7 +30,7 @@ export const FilterTasksButtons = memo((props: FilterTasksButtons) => {
     }
 
     return (
-        <div className={S.to_Do_List__btn_lists}>
+        <div className={S.btn_lists}>
             {universalButton('all', 'secondary', 'All')}
             {universalButton('active', 'primary', 'Active')}
             {universalButton('completed', 'success', 'Completed')}

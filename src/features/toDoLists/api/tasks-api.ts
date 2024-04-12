@@ -1,6 +1,6 @@
 import {ResponseType} from './todolist-api'
-import {instance} from '../../../utils/api/common.api'
-import {TasksPriorities, TasksStatuses} from '../../../utils/api/enums'
+import {instance} from "utils/api/common.api"
+import {TasksPriorities, TasksStatuses} from "utils/api/enums"
 
 // ----- Типизация Get запроса ------
 export type GetTaskType = {

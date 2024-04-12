@@ -1,9 +1,9 @@
 import React, {memo, useCallback, useEffect} from 'react'
 import S from './ToDoList.module.css'
-import {AddItemForm} from '../../../../components/addItemForm/AddItemForm'
+import {AddItemForm} from "components/addItemForm/AddItemForm"
 import {FilterValuesType} from 'features/toDoLists/model/toDoLists/todolists-reducer'
 import {tasksThunks} from 'features/toDoLists/model/tasks/tasks-reducer'
-import {appActions, RequestStatusType} from 'app/model/app-reducer'
+import { RequestStatusType} from 'app/model/app-reducer'
 import {useActions} from 'utils/hooks/useActions'
 import {FilterTasksButtons} from './filterTasksButtons/FilterTasksButtons'
 import {Tasks} from './tasks/Tasks'
