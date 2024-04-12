@@ -1,11 +1,12 @@
 import {FormikHelpers, useFormik} from 'formik'
-import {LoginParamsType} from '../../features/auth/api/auth-api'
-import {logIn} from '../../features/auth/model/auth-reducer'
-import {ResponseType} from '../../features/toDoLists/api/todolist-api'
-import {useAppDispatch} from '../../app/model/store'
+import {LoginParamsType} from "features/auth/api/auth-api"
+import {logIn} from "features/auth/model/auth-reducer"
+import {ResponseType} from "features/toDoLists/api/todolist-api"
+import {useAppDispatch} from "app/model/store"
 
 // Типы для валидации ошибок
 type FormikErrorType = Partial<Omit<LoginParamsType, 'captcha'>>;
+
 
 
 export const useLogIn = () => {
