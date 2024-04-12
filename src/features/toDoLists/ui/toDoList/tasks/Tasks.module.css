@@ -1,0 +1,14 @@
+.tasks_list {
+    list-style: none;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.no_tasks {
+    font-size: 18px;
+    text-align: center;
+    text-transform: capitalize;
+    color: darkgreen;
+}

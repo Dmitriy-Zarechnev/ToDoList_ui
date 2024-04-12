@@ -1,29 +1,28 @@
-.to_Do_List__list {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: nowrap;
-  border: 2px solid black;
-  padding: 5px;
-  border-radius: 5px;
+.task__list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    border: 2px solid black;
+    padding: 5px;
+    border-radius: 5px;
 }
 
-.to_Do_List__list:not(:last-child) {
-  margin-bottom: 5px;
+.task__list:not(:last-child) {
+    margin-bottom: 5px;
 }
 
-.to_Do_List__list_box {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  overflow: hidden;
+.task__list_box {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    overflow: hidden;
 }
 
-.to_Do_List__list_box input {
-  margin-right: 5px;
-  /*flex-grow: 1;*/
+.task__list_box input {
+    margin-right: 5px;
 }
 
 .is_done {
-  opacity: 0.5;
+    opacity: 0.5;
 }

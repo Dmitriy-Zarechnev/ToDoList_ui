@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react'
 import {Task} from './Task'
-import {TasksPriorities, TasksStatuses} from '../../../../../../utils/api/enums'
+import {TasksPriorities, TasksStatuses} from "utils/api/enums"
 
 const meta: Meta<typeof Task> = {
     title: 'TODOLISTS/Task',

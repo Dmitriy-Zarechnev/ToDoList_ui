@@ -1,8 +1,8 @@
 import React, {memo} from 'react'
-import S from '../ToDoList.module.css'
+import S from './Tasks.module.css'
 import {Task} from './task/Task'
 import {FilterValuesType} from '../../../model/toDoLists/todolists-reducer'
-import {TasksStatuses} from '../../../../../utils/api/enums'
+import {TasksStatuses} from "utils/api/enums"
 import {tasksSelector} from '../../../model/tasks/tasks-selector'
 import {useSelector} from 'react-redux'
 
@@ -35,7 +35,7 @@ export const Tasks = memo((props: TasksPropsType) => {
 
 
     return (
-        <div className={S.to_Do_List__lists}>
+        <div className={S.tasks_list}>
             {tasksForToDoList.map((el) => {
                 return (
                     <Task
