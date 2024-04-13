@@ -13,7 +13,7 @@ const logIn = createAppAsyncThunk<{
   // 1 - prefix
   "auth/logIn",
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (data, { rejectWithValue }) => {
+  async (data, { dispatch, rejectWithValue }) => {
     // Запрос на logIn
     const logInData = await authAPI.logIn(data);
 
@@ -22,6 +22,11 @@ const logIn = createAppAsyncThunk<{
 
       // Return после ответа от сервера true
       return { isLoggedIn: true };
+    } else if (logInData.resultCode === ResultCode.captcha) {
+
+      // Запрос на получение captcha
+      dispatch(getCaptcha());
+      return { isLoggedIn: false };
     } else {
       // Здесь будет упакована ошибка
       return rejectWithValue(logInData);
@@ -44,6 +49,7 @@ const initializeMe = createAppAsyncThunk<{
     const meData = await authAPI.me();
     // Инициализировали приложение после ответа
     dispatch(appActions.setAppInitialized({ isInitialized: true }));
+
 
     // Если успех
     if (meData.resultCode === ResultCode.success) {
@@ -87,18 +93,40 @@ const logOut = createAppAsyncThunk<{
   }
 );
 
+// ------------- Get captcha -----------------------
+const getCaptcha = createAppAsyncThunk<{
+  captcha: string
+}>(
+  // 1 - prefix
+  "auth/getCaptcha",
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async (_) => {
+
+    // Запрос на getCaptcha
+    const captchaData = await authAPI.getCaptcha();
+
+    return { captcha: captchaData.url };
+  }
+);
+
+
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
   // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
   name: "auth",
   initialState: {
-    isLoggedIn: false as boolean
+    isLoggedIn: false as boolean,
+    captchaUrl: "" as string
   },
   // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
   reducers: {},
   extraReducers: builder => {
     builder
+      .addCase(authThunks.getCaptcha.fulfilled,
+        (state, action) => {
+          state.captchaUrl = action.payload.captcha;
+        })
       .addMatcher(
         isFulfilled(authThunks.logIn, authThunks.logOut, authThunks.initializeMe),
         (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
@@ -111,7 +139,7 @@ const slice = createSlice({
 export const authReducer = slice.reducer;
 
 // Thunks упаковываем в объект
-export const authThunks = { logOut, logIn, initializeMe };
+export const authThunks = { logOut, logIn, initializeMe, getCaptcha };
 
 // Типизация AuthInitialStateType для тестов
 export type AuthInitialStateType = ReturnType<typeof slice.getInitialState>
