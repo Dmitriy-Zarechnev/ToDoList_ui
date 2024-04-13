@@ -17,13 +17,11 @@ export const ErrorSnackbar = () => {
   // Используя useAction получили callbacks в которые уже входит dispatch
   const { setAppStatus, setAppError } = useActions(appActions);
 
-
   // Закрытие Snackbar при кликах
   const handleClose = () => {
     setAppStatus({ status: "idle" });
     setAppError({ error: null });
   };
-
 
   // Snackbar универсальный
   const universalSnackBar = (open: boolean,
