@@ -142,6 +142,7 @@ const deleteTodoLists = createAppAsyncThunk<{
   }
 );
 
+
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
