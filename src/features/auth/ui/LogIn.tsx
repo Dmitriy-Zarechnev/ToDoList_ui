@@ -24,6 +24,7 @@ export const LogIn = () => {
   // Получили formik используя кастомный хук
   const { formik } = useLogIn();
 
+
   // Redirect в случае isLoggedIn === true
   if (isLoggedIn) {
     return <Navigate to={"/"} />;
