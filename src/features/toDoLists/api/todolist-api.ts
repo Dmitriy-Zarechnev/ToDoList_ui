@@ -8,11 +8,13 @@ export type TodolistType = {
     title: string;
 };
 
+
 // ----- Типизация ошибок при запросе ------
 export type FieldErrorType = {
     error: string;
     field: string;
 };
+
 
 // ----- Типизация запросов с generic ------
 export type ResponseType<D = {}> = {
