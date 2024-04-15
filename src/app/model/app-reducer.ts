@@ -39,6 +39,12 @@ const slice = createSlice({
                     if (action.type === authThunks.logOut.fulfilled.type) {
                         // Убрал оповещение при выходе из приложения
                         state.status = 'idle'
+                    } else if (action.type === authThunks.getCaptcha.fulfilled.type) {
+                        // Убрал оповещение при появлении captcha
+                        state.status = 'idle'
+                    } else if (action.type === authThunks.logIn.fulfilled.type) {
+                        // Убрал оповещение при входе
+                        state.status = 'idle'
                     } else {
                         state.status = 'updated'
                     }
