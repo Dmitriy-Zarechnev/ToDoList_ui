@@ -26,6 +26,7 @@ const logIn = createAppAsyncThunk<{
 
             // Запрос на получение captcha
             dispatch(getCaptcha())
+            // выбросили ошибку
             return rejectWithValue(logInData)
         } else {
             // Здесь будет упакована ошибка
