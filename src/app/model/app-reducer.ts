@@ -1,6 +1,7 @@
 import {createSlice, isFulfilled, isPending, isRejected, PayloadAction} from '@reduxjs/toolkit'
 import {authThunks} from "features/auth/model/auth-reducer"
 
+
 // Типы статусов для работы в приложении
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed' | 'updated';
 
@@ -54,7 +55,7 @@ const slice = createSlice({
                     state.status = 'failed'
                     if (action.payload) {
                         // Не показываем ошибку глобально, а только локально в AddItemForm 40 строка
-                        //if (action.type === toDoListsThunks.addTodoListsTC.rejected.type) return
+                        //if (action.type === toDoListsThunks.addTodoLists.rejected.type) return
                         //if (action.type === tasksThunks.addTaskTC.rejected.type) return
 
                         // Показываем ошибку сервера глобально
