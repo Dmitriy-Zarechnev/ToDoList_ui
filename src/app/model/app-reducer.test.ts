@@ -2,6 +2,7 @@ import {appActions, AppInitialStateType, appReducer} from './app-reducer'
 
 let startState: AppInitialStateType
 
+
 beforeEach(() => {
     startState = {
         status: 'idle',
