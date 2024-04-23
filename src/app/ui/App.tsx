@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import S from "./App.module.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import Button from "@mui/material/Button";
@@ -18,13 +18,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useActions } from "utils/hooks/useActions";
 import { ErrorPage } from "components/errorPage/ErrorPage";
 import { appSelectors } from "app/model/app-reducer";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Switch } from "@mui/material";
+import CssBaseline from '@mui/material/CssBaseline'
 
+type ThemeMode = "dark" | "light"
 
 type AppPropsType = {
   demo?: boolean;
 };
 
 function App({ demo = false }: AppPropsType) {
+  // Локальный state для темы
+  const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+
   // Получили status из state используя хук - useSelector и selector - appSelectors
   const status = useSelector(appSelectors.selectAppStatus);
   // Получили isInitialized из state используя хук - useSelector и selector - appSelectors
@@ -53,43 +60,65 @@ function App({ demo = false }: AppPropsType) {
     isLoggedIn ? logOut() : <Navigate to={"/login"} />;
   };
 
+  const changeModeHandler = () => {
+    setThemeMode(themeMode == 'light' ? 'dark' : 'light')
+  }
+
+  // Добавили theme нашему app
+  const theme = createTheme({
+    palette: {
+      mode: themeMode === 'light' ? 'light' : 'dark',
+      primary: {
+        main: "#009688"
+      },
+      secondary: {
+        main: "#ff9100"
+      }
+    }
+  });
+
+
   return (
-    <div className="App">
-      {/*ErrorSnackbar который показываем во время ошибки*/}
-      <ErrorSnackbar />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        {/*ErrorSnackbar который показываем во время ошибки*/}
+        <ErrorSnackbar />
 
-      {/*Header для приложения*/}
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <NavLink to={"/"} className={S.link_to_app}>ToDoList ☢</NavLink>
-          </Typography>
-          <Button color={"warning"}
-                  onClick={onClickHandler}
-                  size="medium"
-                  variant={"contained"}>
-            {isLoggedIn ? "Log Out 📛"
-              : <NavLink to={"/login"} className={S.link_to_login}>Log In</NavLink>}
-          </Button>
-        </Toolbar>
+        {/*Header для приложения*/}
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <NavLink to={"/"} className={S.link_to_app}>ToDoList ☢</NavLink>
+            </Typography>
+            <Button color={"warning"}
+                    onClick={onClickHandler}
+                    size="medium"
+                    variant={"contained"}>
+              {isLoggedIn ? "Log Out 📛"
+                : <NavLink to={"/login"} className={S.link_to_login}>Log In</NavLink>}
+            </Button>
+            <Switch color={'default'} onChange={changeModeHandler} />
+          </Toolbar>
 
-        {/*Preloader который показываем во время связи с сервером*/}
-        {status === "loading" && <LinearProgress />}
-      </AppBar>
+          {/*Preloader который показываем во время связи с сервером*/}
+          {status === "loading" && <LinearProgress />}
+        </AppBar>
 
-      {/*Routes для приложения*/}
-      <Container fixed>
-        <Routes>
-          <Route path={"/"} element={<ToDoLists demo={demo} />} />
-          <Route path={"/login"} element={<LogIn />} />
+        {/*Routes для приложения*/}
+        <Container fixed>
+          <Routes>
+            <Route path={"/"} element={<ToDoLists demo={demo} />} />
+            <Route path={"/login"} element={<LogIn />} />
 
-          <Route path={"/*"} element={<ErrorPage />} />
-        </Routes>
-      </Container>
-    </div>
+            <Route path={"/*"} element={<ErrorPage />} />
+          </Routes>
+        </Container>
+      </div>
+    </ThemeProvider>
   );
 }
 
