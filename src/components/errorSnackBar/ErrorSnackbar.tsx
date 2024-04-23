@@ -2,17 +2,16 @@ import React from "react";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
-import { appErrorSelector, appStatusSelector } from "app/model/app-selector";
 import { useActions } from "utils/hooks/useActions";
-import { appActions } from "app/model/app-reducer";
+import { appActions, appSelectors } from "app/model/app-reducer";
 
 
 export const ErrorSnackbar = () => {
-  // Получили error из state используя хук - useSelector и selector - appErrorSelector
-  const error = useSelector(appErrorSelector);
+  // Получили error из state используя хук - useSelector и selector - appSelectors
+  const error = useSelector(appSelectors.selectAppError);
 
-  // Получили status из state используя хук - useSelector и selector - appStatusSelector
-  const status = useSelector(appStatusSelector);
+  // Получили status из state используя хук - useSelector и selector - appSelectors
+  const status = useSelector(appSelectors.selectAppStatus);
 
   // Используя useAction получили callbacks в которые уже входит dispatch
   const { setAppStatus, setAppError } = useActions(appActions);

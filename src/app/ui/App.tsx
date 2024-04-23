@@ -9,7 +9,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { useSelector } from "react-redux";
 import LinearProgress from "@mui/material/LinearProgress";
-import { appStatusSelector } from "app/model/app-selector";
 import { ErrorSnackbar } from "components/errorSnackBar/ErrorSnackbar";
 import { Navigate, NavLink, Route, Routes } from "react-router-dom";
 import { LogIn } from "features/auth/ui/LogIn";
@@ -26,8 +25,8 @@ type AppPropsType = {
 };
 
 function App({ demo = false }: AppPropsType) {
-  // Получили status из state используя хук - useSelector и selector - appStatusSelector
-  const status = useSelector(appStatusSelector);
+  // Получили status из state используя хук - useSelector и selector - appSelectors
+  const status = useSelector(appSelectors.selectAppStatus);
   // Получили isInitialized из state используя хук - useSelector и selector - appSelectors
   const isInitialized = useSelector(appSelectors.selectAppIsInitialized);
   // Получили isLoggedIn из state используя хук - useSelector и selector - authSelectors
