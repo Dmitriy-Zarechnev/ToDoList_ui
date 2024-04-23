@@ -302,6 +302,10 @@ const slice = createSlice({
             tasks[index].title = action.payload.title;
           }
         });
+  },
+  // Selectors
+  selectors: {
+    selectTasks: (sliceState) => sliceState
   }
 });
 
@@ -313,4 +317,7 @@ export const tasksReducer = slice.reducer;
 export const tasksActions = slice.actions;
 // Thunks упаковываем в объект
 export const tasksThunks = { getTasks, addTask, deleteTask, updateTaskStatus, updateTaskTitle };
+
+// Упаковали все selectors в один объект
+export const tasksSelectors = slice.selectors;
 

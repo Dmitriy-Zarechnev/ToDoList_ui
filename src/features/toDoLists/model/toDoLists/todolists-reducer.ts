@@ -209,6 +209,9 @@ const slice = createSlice({
             state.splice(index, 1);
           }
         });
+  },
+  selectors: {
+    selectToDoLists: (sliceState) => sliceState
   }
 });
 
@@ -221,3 +224,6 @@ export const toDoListsActions = slice.actions;
 
 // Thunks упаковываем в объект
 export const toDoListsThunks = { deleteTodoLists, addTodoLists, updateTodoLists, getTodoLists };
+
+// Упаковали все selectors в один объект
+export const toDoListsSelectors = slice.selectors;
