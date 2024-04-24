@@ -14,213 +14,6 @@ export type TasksInitialStateType = {
 };
 
 
-// *********** Thunk - необходимые для общения с DAL ****************
-// ------------- Получение tasks с сервера -----------------------
-const getTasks = createAppAsyncThunk<{
-  toDoListID: string, tasks: TasksType[]
-}, string>(
-  // 1 - prefix
-  "tasks/getTasks",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (toDoListID, _) => {
-
-    // Запрос на получение tasks с сервера
-    const getTasksData = await tasksAPI.getTasks(toDoListID);
-
-
-    // return ответ от сервера
-    return { toDoListID, tasks: getTasksData.items };
-  }
-);
-
-
-// ------------- Добавление task -----------------------
-const addTask = createAppAsyncThunk<{
-  task: TaskWithEntityType
-}, { toDoListID: string, title: string }>(
-  // 1 - prefix
-  "tasks/addTask",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, title }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
-
-    // Отключаем кнопку во время запроса
-    dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "loading" }));
-
-    // Запрос на добавление task
-    const addTaskData = await tasksAPI.createTask(toDoListID, title);
-
-    // Если успех
-    if (addTaskData.resultCode === ResultCode.success) {
-
-      // Включаем кнопку после успешного ответа
-      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
-      // Return ответ от сервера и прибавили entityTaskStatus
-      return { task: { ...addTaskData.data.item, entityTaskStatus: "idle" } };
-    } else {
-
-      // Включаем кнопку после провала
-      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
-      // Здесь будет упакована ошибка
-      return rejectWithValue(addTaskData);
-    }
-  }
-);
-
-
-// ------------- Удаление task -----------------------
-const deleteTask = createAppAsyncThunk<{
-  toDoListID: string, taskId: string
-}, { toDoListID: string, taskId: string }>(
-  // 1 - prefix
-  "tasks/deleteTask",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, taskId }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
-
-    // Отключаем кнопку во время запроса
-    dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
-
-    // Запрос на удаление task
-    const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId);
-
-    // Если успех
-    if (deleteTaskData.resultCode === ResultCode.success) {
-
-      // Включили после успеха
-      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
-
-      // Return после ответа от сервера и удалили task
-      return { toDoListID, taskId };
-    } else {
-
-      // Включили после провала
-      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
-      // Здесь будет упакована ошибка
-      return rejectWithValue(deleteTaskData);
-    }
-  }
-);
-
-
-// ------------- Изменение task's status -----------------------
-const updateTaskStatus = createAppAsyncThunk<{
-  toDoListID: string, taskId: string, status: TasksStatuses
-}, { toDoListID: string, taskId: string, status: TasksStatuses }>(
-  // 1 - prefix
-  "tasks/updateTaskStatus",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, taskId, status }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue, getState } = thunkAPI;
-
-    // Получили все tasks из state
-    const allTasksFromState = getState().tasks;
-
-    // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
-    const task = allTasksFromState[toDoListID].find((t) => {
-      return t.id === taskId;
-    });
-
-    // Проверка, т.к find может вернуть undefined
-    if (task) {
-      // Отключаем кнопку во время запроса
-      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
-
-
-      // Запрос на изменение task's status
-      const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
-        title: task.title,
-        startDate: task.startDate,
-        priority: task.priority,
-        description: task.description,
-        deadline: task.deadline,
-        status: status
-      });
-
-      // Если успех
-      if (updateTaskData.resultCode === ResultCode.success) {
-
-
-        // Включили после успеха
-        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
-
-        // Dispatch после ответа от сервера и поменяли status
-        return { toDoListID, taskId, status };
-      } else {
-
-        // Включили после провала
-        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
-        // Здесь будет упакована ошибка
-        return rejectWithValue(updateTaskData);
-      }
-    }
-    // Здесь будет упакована ошибка
-    return rejectWithValue(null);
-  }
-);
-
-
-// ------------- Изменение tasks title -----------------------
-const updateTaskTitle = createAppAsyncThunk<{
-  toDoListID: string, taskId: string, title: string
-}, { toDoListID: string, taskId: string, title: string }>(
-  // 1 - prefix
-  "tasks/updateTaskTitle",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, taskId, title }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue, getState } = thunkAPI;
-
-    // Получили все tasks из state
-    const allTasksFromState = getState().tasks;
-
-    // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
-    const task = allTasksFromState[toDoListID].find((t) => {
-      return t.id === taskId;
-    });
-
-    // Проверка, т.к find может вернуть undefined
-    if (task) {
-
-      // Отключаем кнопку во время запроса
-      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
-
-
-      // Запрос на изменение task's title
-      const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
-        title: title,
-        startDate: task.startDate,
-        priority: task.priority,
-        description: task.description,
-        deadline: task.deadline,
-        status: task.status
-      });
-
-      // Если успех
-      if (updateTaskData.resultCode === ResultCode.success) {
-
-        // Включили после успеха
-        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
-
-        // Return после ответа и поменяли title
-        return { toDoListID, taskId, title };
-      } else {
-
-        // Включили после провала
-        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
-        // Здесь будет упакована ошибка
-        return rejectWithValue(updateTaskData);
-      }
-    }
-    // Здесь будет упакована ошибка
-    return rejectWithValue(null);
-  }
-);
-
-
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -308,6 +101,213 @@ const slice = createSlice({
     selectTasks: (sliceState) => sliceState
   }
 });
+
+
+// *********** Thunk - необходимые для общения с DAL ****************
+// ------------- Получение tasks с сервера -----------------------
+const getTasks = createAppAsyncThunk<{
+  toDoListID: string, tasks: TasksType[]
+}, string>(
+  // 1 - prefix
+  `${slice.name}/getTasks`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async (toDoListID, _) => {
+
+    // Запрос на получение tasks с сервера
+    const getTasksData = await tasksAPI.getTasks(toDoListID);
+
+
+    // return ответ от сервера
+    return { toDoListID, tasks: getTasksData.items };
+  }
+);
+
+
+// ------------- Добавление task -----------------------
+const addTask = createAppAsyncThunk<{
+  task: TaskWithEntityType
+}, { toDoListID: string, title: string }>(
+  // 1 - prefix
+  `${slice.name}/addTask`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, title }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    // Отключаем кнопку во время запроса
+    dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "loading" }));
+
+    // Запрос на добавление task
+    const addTaskData = await tasksAPI.createTask(toDoListID, title);
+
+    // Если успех
+    if (addTaskData.resultCode === ResultCode.success) {
+
+      // Включаем кнопку после успешного ответа
+      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
+      // Return ответ от сервера и прибавили entityTaskStatus
+      return { task: { ...addTaskData.data.item, entityTaskStatus: "idle" } };
+    } else {
+
+      // Включаем кнопку после провала
+      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
+      // Здесь будет упакована ошибка
+      return rejectWithValue(addTaskData);
+    }
+  }
+);
+
+
+// ------------- Удаление task -----------------------
+const deleteTask = createAppAsyncThunk<{
+  toDoListID: string, taskId: string
+}, { toDoListID: string, taskId: string }>(
+  // 1 - prefix
+  `${slice.name}/deleteTask`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, taskId }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    // Отключаем кнопку во время запроса
+    dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
+
+    // Запрос на удаление task
+    const deleteTaskData = await tasksAPI.deleteTask(toDoListID, taskId);
+
+    // Если успех
+    if (deleteTaskData.resultCode === ResultCode.success) {
+
+      // Включили после успеха
+      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
+
+      // Return после ответа от сервера и удалили task
+      return { toDoListID, taskId };
+    } else {
+
+      // Включили после провала
+      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
+      // Здесь будет упакована ошибка
+      return rejectWithValue(deleteTaskData);
+    }
+  }
+);
+
+
+// ------------- Изменение task's status -----------------------
+const updateTaskStatus = createAppAsyncThunk<{
+  toDoListID: string, taskId: string, status: TasksStatuses
+}, { toDoListID: string, taskId: string, status: TasksStatuses }>(
+  // 1 - prefix
+  `${slice.name}/updateTaskStatus`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, taskId, status }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue, getState } = thunkAPI;
+
+    // Получили все tasks из state
+    const allTasksFromState = getState().tasks;
+
+    // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
+    const task = allTasksFromState[toDoListID].find((t) => {
+      return t.id === taskId;
+    });
+
+    // Проверка, т.к find может вернуть undefined
+    if (task) {
+      // Отключаем кнопку во время запроса
+      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
+
+
+      // Запрос на изменение task's status
+      const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
+        title: task.title,
+        startDate: task.startDate,
+        priority: task.priority,
+        description: task.description,
+        deadline: task.deadline,
+        status: status
+      });
+
+      // Если успех
+      if (updateTaskData.resultCode === ResultCode.success) {
+
+
+        // Включили после успеха
+        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
+
+        // Dispatch после ответа от сервера и поменяли status
+        return { toDoListID, taskId, status };
+      } else {
+
+        // Включили после провала
+        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
+        // Здесь будет упакована ошибка
+        return rejectWithValue(updateTaskData);
+      }
+    }
+    // Здесь будет упакована ошибка
+    return rejectWithValue(null);
+  }
+);
+
+
+// ------------- Изменение tasks title -----------------------
+const updateTaskTitle = createAppAsyncThunk<{
+  toDoListID: string, taskId: string, title: string
+}, { toDoListID: string, taskId: string, title: string }>(
+  // 1 - prefix
+  `${slice.name}/updateTaskTitle`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, taskId, title }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue, getState } = thunkAPI;
+
+    // Получили все tasks из state
+    const allTasksFromState = getState().tasks;
+
+    // Нашли нужные tasks по todolistId, а затем используя taskId нужную task
+    const task = allTasksFromState[toDoListID].find((t) => {
+      return t.id === taskId;
+    });
+
+    // Проверка, т.к find может вернуть undefined
+    if (task) {
+
+      // Отключаем кнопку во время запроса
+      dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "loading" }));
+
+
+      // Запрос на изменение task's title
+      const updateTaskData = await tasksAPI.updateTask(toDoListID, taskId, {
+        title: title,
+        startDate: task.startDate,
+        priority: task.priority,
+        description: task.description,
+        deadline: task.deadline,
+        status: task.status
+      });
+
+      // Если успех
+      if (updateTaskData.resultCode === ResultCode.success) {
+
+        // Включили после успеха
+        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "idle" }));
+
+        // Return после ответа и поменяли title
+        return { toDoListID, taskId, title };
+      } else {
+
+        // Включили после провала
+        dispatch(tasksActions.changeTaskEntityStatus({ toDoListID, taskId, entityTaskStatus: "failed" }));
+        // Здесь будет упакована ошибка
+        return rejectWithValue(updateTaskData);
+      }
+    }
+    // Здесь будет упакована ошибка
+    return rejectWithValue(null);
+  }
+);
 
 
 // Создаем tasksReducer с помощью slice

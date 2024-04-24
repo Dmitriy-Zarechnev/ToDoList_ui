@@ -5,13 +5,43 @@ import { ResultCode } from "utils/api/enums";
 import { appActions } from "app/model/app-reducer";
 
 
+// *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
+// slice - reducer создаем с помощью функции createSlice
+const slice = createSlice({
+  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
+  name: "auth",
+  initialState: {
+    isLoggedIn: false as boolean,
+    captchaUrl: "" as string
+  },
+  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
+  reducers: {},
+  extraReducers: builder => {
+    builder
+      .addCase(authThunks.getCaptcha.fulfilled,
+        (state, action) => {
+          state.captchaUrl = action.payload.captcha;
+        })
+      .addMatcher(
+        isFulfilled(authThunks.logIn, authThunks.logOut, authThunks.initializeMe),
+        (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+          state.isLoggedIn = action.payload.isLoggedIn;
+        });
+  },
+  selectors: {
+    selectIsLoggedIn: (sliceState) => sliceState.isLoggedIn,
+    selectCaptchaUrl: (sliceState) => sliceState.captchaUrl
+  }
+});
+
+
 // *********** Thunk - необходимы для общения с DAL ****************
 // ------------- LogIn на сервере -----------------------
 const logIn = createAppAsyncThunk<{
   isLoggedIn: boolean
 }, LoginParamsType>(
   // 1 - prefix
-  "auth/logIn",
+  `${slice.name}/logIn`,
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (data, { dispatch, rejectWithValue }) => {
     // Запрос на logIn
@@ -40,7 +70,7 @@ const initializeMe = createAppAsyncThunk<{
   isLoggedIn: boolean
 }>(
   // 1 - prefix
-  "auth/initializeMe",
+  `${slice.name}/initializeMe`,
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (_, thunkAPI) => {
     // 3 - деструктурируем параметры
@@ -69,7 +99,7 @@ const logOut = createAppAsyncThunk<{
   isLoggedIn: boolean
 }>(
   // 1 - prefix
-  "auth/logOut",
+  `${slice.name}/logOut`,
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (_, thunkAPI) => {
     // 3 - деструктурируем параметры
@@ -99,7 +129,7 @@ const getCaptcha = createAppAsyncThunk<{
   captcha: string
 }>(
   // 1 - prefix
-  "auth/getCaptcha",
+  `${slice.name}/getCaptcha`,
   // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
   async (_) => {
 
@@ -110,35 +140,6 @@ const getCaptcha = createAppAsyncThunk<{
   }
 );
 
-
-// *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
-// slice - reducer создаем с помощью функции createSlice
-const slice = createSlice({
-  // важно чтобы не дублировалось, будет в качестве приставки согласно соглашению redux ducks 🦆
-  name: "auth",
-  initialState: {
-    isLoggedIn: false as boolean,
-    captchaUrl: "" as string
-  },
-  // sub-reducers, каждый из которых эквивалентен одному оператору case в switch, как мы делали раньше (обычный redux)
-  reducers: {},
-  extraReducers: builder => {
-    builder
-      .addCase(authThunks.getCaptcha.fulfilled,
-        (state, action) => {
-          state.captchaUrl = action.payload.captcha;
-        })
-      .addMatcher(
-        isFulfilled(authThunks.logIn, authThunks.logOut, authThunks.initializeMe),
-        (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-          state.isLoggedIn = action.payload.isLoggedIn;
-        });
-  },
-  selectors: {
-    selectIsLoggedIn: (sliceState) => sliceState.isLoggedIn,
-    selectCaptchaUrl: (sliceState) => sliceState.captchaUrl
-  }
-});
 
 // Создаем authReducer с помощью slice
 export const authReducer = slice.reducer;

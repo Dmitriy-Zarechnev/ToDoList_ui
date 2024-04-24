@@ -22,127 +22,6 @@ export const createAppAsyncThunk = createAsyncThunk.withTypes<{
 }>();
 
 
-// *********** Thunk - необходимые для общения с DAL ****************
-// ------------- Получение todolist с сервера -----------------------
-const getTodoLists = createAppAsyncThunk<{
-  toDoLists: TodolistType[]
-}>(
-  // 1 - prefix
-  "toDoLists/getTodoLists",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async () => {
-
-    // Запрос на получение todolist с сервера
-    const getTodoListsData = await todolistAPI.getTodolists();
-
-    // Return ответ от сервера
-    return { toDoLists: getTodoListsData };
-  }
-);
-
-
-// ------------- Изменение toDoList's title -----------------------
-const updateTodoLists = createAppAsyncThunk<{
-  toDoListID: string, title: string
-}, { toDoListID: string, title: string }>(
-  // 1 - prefix
-  "toDoLists/updateTodoLists",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async ({ toDoListID, title }, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { rejectWithValue, getState } = thunkAPI;
-
-    // Получили все toDoLists из state
-    const allTodoListsFromState = getState().toDoLists;
-
-    // Нашли нужный todolist по todolistId
-    const toDoList = allTodoListsFromState.find((t) => {
-      return t.id === toDoListID;
-    });
-
-    // Проверка, т.к find может вернуть undefined
-    if (toDoList) {
-
-      // Запрос на изменение toDoList's title
-      const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title);
-
-      // Если успех
-      if (updateTodolistData.resultCode === ResultCode.success) {
-
-        // return после ответа от сервера и поменяли title
-        return { toDoListID, title };
-      } else {
-
-        // Здесь будет упакована ошибка
-        return rejectWithValue(updateTodolistData);
-      }
-    }
-    // Здесь будет упакована ошибка
-    return rejectWithValue(null);
-  }
-);
-
-
-// ------------- Добавление нового todolist -----------------------
-const addTodoLists = createAppAsyncThunk<{
-  title: string, toDoListID: string
-}, string>(
-  // 1 - prefix
-  "toDoLists/addTodoLists",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (title, { rejectWithValue }) => {
-
-    // Запрос на добавление todolist
-    const addTodoListsData = await todolistAPI.createTodolist(title);
-
-    // Если успех
-    if (addTodoListsData.resultCode === ResultCode.success) {
-
-      // return ответ от сервера
-      return { title, toDoListID: addTodoListsData.data.item.id };
-    } else {
-
-      // Здесь будет упакована ошибка
-      return rejectWithValue(addTodoListsData);
-    }
-  }
-);
-
-
-// ------------- Удаление todolist -----------------------
-const deleteTodoLists = createAppAsyncThunk<{
-  toDoListID: string
-}, string>(
-  // 1 - prefix
-  "toDoLists/deleteTodoLists",
-  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
-  async (toDoListID, thunkAPI) => {
-    // 3 - деструктурируем параметры
-    const { dispatch, rejectWithValue } = thunkAPI;
-
-    // Отключаем кнопку во время запроса
-    dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "loading" }));
-    // Запрос на удаление todolist
-    const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID);
-
-    // Если успех
-    if (deleteTodolistData.resultCode === ResultCode.success) {
-      // Включаем кнопку после успешного ответа
-      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
-
-      // return после ответа от сервера и удалили todolist
-      return { toDoListID };
-    } else {
-
-      // Включаем кнопку после ответа
-      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "failed" }));
-      // Здесь будет упакована ошибка
-      return rejectWithValue(deleteTodolistData);
-    }
-  }
-);
-
-
 // *********** Reducer - чистая функция для изменения state после получения action от dispatch ****************
 // slice - reducer создаем с помощью функции createSlice
 const slice = createSlice({
@@ -214,6 +93,127 @@ const slice = createSlice({
     selectToDoLists: (sliceState) => sliceState
   }
 });
+
+
+// *********** Thunk - необходимые для общения с DAL ****************
+// ------------- Получение todolist с сервера -----------------------
+const getTodoLists = createAppAsyncThunk<{
+  toDoLists: TodolistType[]
+}>(
+  // 1 - prefix
+  `${slice.name}/getTodoLists`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async () => {
+
+    // Запрос на получение todolist с сервера
+    const getTodoListsData = await todolistAPI.getTodolists();
+
+    // Return ответ от сервера
+    return { toDoLists: getTodoListsData };
+  }
+);
+
+
+// ------------- Изменение toDoList's title -----------------------
+const updateTodoLists = createAppAsyncThunk<{
+  toDoListID: string, title: string
+}, { toDoListID: string, title: string }>(
+  // 1 - prefix
+  `${slice.name}/updateTodoLists`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async ({ toDoListID, title }, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { rejectWithValue, getState } = thunkAPI;
+
+    // Получили все toDoLists из state
+    const allTodoListsFromState = getState().toDoLists;
+
+    // Нашли нужный todolist по todolistId
+    const toDoList = allTodoListsFromState.find((t) => {
+      return t.id === toDoListID;
+    });
+
+    // Проверка, т.к find может вернуть undefined
+    if (toDoList) {
+
+      // Запрос на изменение toDoList's title
+      const updateTodolistData = await todolistAPI.updateTodolist(toDoListID, title);
+
+      // Если успех
+      if (updateTodolistData.resultCode === ResultCode.success) {
+
+        // return после ответа от сервера и поменяли title
+        return { toDoListID, title };
+      } else {
+
+        // Здесь будет упакована ошибка
+        return rejectWithValue(updateTodolistData);
+      }
+    }
+    // Здесь будет упакована ошибка
+    return rejectWithValue(null);
+  }
+);
+
+
+// ------------- Добавление нового todolist -----------------------
+const addTodoLists = createAppAsyncThunk<{
+  title: string, toDoListID: string
+}, string>(
+  // 1 - prefix
+  `${slice.name}/addTodoLists`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async (title, { rejectWithValue }) => {
+
+    // Запрос на добавление todolist
+    const addTodoListsData = await todolistAPI.createTodolist(title);
+
+    // Если успех
+    if (addTodoListsData.resultCode === ResultCode.success) {
+
+      // return ответ от сервера
+      return { title, toDoListID: addTodoListsData.data.item.id };
+    } else {
+
+      // Здесь будет упакована ошибка
+      return rejectWithValue(addTodoListsData);
+    }
+  }
+);
+
+
+// ------------- Удаление todolist -----------------------
+const deleteTodoLists = createAppAsyncThunk<{
+  toDoListID: string
+}, string>(
+  // 1 - prefix
+  `${slice.name}/deleteTodoLists`,
+  // 2 - Первый параметр - параметры санки, Второй параметр - thunkAPI
+  async (toDoListID, thunkAPI) => {
+    // 3 - деструктурируем параметры
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    // Отключаем кнопку во время запроса
+    dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "loading" }));
+    // Запрос на удаление todolist
+    const deleteTodolistData = await todolistAPI.deleteTodolist(toDoListID);
+
+    // Если успех
+    if (deleteTodolistData.resultCode === ResultCode.success) {
+      // Включаем кнопку после успешного ответа
+      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "idle" }));
+
+      // return после ответа от сервера и удалили todolist
+      return { toDoListID };
+    } else {
+
+      // Включаем кнопку после ответа
+      dispatch(toDoListsActions.changeTodolistEntityStatus({ toDoListID, entityStatus: "failed" }));
+      // Здесь будет упакована ошибка
+      return rejectWithValue(deleteTodolistData);
+    }
+  }
+);
 
 
 // Создаем toDoListsReducer с помощью slice
