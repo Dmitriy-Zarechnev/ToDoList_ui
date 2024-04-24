@@ -1,7 +1,7 @@
 import {TasksInitialStateType, tasksReducer} from './tasks/tasks-reducer'
 import { ToDoListDomainType, toDoListsActions, toDoListsReducer, toDoListsThunks } from "./toDoLists/todolists-reducer";
 import {v1} from 'uuid'
-import {TasksPriorities, TasksStatuses} from 'utils/api/enums'
+import {TasksPriorities, TasksStatuses} from 'common/api/enums'
 
 
 test('ids should be equals', () => {

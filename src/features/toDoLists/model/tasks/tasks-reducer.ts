@@ -2,7 +2,7 @@ import { createAppAsyncThunk, toDoListsActions, toDoListsThunks } from "../toDoL
 import { tasksAPI, TasksType } from "features/toDoLists/api/tasks-api";
 import { RequestStatusType } from "app/model/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ResultCode, TasksStatuses } from "utils/api/enums";
+import { ResultCode, TasksStatuses } from "common/api/enums";
 
 
 // Типизация TaskWithEntityType

@@ -1,4 +1,4 @@
-@import "../../utils/ColorVar.module.css";
+@import "../../common/utils/ColorVar.module.css";
 
 .link_to_app {
     text-decoration: none;

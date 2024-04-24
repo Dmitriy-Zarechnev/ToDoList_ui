@@ -1,12 +1,12 @@
 import React, { memo, useCallback, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { AddItemForm } from "components/addItemForm/AddItemForm";
+import { AddItemForm } from "common/components/addItemForm/AddItemForm";
 import Paper from "@mui/material/Paper";
 import { ToDoList } from "./ui/toDoList/ToDoList";
 import { toDoListsSelectors, toDoListsThunks } from "features/toDoLists/model/toDoLists/todolists-reducer";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { useActions } from "utils/hooks/useActions";
+import { useActions } from "common/hooks/useActions";
 import { authSelectors } from "features/auth/model/auth-reducer";
 
 

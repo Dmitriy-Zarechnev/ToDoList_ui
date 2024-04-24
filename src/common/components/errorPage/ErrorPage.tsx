@@ -1,6 +1,6 @@
 import React from 'react'
-import img from './404.png'
-import S from './ErrorPage.module.css'
+import img from 'common/components/errorPage/404.png'
+import S from 'common/components/errorPage/ErrorPage.module.css'
 
 export const ErrorPage = () => {
     return (

@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import S from "./LogIn.module.css";
-import { useLogIn } from "utils/hooks/useLogIn";
+import { useLogIn } from "common/hooks/useLogIn";
 import { authSelectors } from "features/auth/model/auth-reducer";
 
 

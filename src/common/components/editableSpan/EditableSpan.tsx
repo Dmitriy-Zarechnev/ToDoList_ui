@@ -1,5 +1,5 @@
 import React, {ChangeEvent, memo, useCallback, useState} from 'react'
-import S from '../../features/toDoLists/ui/toDoList/ToDoList.module.css'
+import S from 'features/toDoLists/ui/toDoList/ToDoList.module.css'
 import TextField from '@mui/material/TextField'
 import {RequestStatusType} from 'app/model/app-reducer'
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { LogIn } from "./LogIn";
-import { HashRouterDecorator, ReduxStoreProviderDecorator } from "../../../stories/decorators/ReduxStoreProviderDecorator";
+import { HashRouterDecorator, ReduxStoreProviderDecorator } from "common/stories/decorators/ReduxStoreProviderDecorator";
 
 const meta: Meta<typeof LogIn> = {
   title: "TODOLISTS/LogIn",

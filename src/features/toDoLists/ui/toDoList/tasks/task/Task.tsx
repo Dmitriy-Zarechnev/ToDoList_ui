@@ -1,13 +1,13 @@
 import React, { ChangeEvent, FC, memo } from "react";
 import S from "./Task.module.css";
 import Checkbox from "@mui/material/Checkbox";
-import { EditableSpan } from "components/editableSpan/EditableSpan";
+import { EditableSpan } from "common/components/editableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TasksType } from "features/toDoLists/api/tasks-api";
 import { RequestStatusType } from "app/model/app-reducer";
-import { TasksStatuses } from "utils/api/enums";
-import { useActions } from "utils/hooks/useActions";
+import { TasksStatuses } from "common/api/enums";
+import { useActions } from "common/hooks/useActions";
 import { tasksThunks } from "../../../../model/tasks/tasks-reducer";
 
 type TaskPropsType = {

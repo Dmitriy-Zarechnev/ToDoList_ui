@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, memo,  useState} from 'react'
-import S from './AddItemForm.module.css'
+import S from 'common/components/addItemForm/AddItemForm.module.css'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import {RequestStatusType} from 'app/model/app-reducer'

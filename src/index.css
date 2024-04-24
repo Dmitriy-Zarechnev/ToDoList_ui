@@ -1,4 +1,4 @@
-@import "utils/ColorVar.module.css";
+@import "common/utils/ColorVar.module.css";
 
 *,
 *::before,
@@ -28,7 +28,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px var(--main-bg-color) inset !important;
+  /*-webkit-box-shadow: 0 0 0 30px var(--main-bg-color) inset !important;*/
   /* color: ${theme.colors.accent};*/
 }
 

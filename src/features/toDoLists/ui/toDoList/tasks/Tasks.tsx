@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import S from "./Tasks.module.css";
 import { Task } from "./task/Task";
 import { FilterValuesType } from "../../../model/toDoLists/todolists-reducer";
-import { TasksStatuses } from "utils/api/enums";
+import { TasksStatuses } from "common/api/enums";
 import { useSelector } from "react-redux";
 import { tasksSelectors } from "features/toDoLists/model/tasks/tasks-reducer";
 

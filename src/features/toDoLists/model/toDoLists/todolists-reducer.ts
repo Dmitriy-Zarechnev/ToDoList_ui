@@ -2,7 +2,7 @@ import { AppDispatch, AppRootStateType } from "app/model/store";
 import { ResponseType, todolistAPI, TodolistType } from "features/toDoLists/api/todolist-api";
 import { RequestStatusType } from "app/model/app-reducer";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ResultCode } from "utils/api/enums";
+import { ResultCode } from "common/api/enums";
 
 
 // Типизация Filters

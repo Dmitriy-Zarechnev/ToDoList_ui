@@ -1,7 +1,7 @@
 import { authAPI, LoginParamsType } from "features/auth/api/auth-api";
 import { createAppAsyncThunk, toDoListsActions } from "../../toDoLists/model/toDoLists/todolists-reducer";
 import { createSlice, isFulfilled, PayloadAction } from "@reduxjs/toolkit";
-import { ResultCode } from "utils/api/enums";
+import { ResultCode } from "common/api/enums";
 import { appActions } from "app/model/app-reducer";
 
 

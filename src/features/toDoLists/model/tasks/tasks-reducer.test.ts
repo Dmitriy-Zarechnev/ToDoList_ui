@@ -2,7 +2,7 @@ import {
   tasksActions,
   TasksInitialStateType, tasksReducer, tasksThunks
 } from "./tasks-reducer";
-import { TasksPriorities, TasksStatuses } from "utils/api/enums";
+import { TasksPriorities, TasksStatuses } from "common/api/enums";
 import { toDoListsThunks } from "features/toDoLists/model/toDoLists/todolists-reducer";
 
 let startState: TasksInitialStateType;
@@ -294,7 +294,8 @@ test("new array should be added when new todolist is set", () => {
 
 
 test("tasks should be set from API ", () => {
-  const endState = tasksReducer(
+
+    const endState = tasksReducer(
     startState,
     tasksThunks.getTasks.fulfilled({
       toDoListID: "todolistId1", tasks: [
@@ -325,6 +326,7 @@ test("tasks should be set from API ", () => {
       ]
     }, "requestId", "todolistId1")
   );
+
 
   expect(endState["todolistId1"].length).toBe(2);
 });

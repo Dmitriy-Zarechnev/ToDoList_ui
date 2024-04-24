@@ -1,10 +1,10 @@
 import React, {memo, useCallback} from 'react'
 import S from './ToDoListTitle.module.css'
-import {EditableSpan} from "components/editableSpan/EditableSpan"
+import {EditableSpan} from "common/components/editableSpan/EditableSpan"
 import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {RequestStatusType} from "app/model/app-reducer"
-import {useActions} from "utils/hooks/useActions"
+import {useActions} from "common/hooks/useActions"
 import {toDoListsThunks} from '../../../model/toDoLists/todolists-reducer'
 
 type ToDoListTitlePropsType = {
