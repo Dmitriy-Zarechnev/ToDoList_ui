@@ -60,9 +60,11 @@ function App({ demo = false }: AppPropsType) {
     isLoggedIn ? logOut() : <Navigate to={"/login"} />;
   };
 
+
   const changeModeHandler = () => {
     setThemeMode(themeMode == 'light' ? 'dark' : 'light')
   }
+
 
   // Добавили theme нашему app
   const theme = createTheme({
