@@ -76,6 +76,7 @@ const initializeMe = createAppAsyncThunk<{
     // 3 - деструктурируем параметры
     const { dispatch, rejectWithValue } = thunkAPI;
 
+
     // Запрос на проверку
     const meData = await authAPI.me();
     // Инициализировали приложение после ответа
