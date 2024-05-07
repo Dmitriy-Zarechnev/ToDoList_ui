@@ -20,15 +20,12 @@ import { ErrorPage } from "common/components/errorPage/ErrorPage";
 import { appSelectors } from "app/model/app-reducer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Switch } from "@mui/material";
-import CssBaseline from '@mui/material/CssBaseline'
+import CssBaseline from "@mui/material/CssBaseline";
 
 type ThemeMode = "dark" | "light"
 
-type AppPropsType = {
-  demo?: boolean;
-};
 
-function App({ demo = false }: AppPropsType) {
+function App() {
   // Локальный state для темы
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
 
@@ -43,7 +40,7 @@ function App({ demo = false }: AppPropsType) {
   const { initializeMe, logOut } = useActions(authThunks);
 
   useEffect(() => {
-    if (!demo) initializeMe();
+    if (!isInitialized) initializeMe();
   }, []);
 
   // Крутилка во время инициализации
@@ -62,14 +59,14 @@ function App({ demo = false }: AppPropsType) {
 
 
   const changeModeHandler = () => {
-    setThemeMode(themeMode == 'light' ? 'dark' : 'light')
-  }
+    setThemeMode(themeMode == "light" ? "dark" : "light");
+  };
 
 
   // Добавили theme нашему app
   const theme = createTheme({
     palette: {
-      mode: themeMode === 'light' ? 'light' : 'dark',
+      mode: themeMode === "light" ? "light" : "dark",
       primary: {
         main: "#009688"
       },
@@ -103,7 +100,7 @@ function App({ demo = false }: AppPropsType) {
               {isLoggedIn ? "Log Out 📛"
                 : <NavLink to={"/login"} className={S.link_to_login}>Log In</NavLink>}
             </Button>
-            <Switch color={'default'} onChange={changeModeHandler} />
+            <Switch color={"default"} onChange={changeModeHandler} />
           </Toolbar>
 
           {/*Preloader который показываем во время связи с сервером*/}
@@ -113,7 +110,7 @@ function App({ demo = false }: AppPropsType) {
         {/*Routes для приложения*/}
         <Container fixed>
           <Routes>
-            <Route path={"/"} element={<ToDoLists demo={demo} />} />
+            <Route path={"/"} element={<ToDoLists demo={false} />} />
             <Route path={"/login"} element={<LogIn />} />
 
             <Route path={"/*"} element={<ErrorPage />} />

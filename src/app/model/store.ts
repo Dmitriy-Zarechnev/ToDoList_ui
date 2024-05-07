@@ -1,23 +1,21 @@
-import { tasksReducer } from "features/toDoLists/model/tasks/tasks-reducer";
-import { toDoListsReducer } from "features/toDoLists/model/toDoLists/todolists-reducer";
 import { thunk } from "redux-thunk";
 import { useDispatch } from "react-redux";
-import { appReducer } from "./app-reducer";
-import { authReducer } from "features/auth/model/auth-reducer";
 import { configureStore } from "@reduxjs/toolkit";
+import { rootReducer } from "app/model/reducers";
 
 
 /* Создали RTK store */
 export const store = configureStore({
-  reducer: {
-    tasks: tasksReducer,
-    toDoLists: toDoListsReducer,
-    app: appReducer,
-    auth: authReducer
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk)
 });
 
+// Hot Replacement
+if (process.env.NODE_ENV === "development" && module.hot) {
+  module.hot.accept("app/model/reducers", () => {
+    store.replaceReducer(require("app/model/reducers").rootReducer);
+  });
+}
 
 // Типизация всего STATE
 export type AppRootStateType = ReturnType<typeof store.getState>;

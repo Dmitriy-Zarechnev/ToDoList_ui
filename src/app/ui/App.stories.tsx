@@ -7,11 +7,11 @@ const meta: Meta<typeof App> = {
   component: App,
 
   tags: ["autodocs"],
-  decorators: [ReduxStoreProviderDecorator, HashRouterDecorator],
+  decorators: [ReduxStoreProviderDecorator, HashRouterDecorator]
 };
 
 export default meta;
 
 export const AppStory = () => {
-  return <App demo={true} />;
+  return <App />;
 };

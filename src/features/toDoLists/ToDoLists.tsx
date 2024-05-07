@@ -27,7 +27,7 @@ export const ToDoLists = memo(({ demo = false }: { demo: boolean }) => {
     if (!isLoggedIn) return;
 
     // Получаем toDoLists
-    if (!demo) getTodoLists();
+    if (!demo || !toDoLists.length) getTodoLists();
   }, []);
 
 
