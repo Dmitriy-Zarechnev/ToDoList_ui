@@ -11,11 +11,11 @@ export const store = configureStore({
 });
 
 // Hot Replacement
-if (process.env.NODE_ENV === "development" && module.hot) {
-  module.hot.accept("app/model/reducers", () => {
-    store.replaceReducer(require("app/model/reducers").rootReducer);
-  });
-}
+// if (process.env.NODE_ENV === "development" && module.hot) {
+//   module.hot.accept("app/model/reducers", () => {
+//     store.replaceReducer(require("app/model/reducers").rootReducer);
+//   });
+// }
 
 // Типизация всего STATE
 export type AppRootStateType = ReturnType<typeof store.getState>;
