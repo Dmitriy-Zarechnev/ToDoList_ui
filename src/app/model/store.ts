@@ -17,6 +17,7 @@ export const store = configureStore({
 //   });
 // }
 
+
 // Типизация всего STATE
 export type AppRootStateType = ReturnType<typeof store.getState>;
 
