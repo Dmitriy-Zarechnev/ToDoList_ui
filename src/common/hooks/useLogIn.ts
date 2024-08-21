@@ -29,8 +29,8 @@ export const useLogIn = () => {
             }
             if (!values.password) {
                 errors.password = 'Password Required'
-            } else if (values.password.length < 6) {
-                errors.password = 'Must be 6 characters or more'
+            } else if (values.password.length < 4) {
+                errors.password = 'Must be 4 characters or more'
             }
             return errors
         },
@@ -51,6 +51,5 @@ export const useLogIn = () => {
         }
     })
 
-    // Возвращение результата
     return {formik}
 }
