@@ -9,11 +9,13 @@ import { HashRouter } from "react-router-dom";
 const rerenderEntireTree = () => {
   const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
   root.render(
-    <Provider store={store}>
-      <HashRouter>
+    <HashRouter>
+      <Provider store={store}>
+
         <App />
-      </HashRouter>
-    </Provider>
+
+      </Provider>
+    </HashRouter>
   );
 };
 
