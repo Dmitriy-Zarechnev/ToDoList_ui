@@ -150,6 +150,7 @@ const updateTodoLists = createAppAsyncThunk<{
         return rejectWithValue(updateTodolistData);
       }
     }
+
     // Здесь будет упакована ошибка
     return rejectWithValue(null);
   }
