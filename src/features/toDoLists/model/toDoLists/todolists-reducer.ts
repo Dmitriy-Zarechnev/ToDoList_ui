@@ -156,7 +156,6 @@ const updateTodoLists = createAppAsyncThunk<{
   }
 );
 
-
 // ------------- Добавление нового todolist -----------------------
 const addTodoLists = createAppAsyncThunk<{
   title: string, toDoListID: string
